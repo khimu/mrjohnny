@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Place Bid Page</title>
+	<!--Made with love by Mutiullah Samim -->
+
+	<!--Custom styles-->
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+	<!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+	<!------ Include the above in your HEAD tag ---------->
+
+	<style>
+		/* Credit to bootsnipp.com for the css for the color graph */
+		.colorgraph {
+			height: 5px;
+			border-top: 0;
+			background: #c4e17f;
+			border-radius: 5px;
+			background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+			background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+			background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+			background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+		}
+	</style>
+
+	<script type="text/javascript">
+		function setCookie(token){
+			var now = new Date();
+			var time = now.getTime();
+			var expireTime = time + 1000*36000;
+			now.setTime(expireTime);
+			document.cookie = 'cookie=' + token + ';expires='+now.toUTCString()+';path=/';
+		}
+
+		function getCookie(){
+			alert(document.cookie);
+		}
+
+    	function getCookieValue(name) {
+			const value = `; ${document.cookie}`;
+			const parts = value.split(`; ${name}=`);
+			if (parts.length === 2) return parts.pop().split(';').shift();
+		}
+
+		let token = getCookieValue('atid');
+
+		function get_query(){
+			var url = document.location.href;
+			var qs = url.substring(url.indexOf('?') + 1).split('&');
+			for(var i = 0, result = {}; i < qs.length; i++){
+				qs[i] = qs[i].split('=');
+				result[qs[i][0]] = decodeURIComponent(qs[i][1]);
+			}
+			return result;
+		}
+
+		var result = get_query();
+		console.log(result);
+
+		$(document).ready(function(){
+			$.ajax({
+				type: "GET",
+				url: "https://dymvd59sri.execute-api.us-east-1.amazonaws.com/Prod/bids/" + result.id,
+				crossDomain: true,
+				headers: {
+					'Authorization': 'Bearer ' + token
+				},
+				dataType: 'json',
+				success: function (result) {
+					alert('success');
+					json = JSON.parse(result);
+					// {"Item":{"content":"mustache","currency":"USD","frame_location":"1000","placement_y":"300","amount":"400","merchant_id":"mrjohnny","placement_x":"400","id":"86818d4f-fddb-4c05-8fbb-4d83d884ce7a"}}
+					let items = json.Items;
+					console.log(JSON.stringify(items));
+					for (var i in items) {
+						// http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/bid-detail.html
+
+						console.log(JSON.stringify(items[i]));
+						$('#id').attr('value', json.id);
+						$('#amount').attr('value', json.amount);
+						$('#content').attr('value', json.content);
+						$('#merchant_id').attr('value', json.merchant_id);
+					}
+				},
+				error: function (xhr, status, error) {
+					console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+					alert("You are no longer logged in");
+					//location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+				}
+			});
+
+			// need to implement onSubmit
+		});
+	</script>
+</head>
+<body>
+
+<div class="container">
+
+	<div class="row" style="margin-top:20px">
+		<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+			<form id="bidForm" role="form">
+				<input type="hidden" name="id" id="id" class="form-control input-lg" />
+				<fieldset>
+					<h2>Place Your Bid</h2>
+					<hr class="colorgraph">
+					<div class="form-group">
+						<label for="amount">Previous Bid</label>
+						<input type="text" name="amount" id="amount" class="form-control input-lg" >
+					</div>
+					<div class="form-group">
+						<label for="content">Video</label>
+						<input type="text" name="content" id="content" class="form-control input-lg" >
+					</div>
+					<div class="form-group">
+						<label for="merchant_id">Previous Bidder</label>
+						<input type="text" name="merchant_id" id="merchant_id" class="form-control input-lg" >
+					</div>
+				</span>
+					<hr class="colorgraph">
+					<div class="row">
+						<div class="col-xs-6 col-sm-6 col-md-6">
+							<!--<button type="button" id="login" class="btn btn-primary btn-lg">Login</button>-->
+							<input type="button" id="login" class="btn btn-lg btn-success btn-block" value="Your Bid">
+						</div>
+						<div class="col-xs-6 col-sm-6 col-md-6">
+							<a href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/tables.html" class="btn btn-lg btn-primary btn-block">Cancel</a>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+
+</div>
+</body>
+</html>

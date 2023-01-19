@@ -1,0 +1,6 @@
+To delete the this CloudFormation
+    sam delete
+
+To run deploy this Cognito Service run native aws command or sam deploy
+    aws cloudformation deploy --template-file cognito.yaml --stack-name cognito --capabilities CAPABILITY_IAM --parameter-overrides AuthName=MrJohnnyUerPool
+

@@ -1,0 +1,3 @@
+aws configure
+aws s3api create-bucket --bucket mrjohnny-deploy
+

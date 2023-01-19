@@ -1,0 +1,386 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+  using Amazon API Gateway.
+Globals:
+  Api:
+    Cors:
+      AllowMethods: '''*'''
+      AllowHeaders: '''*'''
+      AllowOrigin: '''*'''
+  Function:
+    Timeout: 10
+    Runtime: nodejs14.x
+    Environment:
+      Variables:
+        ENV:
+          Ref: ENV
+Parameters:
+  ENV:
+    Type: String
+    Default: Prod
+  BucketName:
+    Type: String
+    Default: ContentCreatorVideos
+Resources:
+  AccessLogBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: LogDeliveryWrite
+    Metadata:
+      SamResourceId: AccessLogBucket
+  ServerlessApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: '''*'''
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: arn:aws:cognito-idp:us-east-1:411460918332:userpool/us-east-1_eqsRxbA3C
+        AddDefaultAuthorizerToCorsPreflight: false
+      EndpointConfiguration:
+        Type: REGIONAL
+        PayloadFormatVersion: '2.0'
+      GatewayResponses:
+        UNAUTHORIZED:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: '''WWW-Authenticate'''
+              Access-Control-Allow-Origin: '''*'''
+              WWW-Authenticate: '''Bearer realm="admin"'''
+    Metadata:
+      SamResourceId: ServerlessApi
+  LambdaExecRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: mrjohnny-cloudformation-lambda-role
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName: OpenPolicy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            - s3:GetObject
+            - s3:GetObjectVersion
+            - s3:PutObject
+            - s3:DeleteObject
+            - ec2:DescribeNetworkInterfaces
+            - ec2:CreateNetworkInterface
+            - ec2:DeleteNetworkInterface
+            - ec2:DescribeInstances
+            - ec2:AttachNetworkInterface
+            Resource: '*'
+      - PolicyName: ClosedPolicy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:DeleteItem
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:Scan
+            - dynamodb:UpdateItem
+            Resource: arn:aws:dynamodb:us-east-1:411460918332:table/*
+    Metadata:
+      SamResourceId: LambdaExecRole
+  ListBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/9ec4748e602ddef5e8a47829336b2f16
+      Handler: ListBids.handler
+      FunctionName: ListBrandBids
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        lambda-console:blueprint: microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        ListBids:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /list-bids
+            Method: GET
+    Metadata:
+      SamResourceId: ListBrandBidsFunction
+  PostBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/8f42aceb01bd8038aca9870ea3b1174a
+      Handler: PostBid.handler
+      FunctionName: PostBrandBids
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        lambda-console:blueprint: microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        PostBids:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids
+            Method: POST
+    Metadata:
+      SamResourceId: PostBrandBidsFunction
+  GetBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/d5d0366434dd1e18e83d3f6e2581ca2e
+      Handler: GetBid.handler
+      FunctionName: GetBrandBids
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        lambda-console:blueprint: microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        GetBids:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids/{id}
+            Method: GET
+    Metadata:
+      SamResourceId: GetBrandBidsFunction
+  DeleteBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/9637e99a735427769222a89bcb100605
+      Handler: DeleteBid.handler
+      FunctionName: DeleteBrandBids
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        lambda-console:blueprint: microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        DeleteBids:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids/{id}
+            Method: DELETE
+    Metadata:
+      SamResourceId: DeleteBrandBidsFunction
+  CreatorContentSchedulerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/b099fd416e77710441e1dd7162670fc7
+      Handler: ContentScheduler.handler
+      FunctionName: CreatorContentScheduler
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        lambda-console:blueprint: microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        CreatorScheduler:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /creator_scheduler
+            Method: POST
+    Metadata:
+      SamResourceId: CreatorContentSchedulerFunction
+  PutBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/2c99f4ffd93df52cfc526f4c42151bc0
+      Handler: PutBid.handler
+      FunctionName: PutBid
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        lambda-console:blueprint: microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        PutBid:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids/{id}
+            Method: PUT
+    Metadata:
+      SamResourceId: PutBrandBidsFunction
+  SignUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/c4e3a31ad6a6fed79155ed8e6a5d8bcd
+      Handler: SignUrl.handler
+      FunctionName: SignUrl
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        lambda-console:blueprint: microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+          UploadBucket:
+            Ref: ContentCreatorVideos
+      Policies:
+      - S3WritePolicy:
+          BucketName:
+            Ref: ContentCreatorVideos
+      Events:
+        GetSignUrl:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /sign-url/{username}/{filename}
+            Method: GET
+    Metadata:
+      SamResourceId: SignUrlFunction
+  ContentCreatorVideos:
+    Type: AWS::S3::Bucket
+    Properties:
+      LoggingConfiguration:
+        DestinationBucketName:
+          Ref: AccessLogBucket
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders:
+          - '*'
+          AllowedMethods:
+          - GET
+          - PUT
+          - HEAD
+          AllowedOrigins:
+          - '*'
+    Metadata:
+      SamResourceId: ContentCreatorVideos
+Outputs:
+  ApiUrl:
+    Description: The target URL of the created API
+    Value:
+      Fn::Sub: https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
+    Export:
+      Name: BidsFlow
+  S3UploadBucketName:
+    Description: S3 bucket for application uploads
+    Value:
+      Ref: ContentCreatorVideos
+    Export:
+      Name: ContentCreatorVideos

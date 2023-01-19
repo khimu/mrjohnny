@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Place Bid Page</title>
+	<!--Made with love by Mutiullah Samim -->
+
+	<!--Custom styles-->
+	<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+	<!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+	<!------ Include the above in your HEAD tag ---------->
+
+	<style>
+		/* Credit to bootsnipp.com for the css for the color graph */
+		.colorgraph {
+			height: 5px;
+			border-top: 0;
+			background: #c4e17f;
+			border-radius: 5px;
+			background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+			background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+			background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+			background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+		}
+	</style>
+
+	<script type="text/javascript">
+		function setCookie(token){
+			var now = new Date();
+			var time = now.getTime();
+			var expireTime = time + 1000*36000;
+			now.setTime(expireTime);
+			document.cookie = 'cookie=' + token + ';expires='+now.toUTCString()+';path=/';
+		}
+
+		function getCookie(){
+			alert(document.cookie);
+		}
+
+    	function getCookieValue(name) {
+			const value = `; ${document.cookie}`;
+			const parts = value.split(`; ${name}=`);
+			if (parts.length === 2) return parts.pop().split(';').shift();
+		}
+
+		let token = getCookieValue('atid');
+
+		function get_query(){
+			var url = document.location.href;
+			var qs = url.substring(url.indexOf('?') + 1).split('&');
+			for(var i = 0, result = {}; i < qs.length; i++){
+				qs[i] = qs[i].split('=');
+				result[qs[i][0]] = decodeURIComponent(qs[i][1]);
+			}
+			return result;
+		}
+
+		var result = get_query();
+		console.log(result);
+
+		$(document).ready(function(){
+			const response = await axios.get(API_ENDPOINT_URL, {
+				headers: {
+					Authorization: `Bearer ${token}`
+				}
+			})
+
+			let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
+			const result = await fetch(signedURL, {
+				method: 'PUT',
+				body: blobData
+			})
+
+			/*
+			{\"uploadURL\":\"https://brandbidslambdafunctions-contentcreatorvideos-11epc5oyrifxl.s3.amazonaws.com/khimung%40gmail.com/myvideo.mp4?AWSAccessKeyId=ASIAV7TH3LQ6KFP7UZLS&Content-Type=%24%7Btype%7D%2F%24%7Bextension%7D&Expires=1674107883&Signature=kUCVhD7bS43d%2BtCnuJnH4ywvt%2Bg%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEAYaCXVzLWVhc3QtMSJHMEUCIDJP6XV%2B0ksluwLMghnUWpH6lUgqACUPgA612LhoEiiqAiEA6dAl3Vpo19DlsE3POoCOXRezLXSbdWIoYWE28SaPo%2FUq4gIIbxAAGgw0MTE0NjA5MTgzMzIiDMAvCBvMOefTBJ1Loiq%2FAtXfQALlu3SikrZt0yr%2F%2F0XcaZpFJQVaJqWyfBKhYUVDtMx73vcDu7LYmjDWP%2BQP50xR%2FwXR%2ByeJnn00i7HbEpih4UrlvF7AdLwfJ2jeCnF0Z%2BMpbUOecX25UEvVxng6O1CF%2BMb5fk1aVOPTQKyAv4r5jTxXWdkqmEDX%2BgLx4mGxot9nLMF5aodXteo1C74PUgRr5I4BqhT9M0oTt%2Bs5TMHL2Zy%2BstyuVy9jxlBslBXqnV3jFTrBmlCw7zIQIM9BhccQCqPYB6OBRqEBkiX3rEzqQYrMxIDe0q6KSIK3HaU5v%2BMvLh8MCSBQx8Y6LsQyP15LnCwtjCu%2FTfpCuaV6mRKAGvowdrRjYfKHTOYKknpXg%2BcxE7ADfw8XBXqAWJzmV9uijUfv%2BaVJ%2FW19tB8856wOCnJoJfW56zYTQ6s7q0sw67OjngY6ngFkGdX0SS5UAl%2BWsJWRPmqJUDm2rsnEwoHWAwonZ%2Bf%2FfBc9peVnZce3UZDnvMjurwR3ABDtHzZP7tyvuZWErbls52WZAba8ls6dY055zjCAj9BdBn9IFgChfWQ6x3XNAukogStSIxKMa3ft6EcxVcfu0CprN7WK4IJxZS9He%2FFtJybZuihdU984HAk4re4ExGy80irIGT4uod2YRp4Sgw%3D%3D\",\"Key\":\"khimung@gmail.com/myvideo.mp4\"}"
+			 */
+
+			$("form#data").submit(function(e) {
+				e.preventDefault();
+				var formData = new FormData(this);
+				var fileName = $('input[type=file]').val();
+				var cleanFileName = fileName.split('\\').pop(); // clean from C:\fakepath OR C:\fake_path
+				console.log('clean file name : '+ cleanFileName);
+
+				$.ajax({
+					type: "GET",
+					url: "https://ply0trldv5.execute-api.us-east-1.amazonaws.com/Prod/sign-url/"+ getCookieValue('atid') +"/" + cleanFileName,
+					crossDomain: true,
+					headers: {
+						'Authorization': 'Bearer ' + token
+					},
+					dataType: 'json',
+					success: function (signedURL) {
+						console.log('success ' + signedURL);
+
+						//let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
+						let blobData = new Blob([new Uint8Array(array)], {type: 'video/mp4'})
+						const result = await fetch(signedURL, {
+							method: 'PUT',
+							body: blobData
+						})
+
+
+						$.ajax({
+							url: window.location.pathname,
+							type: 'POST',
+							data: formData,
+							success: function (data) {
+								alert(data)
+							},
+							cache: false,
+							contentType: false,
+							processData: false
+						});
+
+						console.log(json);
+					},
+					error: function (xhr, status, error) {
+						console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+						alert("You are no longer logged in");
+						//location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+					}
+				});
+			});
+
+
+		});
+	</script>
+</head>
+<body>
+
+<div class="container">
+
+	<div class="row" style="margin-top:20px">
+		<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+			<form id="data" method="post" enctype="multipart/form-data">
+				<fieldset>
+					<h2>Upload Video</h2>
+					<input name="image" type="file" />
+					</span>
+					<hr class="colorgraph">
+					<div class="row">
+						<div class="col-xs-6 col-sm-6 col-md-6">
+							<!--<button type="button" id="login" class="btn btn-primary btn-lg">Login</button>-->
+							<input type="button" id="upload" class="btn btn-lg btn-success btn-block" value="Upload Video">
+						</div>
+						<div class="col-xs-6 col-sm-6 col-md-6">
+							<a href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/tables.html" class="btn btn-lg btn-primary btn-block">Cancel</a>
+						</div>
+					</div>
+				</fieldset>
+			</form>
+		</div>
+	</div>
+
+</div>
+</body>
+</html>

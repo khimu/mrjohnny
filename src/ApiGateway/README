@@ -1,0 +1,5 @@
+Creates the ApiGateway where all the lambda function endpoint mapping happens
+
+
+
+aws apigateway get-resource --rest-api-id 9n8r136kre

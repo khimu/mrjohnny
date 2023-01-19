@@ -1,0 +1,406 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Description: >-
+  A simple backend (read/write to DynamoDB) with a RESTful API endpoint using
+  Amazon API Gateway.
+
+# Settings
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+  Function:
+    Timeout: 10
+    Runtime: nodejs14.x
+    Environment:
+      Variables:
+        ENV: !Ref ENV
+
+
+# Variable declaration
+Parameters:
+  ENV:
+    Type: String
+    Default: "Prod"
+  BucketName:
+    Type: String
+    Default: "ContentCreatorVideos"
+
+
+Resources:
+
+  AccessLogBucket:
+    Type: "AWS::S3::Bucket"
+    Properties:
+      AccessControl: LogDeliveryWrite
+#
+#  {
+#    "Version": "2008-10-17",
+#    "Statement": [
+#      {
+#        "Effect": "Allow",
+#        "Principal": {
+#          "AWS": "*"
+#        },
+#        "Action": [
+#          "s3:GetObjectAcl",
+#          "s3:GetObject",
+#          "s3:PutObject",
+#          "s3:PutObjectAcl",
+#          "s3:ListMultipartUploadParts"
+#        ],
+#        "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*",
+#        "Condition": {
+#          "StringLike": {
+#            "aws:Referer": "https://example/*"
+#          }
+#        }
+#      }
+#    ]}
+
+
+
+  # Explicit API resource needed to configure an authorizer
+  ServerlessApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: "'*'"
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: "arn:aws:cognito-idp:us-east-1:411460918332:userpool/us-east-1_eqsRxbA3C"
+        AddDefaultAuthorizerToCorsPreflight: False
+      EndpointConfiguration:
+        Type: REGIONAL
+        PayloadFormatVersion: "2.0"
+      GatewayResponses:
+        # API-Gateway responses are missing CORS headers
+        # They need to be defined in Lambda functions or here
+        UNAUTHORIZED:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: "'WWW-Authenticate'"
+              Access-Control-Allow-Origin: "'*'"
+              WWW-Authenticate: >-
+                'Bearer realm="admin"'
+
+
+  LambdaExecRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "mrjohnny-cloudformation-lambda-role"
+      ManagedPolicyArns:
+        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - 'lambda.amazonaws.com'
+            Action:
+              - 'sts:AssumeRole'
+      Policies:
+        - PolicyName: S3ByRegion
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 's3:GetObject'
+                  - 's3:PutObject'
+                Resource: "arn:aws:s3:us-east-1:411460918332:*"
+        - PolicyName: OpenPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'logs:CreateLogStream'
+                  - 'logs:PutLogEvents'
+                  - 'ec2:DescribeNetworkInterfaces'
+                  - 'ec2:CreateNetworkInterface'
+                  - 'ec2:DeleteNetworkInterface'
+                  - 'ec2:DescribeInstances'
+                  - 'ec2:AttachNetworkInterface'
+                Resource: "arn:aws:s3:us-east-1:411460918332:*"
+        - PolicyName: ClosedPolicy
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Effect: Allow
+                Action:
+                  - 'dynamodb:DeleteItem'
+                  - 'dynamodb:GetItem'
+                  - 'dynamodb:PutItem'
+                  - 'dynamodb:Scan'
+                  - 'dynamodb:UpdateItem'
+                  - 'dynamodb:Query'
+                Resource: "arn:aws:dynamodb:us-east-1:411460918332:table/*"
+
+
+  ListBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ListBids.js
+      Handler: ListBids.handler
+      FunctionName: ListBrandBids
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "lambda-console:blueprint": microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        ListBids:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /list-bids
+            Method: GET
+
+
+  PostBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: PostBid.js
+      Handler: PostBid.handler
+      FunctionName: PostBrandBids
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "lambda-console:blueprint": microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        PostBids:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /bids
+            Method: POST
+
+
+
+  GetBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetBid.js
+      Handler: GetBid.handler
+      FunctionName: GetBrandBids
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "lambda-console:blueprint": microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        GetBids:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /bids/{id}
+            Method: GET
+
+
+  DeleteBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: DeleteBid.js
+      Handler: DeleteBid.handler
+      FunctionName: DeleteBrandBids
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "lambda-console:blueprint": microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        DeleteBids:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /bids/{id}
+            Method: DELETE
+
+
+
+  CreatorContentSchedulerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ContentScheduler.js
+      Handler: ContentScheduler.handler
+      FunctionName: CreatorContentScheduler
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "lambda-console:blueprint": microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        CreatorScheduler:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /creator_scheduler
+            Method: POST
+
+
+  PutBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: PutBid.js
+      Handler: PutBid.handler
+      FunctionName: PutBid
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "lambda-console:blueprint": microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        PutBid:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /bids/{id}
+            Method: PUT
+
+
+
+
+
+  SignUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: SignUrl.js
+      Handler: SignUrl.handler
+      FunctionName: SignUrl
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "lambda-console:blueprint": microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+          UploadBucket: !Ref ContentCreatorVideos
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref ContentCreatorVideos
+      Events:
+        GetSignUrl:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /sign-url/{username}/{filename}
+            Method: GET
+
+
+
+  ## S3 bucket
+  ContentCreatorVideos:
+    Type: AWS::S3::Bucket
+    Properties:
+      LoggingConfiguration:
+        DestinationBucketName: !Ref AccessLogBucket
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - GET
+              - PUT
+              - HEAD
+            AllowedOrigins:
+              - "*"
+
+
+
+
+
+Outputs:
+
+  # When the package.json scripts are used, this output will be stored
+  # inside a api-url file
+  ApiUrl:
+    Description: The target URL of the created API
+    Value: !Sub "https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Export:
+      Name: BidsFlow
+  S3UploadBucketName:
+    Description: "S3 bucket for application uploads"
+    Value: !Ref 'ContentCreatorVideos'

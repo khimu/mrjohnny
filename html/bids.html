@@ -1,0 +1,96 @@
+<!doctype html>
+<!-- Website Template by freewebsitetemplates.com -->
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Gallery - Mustache Enthusiast</title>
+	<link rel="stylesheet" type="text/css" href="css/style.css">
+	<link rel="stylesheet" type="text/css" href="css/mobile.css" media="screen and (max-width : 568px)">
+	<script type="text/javascript" src="js/mobile.js"></script>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+
+	<script type="text/javascript">
+		var template = "<li><a href=\"{LINK}\"><img src=\"images/mustache1.jpg\" alt=\"\"></a>{BID}</li>";
+
+		$(document).ready(function(){
+			$.ajax({
+				type: "GET",
+				headers: {
+					"accept": "application/json",
+					"Access-Control-Allow-Origin":"*"
+				},
+				crossDomain: true,
+				url: "https://h0385crmu7.execute-api.us-east-1.amazonaws.com/prod/list-bids",
+				success: function(data){
+					var obj = jQuery.parseJSON( data );
+					$.each(obj, function(key,value) {
+						console.log(value.content);
+						template = template.replace("{BID}", value.amount);
+						template = template.replace("{LINK}", "https://h0385crmu7.execute-api.us-east-1.amazonaws.com/prod/bids?id=" + value.id);
+						$('.gallery').html(template);
+					});
+					/*
+                    {"Items":[{"content":"mustache","currency":"USD","frame_location":"1000","placement_y":"300","merchant_id":"mrjohnny\"","placement_x":"400","id":"a9231013-54d8-4ec8-a571-448aa4438d43"},{"content":"mustache","currency":"USD","frame_location":"1000","placement_y":"300","amount":"400","merchant_id":"mrjohnny","placement_x":"400","id":"86818d4f-fddb-4c05-8fbb-4d83d884ce7a"},{"content":"mustache1","currency":"USD","frame_location":"1000","placement_y":"300","amount":"15000","merchant_id":"mrjohnny","placement_x":"400","id":"f3b61c9a-ef2f-455d-b169-b897e6cd7077"},{"content":"mustachebrothers","currency":"USD","frame_location":"1000","placement_y":"300","amount":"15000","merchant_id":"mrjohnny","placement_x":"400","id":"2fd424d4-37dc-4d2e-8624-6f006c6569f7"},{"content":"mustache","currency":"USD","frame_location":"1000","placement_y":"300","amount":"33","merchant_id":"mrjohnny","placement_x":"400","id":"253cd41e-2f73-48f5-9898-215c6d4d2880"}],"Count":5,"ScannedCount":5}
+                     */
+				}
+			});
+		});
+	</script>
+</head>
+<body>
+	<div id="header">
+		<a href="index.html" class="logo">
+			<img src="images/logo.jpg" alt="">
+		</a>
+		<ul id="navigation">
+			<li>
+				<a href="index.html">home</a>
+			</li>
+			<li>
+				<a href="about.html">about</a>
+			</li>
+			<li class="selected">
+				<a href="gallery.html">gallery</a>
+			</li>
+			<li>
+				<a href="blog.html">blog</a>
+			</li>
+			<li>
+				<a href="contact.html">contact</a>
+			</li>
+		</ul>
+	</div>
+	<div id="body">
+		<h1><span>gallery</span></h1>
+		<ul class="gallery">
+			<div hidden="hidden">
+			<li>
+				<a href="gallery-single-post.html">
+					<img src="images/mustache1.jpg" alt="">
+				</a>
+			</li>
+			</div>
+		</ul>
+	</div>
+	<div id="footer">
+		<div>
+			<p>&copy; 2023 by Mustacchio. All rights reserved.</p>
+			<ul>
+				<li>
+					<a href="http://freewebsitetemplates.com/go/twitter/" id="twitter">twitter</a>
+				</li>
+				<li>
+					<a href="http://freewebsitetemplates.com/go/facebook/" id="facebook">facebook</a>
+				</li>
+				<li>
+					<a href="http://freewebsitetemplates.com/go/googleplus/" id="googleplus">googleplus</a>
+				</li>
+				<li>
+					<a href="http://pinterest.com/fwtemplates/" id="pinterest">pinterest</a>
+				</li>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,35 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Description: "A example REST API build with serverless technology"
+
+Globals:
+
+  # Configuration defaults for all Lambda functions
+  Function:
+    Runtime: nodejs14.x
+    Handler: index.handler
+    Timeout: 10
+    Tags:
+      Application: Serverless API
+  
+Resources:
+
+  # Lambda function that prevents the emission of confirmation emails
+  PreSignupFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      InlineCode: |
+        exports.handler = async event => {
+          event.response = { autoConfirmUser: true };
+          return event;
+        };
+
+Outputs:
+
+  # When the package.json scripts are used, this output will be stored
+  # inside a api-url file
+  ApiUrl:
+    Description: The target URL of the created API
+    Value: !Sub "https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Export:
+      Name: ApiUrl

@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up Page</title>
+    <!--Made with love by Mutiullah Samim -->
+
+    <!--Custom styles-->
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+    <!------ Include the above in your HEAD tag ---------->
+
+    <style>
+        /* Credit to bootsnipp.com for the css for the color graph */
+        .colorgraph {
+            height: 5px;
+            border-top: 0;
+            background: #c4e17f;
+            border-radius: 5px;
+            background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+            background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+            background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+            background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+        }
+    </style>
+
+    <script type="text/javascript">
+            $(document).ready(function(){
+            $( "#register" ).click(function() {
+                // Get some values from elements on the page:
+                var $form = $("#registerForm"),
+                    email = $form.find( "input[type='email']" ).val(),
+                    password = $form.find( "input[type='password']" ).val();
+
+                console.log("username " + email + " password " + password);
+
+                $.ajax({
+                    url: "https://9n8r136kre.execute-api.us-east-1.amazonaws.com/Stage/signup",
+                    type: "POST",
+                    crossDomain: true,
+                    data: JSON.stringify({ username: email, password: password }),
+                    dataType: "json",
+                    success: function (response) {
+                        //$( "#result" ).html(response.message);
+                        alert(response.message);
+                        location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/mustacheenthusiast/signin.html';
+                    },
+                    error: function (xhr, status) {
+                        alert(xhr);
+                    }
+                });
+
+            });
+        });
+    </script>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="row" style="margin-top:20px">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <form id="registerForm" role="form">
+                <fieldset>
+                    <h2>Sign Up</h2>
+                    <hr class="colorgraph">
+                    <div class="form-group">
+                        <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" name="repeat-password" id="repeat-password" class="form-control input-lg" placeholder="Repeat Password">
+                    </div>
+                    <span class="button-checkbox">
+`                       <div class="form-check d-flex justify-content-center mb-5">
+                            <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+                            <label class="form-check-label" >
+                                I agree all statements in <a href="#!">Terms of service</a>
+                            </label>
+                        </div>
+				</span>
+                    <hr class="colorgraph">
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <!--<button type="button" id="login" class="btn btn-primary btn-lg">Login</button>-->
+                            <!--<button type="button" id="register" class="btn btn-primary btn-lg">Register</button>-->
+                            <input type="button" id="register" class="btn btn-lg btn-success btn-block" value="Sign Up">
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6">
+                            <a href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/mustacheenthusiast/index.html" class="btn btn-lg btn-primary btn-block">Login</a>
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
+<!--
+
+<!doctype html>
+&lt;!&ndash; Website Template by freewebsitetemplates.com &ndash;&gt;
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Mustache Enthusiast</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+    <link rel="stylesheet" type="text/css" href="css/mobile.css" media="screen and (max-width : 568px)">
+    <script type="text/javascript" src="js/mobile.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $( "#register" ).click(function() {
+                // Get some values from elements on the page:
+                var $form = $("#registerForm"),
+                    email = $form.find( "input[type='email']" ).val(),
+                    password = $form.find( "input[type='password']" ).val();
+
+                console.log("username " + email + " password " + password);
+
+                $.ajax({
+                    url: "https://9n8r136kre.execute-api.us-east-1.amazonaws.com/Stage/signup",
+                    type: "POST",
+                    crossDomain: true,
+                    data: JSON.stringify({ username: email, password: password }),
+                    dataType: "json",
+                    success: function (response) {
+                        //$( "#result" ).html(response.message);
+                        alert(response.message);
+                        location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/mustacheenthusiast/signin.html';
+                    },
+                    error: function (xhr, status) {
+                        alert(xhr);
+                    }
+                });
+
+            });
+        });
+    </script>
+</head>
+<body>
+<div id="header">
+    <a href="index.html" class="logo">
+        <img src="images/logo.jpg" alt="">
+    </a>
+    <ul id="navigation">
+        <li>
+            <a href="index.html">home</a>
+        </li>
+        <li>
+            <a href="about.html">about</a>
+        </li>
+        <li class="selected">
+            <a href="gallery.html">gallery</a>
+        </li>
+        <li>
+            <a href="blog.html">blog</a>
+        </li>
+        <li>
+            <a href="contact.html">contact</a>
+        </li>
+    </ul>
+</div>
+<div>
+
+    <section class="vh-100" style="background-color: #eee;">
+    <div class="container h-100">
+        <div class="row d-flex justify-content-center align-items-center h-100">
+            <div class="col-lg-12 col-xl-11">
+                <div class="card text-black" style="border-radius: 25px;">
+                    <div class="card-body p-md-5">
+                        <div class="row justify-content-center">
+                            <div class="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
+
+                                <p id="result" class="text-center h1 fw-bold mb-5 mx-1 mx-md-4 mt-4">Sign up</p>
+
+                                <form action="https://9n8r136kre.execute-api.us-east-1.amazonaws.com/Stage/signup" id="registerForm" class="mx-1 mx-md-4">
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-envelope fa-lg me-3 fa-fw"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <input type="email" id="form3Example3c" class="form-control" />
+                                            <label class="form-label" for="form3Example3c">Your Email</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-lock fa-lg me-3 fa-fw"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <input type="password" id="form3Example4c" class="form-control" />
+                                            <label class="form-label" for="form3Example4c">Password</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex flex-row align-items-center mb-4">
+                                        <i class="fas fa-key fa-lg me-3 fa-fw"></i>
+                                        <div class="form-outline flex-fill mb-0">
+                                            <input type="password" id="form3Example4cd" class="form-control" />
+                                            <label class="form-label" for="form3Example4cd">Repeat your password</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-check d-flex justify-content-center mb-5">
+                                        <input class="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
+                                        <label class="form-check-label" >
+                                            I agree all statements in <a href="#!">Terms of service</a>
+                                        </label>
+                                    </div>
+
+                                    <div class="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
+                                        &lt;!&ndash;<input type="submit" class="btn btn-primary btn-lg" value="Register">&ndash;&gt;
+                                        <button type="button" id="register" class="btn btn-primary btn-lg">Register</button>
+                                    </div>
+
+                                </form>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+</body>
+</html>-->

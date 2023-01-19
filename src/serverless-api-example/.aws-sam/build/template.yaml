@@ -1,0 +1,253 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: A example REST API build with serverless technology
+Globals:
+  Function:
+    Runtime: nodejs14.x
+    Handler: index.handler
+    Timeout: 30
+    Tags:
+      Application: Serverless API
+Resources:
+  ServerlessApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: '''*'''
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn:
+              Fn::GetAtt:
+              - UserPool
+              - Arn
+      GatewayResponses:
+        UNAUTHORIZED:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: '''WWW-Authenticate'''
+              Access-Control-Allow-Origin: '''*'''
+              WWW-Authenticate: '''Bearer realm="admin"'''
+  IndexFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: IndexFunction
+      Events:
+        Home:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /
+            Method: GET
+            Auth:
+              Authorizer: NONE
+    Metadata:
+      SamResourceId: IndexFunction
+  AuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: AuthFunction
+      Environment:
+        Variables:
+          USER_POOL_ID:
+            Ref: UserPool
+          USER_POOL_CLIENT_ID:
+            Ref: UserPoolClient
+      Events:
+        Signup:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /signup
+            Method: POST
+            Auth:
+              Authorizer: NONE
+        Signin:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /signin
+            Method: POST
+            Auth:
+              Authorizer: NONE
+    Metadata:
+      SamResourceId: AuthFunction
+  PreSignupFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      InlineCode: "exports.handler = async event => {\n  event.response = { autoConfirmUser:\
+        \ true };\n  return event;\n};\n"
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: ApiUserPool
+      LambdaConfig:
+        PreSignUp:
+          Fn::GetAtt:
+          - PreSignupFunction
+          - Arn
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 6
+  UserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      UserPoolId:
+        Ref: UserPool
+      ClientName: ApiUserPoolClient
+      GenerateSecret: false
+  LambdaCognitoUserPoolExecutionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName:
+        Fn::GetAtt:
+        - PreSignupFunction
+        - Arn
+      Principal: cognito-idp.amazonaws.com
+      SourceArn:
+        Fn::Sub: arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}
+  ElasticsearchDomain:
+    Type: AWS::Elasticsearch::Domain
+    Properties:
+      ElasticsearchVersion: '2.3'
+      ElasticsearchClusterConfig:
+        InstanceCount: 1
+        InstanceType: t2.micro.elasticsearch
+      EBSOptions:
+        EBSEnabled: true
+        Iops: 0
+        VolumeSize: 10
+        VolumeType: gp2
+  ImageBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      AccessControl: PublicRead
+      CorsConfiguration:
+        CorsRules:
+        - AllowedHeaders:
+          - '*'
+          AllowedMethods:
+          - HEAD
+          - GET
+          - PUT
+          - POST
+          AllowedOrigins:
+          - '*'
+  ImageBucketPublicReadPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket:
+        Ref: ImageBucket
+      PolicyDocument:
+        Statement:
+        - Action: s3:GetObject
+          Effect: Allow
+          Principal: '*'
+          Resource:
+            Fn::Join:
+            - ''
+            - - 'arn:aws:s3:::'
+              - Ref: ImageBucket
+              - /*
+  ImageFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ImageFunction
+      Policies:
+      - AmazonS3FullAccess
+      - ElasticsearchHttpPostPolicy:
+          DomainName:
+            Ref: ElasticsearchDomain
+      Environment:
+        Variables:
+          IMAGE_BUCKET_NAME:
+            Ref: ImageBucket
+          ELASTICSEARCH_URL:
+            Fn::GetAtt:
+            - ElasticsearchDomain
+            - DomainEndpoint
+          REGION:
+            Ref: AWS::Region
+      Events:
+        ListImages:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /images
+            Method: GET
+        DeleteImage:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /images/{imageId}
+            Method: DELETE
+        CreateImage:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /images
+            Method: POST
+    Metadata:
+      SamResourceId: ImageFunction
+  TagsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: TagsFunction
+      Environment:
+        Variables:
+          PARAMETER_STORE_CLARIFAI_API_KEY: /serverless-api/CLARIFAI_API_KEY_ENC
+          ELASTICSEARCH_URL:
+            Fn::GetAtt:
+            - ElasticsearchDomain
+            - DomainEndpoint
+          REGION:
+            Ref: AWS::Region
+      Policies:
+      - AmazonS3ReadOnlyAccess
+      - ElasticsearchHttpPostPolicy:
+          DomainName:
+            Ref: ElasticsearchDomain
+      - Statement:
+        - Action:
+          - ssm:GetParameter
+          Effect: Allow
+          Resource: '*'
+      Events:
+        ListTags:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /tags
+            Method: GET
+        ListImages:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /tags/{tagId}/images
+            Method: GET
+        ExtractTags:
+          Type: S3
+          Properties:
+            Bucket:
+              Ref: ImageBucket
+            Events: s3:ObjectCreated:*
+    Metadata:
+      SamResourceId: TagsFunction
+Outputs:
+  ApiUrl:
+    Description: The target URL of the created API
+    Value:
+      Fn::Sub: https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
+    Export:
+      Name: ApiUrl

@@ -1,0 +1,100 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: >-
+  A simple backend (read/write to DynamoDB) with a RESTful API endpoint using
+  Amazon API Gateway.
+
+# Settings
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+  Function:
+    Timeout: 10
+    Runtime: nodejs14.x
+    Handler: index.handler
+    Environment:
+      Variables:
+        ENV: !Ref ENV
+        UserPoolId: !Ref UserPoolId
+        UserPoolClientId: !Ref UserPoolClientId
+
+# Variable declaration
+Parameters:
+  ENV:
+    Type: String
+    Default: "prod"
+  UserPoolId:
+    Type: String
+    Default: "us-east-1_eqsRxbA3C"
+  UserPoolClientId:
+    Type: String
+    Default: "69qme3q9ogoainiii5tg3eg998"
+
+Resources:
+
+  # Explicit API resource needed to configure an authorizer
+  ServerlessApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: "'*'"
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: !GetAtt UserPool.Arn
+      GatewayResponses:
+        # API-Gateway responses are missing CORS headers
+        # They need to be defined in Lambda functions or here
+        UNAUTHORIZED:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: "'WWW-Authenticate'"
+              Access-Control-Allow-Origin: "'*'"
+              WWW-Authenticate: >-
+                'Bearer realm="admin"'
+
+  ListBids:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ListBids.js
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 512
+      Timeout: 10
+      Role: 'arn:aws:iam::411460918332:role/service-role/mrjohnny-dynamo-lambda-role'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        'lambda-console:blueprint': microservice-http-endpoint
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        # API-Gateway event to list all tags stored in Elasticsearch
+        ListBids:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /list-bids
+            Method: GET
+
+Outputs:
+
+  # When the package.json scripts are used, this output will be stored
+  # inside a api-url file
+  ApiUrl:
+    Description: The target URL of the created API
+    Value: !Sub "https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Export:
+      Name: ApiUrl
+
+

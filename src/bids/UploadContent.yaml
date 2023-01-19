@@ -1,0 +1,25 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: >-
+  An Amazon S3 trigger that retrieves metadata for the object that has been
+  updated.
+Resources:
+  UploadContent:
+    Type: 'AWS::Serverless::Function'
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs14.x
+      CodeUri: .
+      Description: >-
+        An Amazon S3 trigger that retrieves metadata for the object that has
+        been updated.
+      MemorySize: 128
+      Timeout: 3
+      Role: 'arn:aws:iam::411460918332:role/service-role/mrjohnny-lambda-s3-role'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        'lambda-console:blueprint': s3-get-object
