@@ -27,6 +27,7 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       AccessControl: LogDeliveryWrite
+      BucketName: mrjohnny-logging-for-upload-contents
     Metadata:
       SamResourceId: AccessLogBucket
   ServerlessApi:
@@ -59,7 +60,6 @@ Resources:
       RoleName: mrjohnny-cloudformation-lambda-role
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-      - arn:aws:iam::aws:policy/AmazonS3FullAccess
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -70,7 +70,18 @@ Resources:
           Action:
           - sts:AssumeRole
       Policies:
-      - PolicyName: OpenPolicy
+      - PolicyName: MrJohnnyS3ByRegion
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:GetObject
+            - s3:PutObject
+            Resource:
+            - arn:aws:s3:::mrjohnny-upload-contents
+            - arn:aws:s3:::mrjohnny-logging-for-upload-contents
+      - PolicyName: MrJohnnyOpenPolicy
         PolicyDocument:
           Version: 2012-10-17
           Statement:
@@ -78,17 +89,13 @@ Resources:
             Action:
             - logs:CreateLogStream
             - logs:PutLogEvents
-            - s3:GetObject
-            - s3:GetObjectVersion
-            - s3:PutObject
-            - s3:DeleteObject
             - ec2:DescribeNetworkInterfaces
             - ec2:CreateNetworkInterface
             - ec2:DeleteNetworkInterface
             - ec2:DescribeInstances
             - ec2:AttachNetworkInterface
             Resource: '*'
-      - PolicyName: ClosedPolicy
+      - PolicyName: MrJohnnyClosedPolicy
         PolicyDocument:
           Version: 2012-10-17
           Statement:
@@ -99,13 +106,14 @@ Resources:
             - dynamodb:PutItem
             - dynamodb:Scan
             - dynamodb:UpdateItem
+            - dynamodb:Query
             Resource: arn:aws:dynamodb:us-east-1:411460918332:table/*
     Metadata:
       SamResourceId: LambdaExecRole
   ListBrandBidsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://mrjohnny-deploy/9ec4748e602ddef5e8a47829336b2f16
+      CodeUri: s3://mrjohnny-deploy/3ee6ffd0dcf3eeec2c287cd9f1c1cb8e
       Handler: ListBids.handler
       FunctionName: ListBrandBids
       Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
@@ -140,7 +148,7 @@ Resources:
   PostBrandBidsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://mrjohnny-deploy/8f42aceb01bd8038aca9870ea3b1174a
+      CodeUri: s3://mrjohnny-deploy/da0562c742885709397d3279cd5bf483
       Handler: PostBid.handler
       FunctionName: PostBrandBids
       Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
@@ -175,7 +183,7 @@ Resources:
   GetBrandBidsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://mrjohnny-deploy/d5d0366434dd1e18e83d3f6e2581ca2e
+      CodeUri: s3://mrjohnny-deploy/d1c9b4b7082d2572c4478b223e031e7c
       Handler: GetBid.handler
       FunctionName: GetBrandBids
       Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
@@ -210,7 +218,7 @@ Resources:
   DeleteBrandBidsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://mrjohnny-deploy/9637e99a735427769222a89bcb100605
+      CodeUri: s3://mrjohnny-deploy/c3a343f08adcf78427f8188c9477a678
       Handler: DeleteBid.handler
       FunctionName: DeleteBrandBids
       Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
@@ -245,7 +253,7 @@ Resources:
   CreatorContentSchedulerFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://mrjohnny-deploy/b099fd416e77710441e1dd7162670fc7
+      CodeUri: s3://mrjohnny-deploy/a776c73e8f928c944a6cdd67a27d6392
       Handler: ContentScheduler.handler
       FunctionName: CreatorContentScheduler
       Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
@@ -280,7 +288,7 @@ Resources:
   PutBrandBidsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://mrjohnny-deploy/2c99f4ffd93df52cfc526f4c42151bc0
+      CodeUri: s3://mrjohnny-deploy/858cc7822adc8c09c816384206b6b4ff
       Handler: PutBid.handler
       FunctionName: PutBid
       Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
@@ -315,7 +323,7 @@ Resources:
   SignUrlFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://mrjohnny-deploy/c4e3a31ad6a6fed79155ed8e6a5d8bcd
+      CodeUri: s3://mrjohnny-deploy/3d7f07b7269ef67132f94839ba5cc645
       Handler: SignUrl.handler
       FunctionName: SignUrl
       Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
@@ -369,6 +377,7 @@ Resources:
           - HEAD
           AllowedOrigins:
           - '*'
+      BucketName: mrjohnny-upload-contents
     Metadata:
       SamResourceId: ContentCreatorVideos
 Outputs:
@@ -382,5 +391,3 @@ Outputs:
     Description: S3 bucket for application uploads
     Value:
       Ref: ContentCreatorVideos
-    Export:
-      Name: ContentCreatorVideos

@@ -101,6 +101,22 @@
 							body: blobData
 						})
 
+						var settings = {
+							"url": "https://mrjohnny-upload-contents.s3.amazonaws.com/khimung%40gmail.com/cocacola.jpeg?AWSAccessKeyId=ASIAV7TH3LQ6JVKJTYNX&Content-Type=image%2Fjpeg&Expires=1674143838&Signature=t713fR%2BMjZdz4wgkd5MnlQia558%3D&x-amz-acl=public-read&x-amz-security-token=IQoJb3JpZ2luX2VjEBAaCXVzLWVhc3QtMSJIMEYCIQCM4yZ4v8RQGIl3evHD8HyNgUtp5A7PFj6AGphm2RLyFwIhAIDOkBjDJCQor6tjXckGVDTPUDwXG11%2BuHR3p2FgozEqKuICCHkQABoMNDExNDYwOTE4MzMyIgze%2F5ysJIb6nAQNNiIqvwIHRYY1HmzTuNpbuZNiUU8Uso4UxWeZFYBVQ28sq1h4Zh8ZUy1RqPFq0xmOwbM3MSqerJGMZIwlmwstkPPDHbfTFbM4BJAk1PVk3wgmnK%2Bux7j7V%2BKsDhHMxTMXZvJVC0u8PN%2FRrv6ekCGdNVK7u25QsT%2BcWMmBpAgk%2F65E9Dx%2F0wT%2FF7hD%2BtO3CnlajC9BvrV06WlMOh5Qrj39UigmxgnPhMr1iVNWSiCFZaJj8fsnXdCy%2B0D93Meu8Tb9Nrx6HGGpPi7vqygjBaDh836BYq3fGPuw0C4Fw18jG69HEVuTJdRjMBb1P0eXvCVLwijzF8JutDBd6bk1PQ2KauqwURHG0RkmZVEa3d%2B%2BccgiY6UqY7usOVlGT0Xwdg49SoM37Bwb9wI5tZKZySmtCZD%2BT0FygXv%2FlIaSIUk162nbBdwVMLHOpZ4GOp0Bey6P6%2FGRSr%2Bh4wswrqxY4IsUtI8MokLnsMmZbih7KcQA%2FfR6maOnKlugj9EQgwW9e05Ch%2BKW1xUErO6tEcmWrJsvz%2BZyn4WrjtUfgUs%2Fvzoue0H%2F4OI1YhvZMvwryLr8K2cMTnsgcHMT5gBqSDES%2Bb%2BotDJ6Mkx2qrjR4wdDmnYZzhPigwmKHvLylWbb4kjHOlXRnn3raBeNeky5SQ%3D%3D",
+							"method": "PUT",
+							"timeout": 0,
+							"headers": {
+								"x-amz-acl": "public-read",
+								"Key": "khimung@gmail.com/cocacola.jpeg",
+								"Content-Type": "image/jpeg"
+							},
+							"data": blobData
+						};
+
+						$.ajax(settings).done(function (response) {
+							console.log(response);
+						});
+
 
 						$.ajax({
 							url: window.location.pathname,

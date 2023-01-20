@@ -35,30 +35,7 @@ Resources:
     Type: "AWS::S3::Bucket"
     Properties:
       AccessControl: LogDeliveryWrite
-#
-#  {
-#    "Version": "2008-10-17",
-#    "Statement": [
-#      {
-#        "Effect": "Allow",
-#        "Principal": {
-#          "AWS": "*"
-#        },
-#        "Action": [
-#          "s3:GetObjectAcl",
-#          "s3:GetObject",
-#          "s3:PutObject",
-#          "s3:PutObjectAcl",
-#          "s3:ListMultipartUploadParts"
-#        ],
-#        "Resource": "arn:aws:s3:::YOUR_BUCKET_NAME/*",
-#        "Condition": {
-#          "StringLike": {
-#            "aws:Referer": "https://example/*"
-#          }
-#        }
-#      }
-#    ]}
+      BucketName: 'mrjohnny-logging-for-upload-contents'
 
 
 
@@ -106,7 +83,7 @@ Resources:
             Action:
               - 'sts:AssumeRole'
       Policies:
-        - PolicyName: S3ByRegion
+        - PolicyName: MrJohnnyS3ByRegion
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -114,8 +91,13 @@ Resources:
                 Action:
                   - 's3:GetObject'
                   - 's3:PutObject'
-                Resource: "arn:aws:s3:us-east-1:411460918332:*"
-        - PolicyName: OpenPolicy
+                  -  's3:PutObjectAcl'
+                Resource:
+                  - "arn:aws:s3:::mrjohnny-upload-contents"
+                  - "arn:aws:s3:::mrjohnny-upload-contents/*"
+                  - "arn:aws:s3:::mrjohnny-logging-for-upload-contents"
+                  - "arn:aws:s3:::mrjohnny-logging-for-upload-contents/*"
+        - PolicyName: MrJohnnyOpenPolicy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -128,8 +110,8 @@ Resources:
                   - 'ec2:DeleteNetworkInterface'
                   - 'ec2:DescribeInstances'
                   - 'ec2:AttachNetworkInterface'
-                Resource: "arn:aws:s3:us-east-1:411460918332:*"
-        - PolicyName: ClosedPolicy
+                Resource: "*"
+        - PolicyName: MrJohnnyClosedPolicy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -387,6 +369,7 @@ Resources:
               - HEAD
             AllowedOrigins:
               - "*"
+      BucketName: 'mrjohnny-upload-contents'
 
 
 

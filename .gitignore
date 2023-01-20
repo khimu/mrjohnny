@@ -1,2 +1,8 @@
 node_modules
 package-lock.json
+html/.DS_Store
+.DS_Store
+.idea/
+.serverless/
+mrjohnny.iml
+test.txt
