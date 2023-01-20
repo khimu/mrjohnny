@@ -12,7 +12,7 @@ I'm executing the below
     sam deploy --template-file /Users/khimung/CODE/mrjohnny/src/ListBids/packaged.yaml --stack-name ListBids
 
 Latest deploy
-	sam deploy --template-file packaged.yaml --region us-east-1 --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM --stack-name MrJohnnyCloudFormation
+	sam deploy --template-file /Users/khimung/CODE/mrjohnny/src/s3BucketCreation/packaged.yaml --stack-name S3BucketCloudFormation
 
 
 sam delete 

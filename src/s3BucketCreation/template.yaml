@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Description: >-
+  A simple backend (read/write to DynamoDB) with a RESTful API endpoint using
+  Amazon API Gateway.
+
+# Variable declaration
+Parameters:
+  ENV:
+    Type: String
+    Default: "Prod"
+  BucketName:
+    Type: String
+    Default: "ContentCreatorVideos"
+
+
+Resources:
+
+#  AccessLogBucket:
+#    Type: "AWS::S3::Bucket"
+##    DeletionPolicy: Retain
+#    Properties:
+#      AccessControl: LogDeliveryWrite
+#      BucketName: 'mrjohnny-logging-for-upload-contents'
+
+
+  ## S3 bucket
+  ContentCreatorVideos:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      #      LoggingConfiguration:
+      #        DestinationBucketName: !Ref AccessLogBucket
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - "*"
+            AllowedMethods:
+              - GET
+              - PUT
+              - HEAD
+            AllowedOrigins:
+              - "*"
+      BucketName: 'mrjohnny-upload-contents'
+
+
+
+
+
+Outputs:
+
+  S3UploadBucketName:
+    Description: "S3 bucket for application uploads"
+    Value: !Ref 'ContentCreatorVideos'
