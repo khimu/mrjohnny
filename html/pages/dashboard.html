@@ -73,6 +73,13 @@
 
     // Attach a submit handler to the form
     $(document).ready(function(){
+      if( getCookieValue('atid') === null ) {
+        $(".modal-body").html("You are no longer logged in");
+        new Boxy('#popupBox', {title: 'Login message'});
+        $('#loading').hide();
+        location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+      }
+
       let identity = getCookieValue("identity");
       $("#identity").text(identity);
 

@@ -141,7 +141,7 @@ Resources:
         SubnetIds:
           - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        "lambda-console:blueprint": microservice-http-endpoint
+        "service": "mrjohny"
       Environment:
         Variables:
           REGION: !Ref AWS::Region
@@ -172,7 +172,7 @@ Resources:
         SubnetIds:
           - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        "lambda-console:blueprint": microservice-http-endpoint
+        "service": "mrjohny"
       Environment:
         Variables:
           REGION: !Ref AWS::Region
@@ -204,7 +204,7 @@ Resources:
         SubnetIds:
           - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        "lambda-console:blueprint": microservice-http-endpoint
+        "service": "mrjohny"
       Environment:
         Variables:
           REGION: !Ref AWS::Region
@@ -235,7 +235,7 @@ Resources:
         SubnetIds:
           - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        "lambda-console:blueprint": microservice-http-endpoint
+        "service": "mrjohny"
       Environment:
         Variables:
           REGION: !Ref AWS::Region
@@ -267,7 +267,7 @@ Resources:
         SubnetIds:
           - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        "lambda-console:blueprint": microservice-http-endpoint
+        "service": "mrjohny"
       Environment:
         Variables:
           REGION: !Ref AWS::Region
@@ -298,7 +298,7 @@ Resources:
         SubnetIds:
           - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        "lambda-console:blueprint": microservice-http-endpoint
+        "service": "mrjohny"
       Environment:
         Variables:
           REGION: !Ref AWS::Region
@@ -332,7 +332,7 @@ Resources:
         SubnetIds:
           - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        "lambda-console:blueprint": microservice-http-endpoint
+        "service": "mrjohny"
       Environment:
         Variables:
           REGION: !Ref AWS::Region
@@ -349,7 +349,110 @@ Resources:
             Method: GET
 
 
+  BrandSignUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: BrandSignUrl.js
+      Handler: BrandSignUrl.handler
+      FunctionName: BrandSignUrl
+      Description: >-
+        Create brand image upload record in dynamodb and return a sign URL for upload /
+        Idempotent - allows for re-submit of image if image fail upload
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+          UploadBucket: !Ref BucketName
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref S3BucketPolicy
+      Events:
+        BrandPutSignUrl:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /brand-sign-url/{username}/{filename}
+            Method: PUT
 
+
+  ContentCreatorSignUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ContentCreatorSignUrl.js
+      Handler: ContentCreatorSignUrl.handler
+      FunctionName: ContentCreatorSignUrl
+      Description: >-
+        Create creator-content upload record in dynamodb and return a sign URL for upload /
+        Idempotent - allows for re-submit of image if image fail upload
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+          UploadBucket: !Ref BucketName
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref S3BucketPolicy
+      Events:
+        CreatorContentSignUrl:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /creator-sign-url/{username}/{filename}
+            Method: PUT
+
+
+  # Lambda function that handles signin and signup with the help of Cognito
+  AuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/auth/
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+      Events:
+        Signup:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /signup
+            Method: POST
+            # Endpoint available for unauthorized users
+            Auth:
+              Authorizer: NONE
+        Signin:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /signin
+            Method: POST
+            # Endpoint available for unauthorized users
+            Auth:
+              Authorizer: NONE
 
 
 Outputs:

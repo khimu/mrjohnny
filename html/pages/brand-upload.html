@@ -69,21 +69,16 @@
 
 
 		$(document).ready(function(){
-
-			// $('#upload-new-ads').click(function(){
-			// 	new Boxy('#ads-box', {title: 'Upload Ads', modal: true});
-			// });
+			if( getCookieValue('atid') === null ) {
+				$(".modal-body").html("You are no longer logged in");
+				new Boxy('#popupBox', {title: 'Login message'});
+				$('#loading').hide();
+				location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+			}
 
 			$("form#data").submit(function(e) {
 				console.log(api_endpoint);
-				alert('function called');
-				$("#loading")
-						.ajaxStart(function(){
-							$(this).show();
-						})
-						.ajaxComplete(function(){
-							$(this).hide();
-						});
+				$('#loading').show();
 				e.preventDefault();
 
 				var formData = new FormData(this);
@@ -101,6 +96,7 @@
 					headers: {
 						'Authorization': 'Bearer ' + token
 					},
+					//data: formData,
 					dataType: 'json',
 					success: function (signedURL) {
 						console.log('success ' + signedURL);
@@ -111,26 +107,46 @@
 						//let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
 						//let blobData = new Blob([new Uint8Array(array)], {type: 'video/mp4'})
 
-						var settings = {
-							"url": json.uploadURL,
-							"method": "PUT",
-							"crossDomain": "true",
-							"timeout": 0,
-							"headers": {
+						$.ajax({
+							type: "PUT",
+							url: json.uploadURL,
+							crossDomain: true,
+							headers: {
 								"x-amz-acl": "public-read",
 								"Key": getCookieValue('identity') + "/" + cleanFileName,
 								"Content-Type": "image/jpeg"
 							},
-							"data": formData
-						};
-
-						$.ajax(settings).done(function (response) {
-							console.log(response);
+							cache: false,
+							contentType: false,
+							processData: false,
+							async: true,
+							"data": photo,
+							dataType: 'text/html',
+							success: function (result) {
+								// success is going into error even though i change type to text/html
+								
+								// console.log(result);
+								// $(".modal-body").html("Your image is uploaded @ " + json.url);
+								// new Boxy('#popupBox', {title: 'Possible Upload Issue'});
+								$('#loading').hide();
+							},
+							error: function (xhr, status, error) {
+								console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+								//$(".modal-body").html("Something went wrong.  Check if your content was successfully @ " + + json.url);
+								//new Boxy('#popupBox2', {title: 'Possible Upload Issue'});
+								$('#loading').hide();
+								// check if all is wll
+								//location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+							}
 						});
 					},
 					error: function (xhr, status, error) {
 						console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
-						alert("You are no longer logged in");
+						// $('#events-form-popup').click(function(){
+						// 	new Boxy('#events-page', {title: 'Profile Upload'});
+						// });
+						//new Boxy('#popupBox', {title: 'Login message'});
+						$('#loading').hide();
 						//location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
 					}
 				});
@@ -143,11 +159,55 @@
 <body>
 
 <div class="container">
-	<img id="loading" src="/images/loading.gif" style="display:none;">
+	<!-- Modal -->
+	<div class="modal" id="popupBox" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					You are all done
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal" id="popupBox2" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel2">Modal title</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					You are logged out
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<img id="loading" src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/loading.gif" style="display:none;">
 	<div class="row" style="margin-top:20px">
 		<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 			<form id="data" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="video_id" id="video_id" />
+				<input type="hidden" name="brand_id" id="brand_id" />
+				<input type="hidden" name="bid_id" id="bid_id" />
+				<input type="hidden" name="content_id" id="content_id" />
+				<input type="hidden" name="video_url" id="video_url" />
 				<input type="hidden" name="position_x" id="position_x" />
 				<input type="hidden" name="position_y" id="position_y" />
 				<input type="hidden" name="position_z" id="position_z" />
@@ -155,7 +215,7 @@
 				<fieldset>
 					<div class="mb-3">
 						<label for="upload-image" class="form-label">Upload Brand Image</label>
-						<input id="upload-image" name="brand_image" class="form-control" type="file"/>
+						<input id="upload-image" name="upload-image" class="form-control" type="file"/>
 					</div>
 					</span>
 					<hr class="colorgraph">
@@ -164,20 +224,20 @@
 						<input type="text" name="bid_amount" id="bid_amount" class="form-control input-lg" >
 					</div>
 					<div class="form-group">
-						<label for="brand_email">Email</label>
-						<input type="text" name="brand_email" id="brand_email" class="form-control input-lg" >
+						<label for="bidder_email">Email</label>
+						<input type="text" name="bidder_email" id="bidder_email" class="form-control input-lg" >
 					</div>
 					<div class="form-group">
 						<label for="ad_description">Ad Description/Hashtag</label>
 						<input type="text" name="ad_description" id="ad_description" class="form-control input-lg" >
 					</div>
-					<span class="button-checkbox">
-`                   <div class="form-check d-flex justify-content-center mb-5">
-						<input class="form-check-input me-2" type="checkbox" value="" id="enable_publish" />
-						<label class="form-check-label" >
-							<a href="#!">Enable Go Live</a>
-						</label>
-					</div>
+<!--					<span class="button-checkbox">-->
+<!--                   <div class="form-check d-flex justify-content-center mb-5">-->
+<!--						<input class="form-check-input me-2" type="checkbox" value="" id="enable_publish" />-->
+<!--						<label class="form-check-label" >-->
+<!--							<a href="#!">Enable Go Live</a>-->
+<!--						</label>-->
+<!--					</div>-->
 					<hr class="colorgraph">
 					<div class="row">
 						<div class="col-xs-6 col-sm-6 col-md-6">

@@ -81,19 +81,17 @@
 //		console.log(result);
 
 		$(document).ready(function(){
+			if( getCookieValue('atid') === null ) {
+				$(".modal-body").html("You are no longer logged in");
+				new Boxy('#popupBox', {title: 'Login message'});
+				$('#loading').hide();
+				location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+			}
 			$("form#data").submit(function(e) {
-				alert('function called');
-				$("#loading")
-						.ajaxStart(function(){
-							$(this).show();
-						})
-						.ajaxComplete(function(){
-							$(this).hide();
-						});
 				e.preventDefault();
 				var formData = new FormData(this);
 				let photo = document.getElementById("upload-video").files[0];
-				formData.append('file', photo);
+				//formData.append('file', photo);
 
 				console.log(photo.name);
 				var cleanFileName = photo.name.split('\\').pop(); // clean from C:\fakepath OR C:\fake_path
