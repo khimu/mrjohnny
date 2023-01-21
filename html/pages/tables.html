@@ -62,10 +62,10 @@
      * Called from sign out button
      */
     function getCookie(){
-      alert(document.cookie);
+      console.log(document.cookie);
       delete_cookie("atid", "/", "");
       delete_cookie("identity", "/", "");
-      alert(document.cookie);
+      console.log(document.cookie);
       location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
     }
 
@@ -75,8 +75,11 @@
       if (parts.length === 2) return parts.pop().split(';').shift();
     }
 
-    var template = "<li><a href=\"{LINK}\"><img src=\"images/mustache1.jpg\" alt=\"\"></a>{BID}</li>";
     let token = getCookieValue('atid');
+    let api_endpoint = getCookieValue('api-endpoint');
+
+    console.log("api_endpoint " + api_endpoint);
+
 
     $(document).ready(function(){
       let identity = getCookieValue("identity");
@@ -84,7 +87,7 @@
 
       $.ajax({
         type: "GET",
-        url: "https://dymvd59sri.execute-api.us-east-1.amazonaws.com/Prod/list-bids",
+        url: api_endpoint + "/list-bids",
         crossDomain: true,
         headers: {
           'Authorization': 'Bearer ' + token
@@ -101,7 +104,7 @@
             //row.find('.mrjohnny-name').html().replace("{{NAME}}", items[i].name);
             //row.find('.mrjohnny-email').html().replace("{{EMAIL}}", items[i].email);
             console.log("html " + row.find(".mrjohnny-merchant").html());
-            let output = row.find(".mrjohnny-merchant").html(items[i].merchant_id);
+           row.find(".mrjohnny-merchant").html(items[i].merchant_id);
             console.log("replace output " + row.find(".mrjohnny-merchant").html());
             row.find(".mrjohnny-content").html(items[i].content);
             row.find(".mrjohnny-bid").html(items[i].amount);
@@ -115,8 +118,8 @@
           $("#mrjohnny-template-content").trigger("create");
         },
         error: function (xhr, status, error) {
-          alert("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
-          location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+          console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+          //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
         }
       });
     });

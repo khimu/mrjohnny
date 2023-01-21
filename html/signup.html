@@ -43,11 +43,11 @@
                     dataType: "json",
                     success: function (response) {
                         //$( "#result" ).html(response.message);
-                        alert(response.message);
+                        console.log(response.message);
                         location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/signin.html';
                     },
                     error: function (xhr, status) {
-                        alert(xhr);
+                        console.log("going into error " + JSON.stringify(xhr) + " " + status);
                     }
                 });
 

@@ -1,6 +1,9 @@
+<!-- NOT USED -->
+
 <!DOCTYPE html>
 <html>
 <head>
+
 	<title>Login Page</title>
 	<!--Made with love by Mutiullah Samim -->
 
@@ -35,7 +38,7 @@
 		}
 
 		function getCookie(){
-			alert(document.cookie);
+			console.log(document.cookie);
 		}
 
 		// Attach a submit handler to the form
@@ -57,12 +60,12 @@
 					success: function (response) {
 						$("#result").html("You are all logged in");
 						setCookie(response.token);
-						alert(getCookie());
+						console.log(getCookie());
 						// redirect to an authenticated dashboard
 						location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/dashboard.html';
 					},
 					error: function (xhr, status) {
-						alert("error");
+						console.log("error");
 					}
 				});
 			});

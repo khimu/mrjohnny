@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Creator Video</title>
+    <!--Made with love by Mutiullah Samim -->
+
+    <!--Custom styles-->
+	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+    <!-- CSS CDN -->
+    <link rel="stylesheet"
+          href=
+                  "https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"
+    />
+    <!-- datetimepicker jQuery CDN -->
+    <script src=
+                    "https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js">
+    </script>
+
+    <script type='text/javascript'
+            src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/js/boxy-0.1.4/jquery.boxy.js'></script>
+    <link rel="stylesheet" href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/js/boxy-0.1.4/boxy.css"
+          type="text/css"/>
+
+
+    <!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
+    <!------ Include the above in your HEAD tag ---------->
+    <meta name="csrf-token" content="{{ csrf_token() }}"/>
+
+    <style>
+        /* Credit to bootsnipp.com for the css for the color graph */
+        .colorgraph {
+            height: 5px;
+            border-top: 0;
+            background: #c4e17f;
+            border-radius: 5px;
+            background-image: -webkit-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+            background-image: -moz-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+            background-image: -o-linear-gradient(left, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+            background-image: linear-gradient(to right, #c4e17f, #c4e17f 12.5%, #f7fdca 12.5%, #f7fdca 25%, #fecf71 25%, #fecf71 37.5%, #f0776c 37.5%, #f0776c 50%, #db9dbe 50%, #db9dbe 62.5%, #c49cde 62.5%, #c49cde 75%, #669ae1 75%, #669ae1 87.5%, #62c2e4 87.5%, #62c2e4);
+        }
+    </style>
+
+    <script type="text/javascript">
+        let api_endpoint = getCookieValue('api-endpoint');
+
+        function setCookie(token) {
+            var now = new Date();
+            var time = now.getTime();
+            var expireTime = time + 1000 * 36000;
+            now.setTime(expireTime);
+            document.cookie = 'cookie=' + token + ';expires=' + now.toUTCString() + ';path=/';
+        }
+
+        function getCookie() {
+            alert(document.cookie);
+        }
+
+        function getCookieValue(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        let token = getCookieValue('atid');
+
+        function get_query() {
+            var url = document.location.href;
+            var qs = url.substring(url.indexOf('?') + 1).split('&');
+            for (var i = 0, result = {}; i < qs.length; i++) {
+                qs[i] = qs[i].split('=');
+                result[qs[i][0]] = decodeURIComponent(qs[i][1]);
+            }
+            return result;
+        }
+
+        //		var result = get_query();
+        //		console.log(result);
+
+        $(document).ready(function () {
+            $("form#data").submit(function (e) {
+                $('#loading').show();
+
+                e.preventDefault();
+                var formData = new FormData(this);
+                let photo = document.getElementById("upload-video").files[0];
+                formData.append('file', photo);
+
+                console.log(photo.name);
+                var cleanFileName = photo.name.split('\\').pop(); // clean from C:\fakepath OR C:\fake_path
+                console.log('clean file name : ' + cleanFileName);
+
+                $.ajax({
+                    type: "GET",
+                    url: api_endpoint + "/sign-url/" + getCookieValue('identity') + "/" + cleanFileName,
+                    crossDomain: true,
+                    headers: {
+                        'Authorization': 'Bearer ' + token
+                    },
+                    dataType: 'json',
+                    success: function (signedURL) {
+                        console.log('success ' + signedURL);
+                        var json = $.parseJSON(JSON.stringify(signedURL));
+
+                        console.log('uploadURL ' + json.uploadURL);
+
+                        //let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
+                        //let blobData = new Blob([new Uint8Array(array)], {type: 'video/mp4'})
+
+                        $.ajax({
+                            type: "PUT",
+                            url: json.uploadURL,
+                            crossDomain: true,
+                            headers: {
+                                "x-amz-acl": "public-read",
+                                "Key": getCookieValue('identity') + "/" + cleanFileName,
+                                "Content-Type": "video/mp4"
+                            },
+                            cache: false,
+                            contentType: false,
+                            processData: false,
+                            async: true,
+                            "data": photo,
+                            dataType: 'json',
+                            success: function (result) {
+                                console.log(result);
+                                $('#loading').hide();
+                            },
+                            error: function (xhr, status, error) {
+                                console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+                                alert("You are no longer logged in");
+                                //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+                            }
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+                        alert("You are no longer logged in");
+                        //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+                    }
+                });
+
+
+            });
+
+        });
+
+
+        $(function () {
+            //$('#scheduled_release_date').datetimepicker({theme:'dark'})
+            $("#scheduled_release_date").datetimepicker();
+            $("#start_bid_window").datetimepicker();
+            $("#end_bid_window").datetimepicker();
+        });
+
+    </script>
+</head>
+<body>
+<img id="loading" src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/loading.gif" style="display:none;">
+<div class="container">
+
+    <div class="row" style="margin-top:20px">
+        <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
+            <form id="data" method="post" enctype="multipart/form-data">
+                <fieldset>
+                    </span>
+                    <div class="mb-3">
+                        <label for="upload-video" class="form-label">Upload Video</label>
+                        <input id="upload-video" name="brand_image" class="form-control" type="file"/>
+                    </div>
+                    </span>
+                    <hr class="colorgraph">
+                    `
+                    <div class="form-group">
+                        <label for="title">Video Title</label>
+                        <input type="text" name="title" id="title" class="form-control input-lg">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" name="description" id="description" class="form-control input-lg">
+                    </div>
+                    <div class="form-group">
+                        <label for="scheduled_release_date">Scheduled Release Date</label>
+                        <input type="text" name="scheduled_release_date" id="scheduled_release_date"
+                               class="form-control input-lg">
+                    </div>
+                    <div class="form-group">
+                        <label for="social_media_platform">Publish To Platform</label>
+                        <input type="text" name="social_media_platform" id="social_media_platform"
+                               class="form-control input-lg">
+                    </div>
+                    <div class="form-group">
+                        <label for="platform_api_key">Social Media Platform Developer API Key</label>
+                        <input type="text" name="platform_api_key" id="platform_api_key" class="form-control input-lg">
+                    </div>
+                    <div class="form-group">
+                        <label for="open_bid_amount">Open Bid Amount</label>
+                        <input type="text" name="open_bid_amount" id="open_bid_amount" class="form-control input-lg">
+                    </div>
+                    <div class="form-group">
+                        <label for="start_bid_window">Start Bid Window</label>
+                        <input type="text" name="start_bid_window" id="start_bid_window" class="form-control input-lg">
+                    </div>
+                    <div class="form-group">
+                        <label for="end_bid_window">End Bid Window</label>
+                        <input type="text" name="end_bid_window" id="end_bid_window" class="form-control input-lg">
+                    </div>
+                    <div class="form-group">
+                        <label for="audience_category">Audience Category</label>
+                        <input type="text" name="audience_category" id="audience_category"
+                               class="form-control input-lg">
+                    </div>
+                    <span class="button-checkbox">
+                   <div class="form-check d-flex justify-content-center mb-5">
+						<input class="form-check-input me-2" type="checkbox" value="" id="kid_friendly"/>
+						<label class="form-check-label">
+							<a href="#!">Kid Friendly</a>
+						</label>
+					</div>
+					<span class="button-checkbox">
+                   <div class="form-check d-flex justify-content-center mb-5">
+						<input class="form-check-input me-2" type="checkbox" value="" id="enable_publish"/>
+						<label class="form-check-label">
+							<a href="#!">Enable Go Live</a>
+						</label>
+					</div>
+					<hr class="colorgraph">
+					<div class="row">
+						<div class="col-xs-6 col-sm-6 col-md-6">
+							<!--<button type="button" id="login" class="btn btn-primary btn-lg">Login</button>-->
+							<input type="submit" id="upload" class="btn btn-lg btn-success btn-block"
+                                   value="Upload Video">
+						</div>
+						<div class="col-xs-6 col-sm-6 col-md-6">
+							<a href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/tables.html"
+                               class="btn btn-lg btn-primary btn-block">Cancel</a>
+						</div>
+					</div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    <div style="visibility: hidden">
+        <video id="creator-video" width="400" height="350" controls poster=
+                "">
+            <source src="#" type="video/mp4">
+        </video>
+    </div>
+
+</div>
+</body>
+</html>

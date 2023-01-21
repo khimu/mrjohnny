@@ -26,6 +26,7 @@
 	</style>
 
 	<script type="text/javascript">
+
 		function setCookie(name, cookie){
 			var now = new Date();
 			var time = now.getTime();
@@ -35,8 +36,10 @@
 		}
 
 		function getCookie(){
-			alert(document.cookie);
+			console.log(document.cookie);
 		}
+
+		setCookie("api-endpoint", "https://1yoo0gu0n8.execute-api.us-east-1.amazonaws.com/Prod");
 
 		// Attach a submit handler to the form
 		$(document).ready(function(){
@@ -61,7 +64,7 @@
 						// redirect to an authenticated dashboard
 					},
 					error: function (xhr, status) {
-						alert("error");
+						console.log("going into error " + JSON.stringify(xhr) + " " + status);
 					}
 				});
 			});

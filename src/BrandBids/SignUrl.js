@@ -11,7 +11,6 @@ const URL_EXPIRATION_SECONDS = 300;
 exports.handler = async (event) => {
     console.log('Received event:', JSON.stringify(event, null, 2));
 
-    console.log('Received event:', JSON.stringify(event, null, 2));
     //const formfield = querystring.parse(event.body);
 
     //var myHashMap = JSON.parse(event.requestContext.authorizer.claims);

@@ -58,10 +58,10 @@
      * Called from sign out button
      */
     function getCookie(){
-      alert(document.cookie);
+      console.log(document.cookie);
       delete_cookie("atid", "/", "");
       delete_cookie("identity", "/", "");
-      alert(document.cookie);
+      console.log(document.cookie);
       location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
     }
 
@@ -75,6 +75,10 @@
     $(document).ready(function(){
       let identity = getCookieValue("identity");
       $("#identity").text(identity);
+
+      // TODO
+      // check if logged in
+
     });
 
   </script>

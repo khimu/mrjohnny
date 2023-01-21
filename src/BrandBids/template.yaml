@@ -26,16 +26,13 @@ Parameters:
     Default: "Prod"
   BucketName:
     Type: String
-    Default: "ContentCreatorVideos"
+    Default: "mrjohnny-upload-contents"
+  S3BucketPolicy:
+    Type: String
+    Default: "arn:aws:s3:::mrjohnny-upload-contents"
 
 
 Resources:
-
-  AccessLogBucket:
-    Type: "AWS::S3::Bucket"
-    Properties:
-      AccessControl: LogDeliveryWrite
-      BucketName: 'mrjohnny-logging-for-upload-contents'
 
 
 
@@ -73,6 +70,7 @@ Resources:
       RoleName: "mrjohnny-cloudformation-lambda-role"
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -91,7 +89,6 @@ Resources:
                 Action:
                   - 's3:GetObject'
                   - 's3:PutObject'
-                  -  's3:PutObjectAcl'
                 Resource:
                   - "arn:aws:s3:::mrjohnny-upload-contents"
                   - "arn:aws:s3:::mrjohnny-upload-contents/*"
@@ -339,10 +336,10 @@ Resources:
       Environment:
         Variables:
           REGION: !Ref AWS::Region
-          UploadBucket: !Ref ContentCreatorVideos
+          UploadBucket: !Ref BucketName
       Policies:
         - S3WritePolicy:
-            BucketName: !Ref ContentCreatorVideos
+            BucketName: !Ref S3BucketPolicy
       Events:
         GetSignUrl:
           Type: Api
@@ -350,26 +347,6 @@ Resources:
             RestApiId: !Ref ServerlessApi
             Path: /sign-url/{username}/{filename}
             Method: GET
-
-
-
-  ## S3 bucket
-  ContentCreatorVideos:
-    Type: AWS::S3::Bucket
-    Properties:
-      LoggingConfiguration:
-        DestinationBucketName: !Ref AccessLogBucket
-      CorsConfiguration:
-        CorsRules:
-          - AllowedHeaders:
-              - "*"
-            AllowedMethods:
-              - GET
-              - PUT
-              - HEAD
-            AllowedOrigins:
-              - "*"
-      BucketName: 'mrjohnny-upload-contents'
 
 
 
@@ -384,6 +361,3 @@ Outputs:
     Value: !Sub "https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
     Export:
       Name: BidsFlow
-  S3UploadBucketName:
-    Description: "S3 bucket for application uploads"
-    Value: !Ref 'ContentCreatorVideos'

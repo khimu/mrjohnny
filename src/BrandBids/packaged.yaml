@@ -21,15 +21,11 @@ Parameters:
     Default: Prod
   BucketName:
     Type: String
-    Default: ContentCreatorVideos
+    Default: mrjohnny-upload-contents
+  S3BucketPolicy:
+    Type: String
+    Default: arn:aws:s3:::mrjohnny-upload-contents
 Resources:
-  AccessLogBucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      AccessControl: LogDeliveryWrite
-      BucketName: mrjohnny-logging-for-upload-contents
-    Metadata:
-      SamResourceId: AccessLogBucket
   ServerlessApi:
     Type: AWS::Serverless::Api
     Properties:
@@ -60,6 +56,7 @@ Resources:
       RoleName: mrjohnny-cloudformation-lambda-role
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      - arn:aws:iam::aws:policy/AmazonS3FullAccess
       AssumeRolePolicyDocument:
         Version: '2012-10-17'
         Statement:
@@ -80,7 +77,9 @@ Resources:
             - s3:PutObject
             Resource:
             - arn:aws:s3:::mrjohnny-upload-contents
+            - arn:aws:s3:::mrjohnny-upload-contents/*
             - arn:aws:s3:::mrjohnny-logging-for-upload-contents
+            - arn:aws:s3:::mrjohnny-logging-for-upload-contents/*
       - PolicyName: MrJohnnyOpenPolicy
         PolicyDocument:
           Version: 2012-10-17
@@ -323,7 +322,7 @@ Resources:
   SignUrlFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://mrjohnny-deploy/3d7f07b7269ef67132f94839ba5cc645
+      CodeUri: s3://mrjohnny-deploy/e857a369013f408b7261e57efc68ad8f
       Handler: SignUrl.handler
       FunctionName: SignUrl
       Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
@@ -346,11 +345,11 @@ Resources:
           REGION:
             Ref: AWS::Region
           UploadBucket:
-            Ref: ContentCreatorVideos
+            Ref: BucketName
       Policies:
       - S3WritePolicy:
           BucketName:
-            Ref: ContentCreatorVideos
+            Ref: S3BucketPolicy
       Events:
         GetSignUrl:
           Type: Api
@@ -361,25 +360,6 @@ Resources:
             Method: GET
     Metadata:
       SamResourceId: SignUrlFunction
-  ContentCreatorVideos:
-    Type: AWS::S3::Bucket
-    Properties:
-      LoggingConfiguration:
-        DestinationBucketName:
-          Ref: AccessLogBucket
-      CorsConfiguration:
-        CorsRules:
-        - AllowedHeaders:
-          - '*'
-          AllowedMethods:
-          - GET
-          - PUT
-          - HEAD
-          AllowedOrigins:
-          - '*'
-      BucketName: mrjohnny-upload-contents
-    Metadata:
-      SamResourceId: ContentCreatorVideos
 Outputs:
   ApiUrl:
     Description: The target URL of the created API
@@ -387,7 +367,3 @@ Outputs:
       Fn::Sub: https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
     Export:
       Name: BidsFlow
-  S3UploadBucketName:
-    Description: S3 bucket for application uploads
-    Value:
-      Ref: ContentCreatorVideos

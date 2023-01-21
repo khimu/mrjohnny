@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Place Bid Page</title>
+	<title>Brand Image Upload</title>
 	<!--Made with love by Mutiullah Samim -->
 
 	<!--Custom styles-->
@@ -10,6 +10,10 @@
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 	<!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
 	<!------ Include the above in your HEAD tag ---------->
+	<meta name="csrf-token" content="{{ csrf_token() }}" />
+
+	<script type='text/javascript' src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/js/boxy-0.1.4/jquery.boxy.js'></script>
+	<link rel="stylesheet" href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/js/boxy-0.1.4/boxy.css" type="text/css" />
 
 	<style>
 		/* Credit to bootsnipp.com for the css for the color graph */
@@ -26,16 +30,14 @@
 	</style>
 
 	<script type="text/javascript">
+		let api_endpoint = getCookieValue('api-endpoint');
+		console.log(api_endpoint);
 		function setCookie(token){
 			var now = new Date();
 			var time = now.getTime();
 			var expireTime = time + 1000*36000;
 			now.setTime(expireTime);
 			document.cookie = 'cookie=' + token + ';expires='+now.toUTCString()+';path=/';
-		}
-
-		function getCookie(){
-			alert(document.cookie);
 		}
 
     	function getCookieValue(name) {
@@ -56,36 +58,45 @@
 			return result;
 		}
 
-		var result = get_query();
-		console.log(result);
+		//var result = get_query();
+		//console.log(result);
+
+		// $.each(json.adss, function(i,ads){
+		// 	/** append works but for some reason its now displaying the image with html description.  description cannot accept large html  **/
+		// 	$('#new-ads-uploaded').append('<a rel="prettyPhoto[gallery]" href="' + ads.thumbnail + '" title="Description:' + ads.description + '" alt="Sponsor Site"><img src="/' + ads.icon + '" title="Description: ' + ads.description + '" /></a>');
+		// });
+
+
 
 		$(document).ready(function(){
-			const response = await axios.get(API_ENDPOINT_URL, {
-				headers: {
-					Authorization: `Bearer ${token}`
-				}
-			})
 
-			let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-			const result = await fetch(signedURL, {
-				method: 'PUT',
-				body: blobData
-			})
-
-			/*
-			{\"uploadURL\":\"https://brandbidslambdafunctions-contentcreatorvideos-11epc5oyrifxl.s3.amazonaws.com/khimung%40gmail.com/myvideo.mp4?AWSAccessKeyId=ASIAV7TH3LQ6KFP7UZLS&Content-Type=%24%7Btype%7D%2F%24%7Bextension%7D&Expires=1674107883&Signature=kUCVhD7bS43d%2BtCnuJnH4ywvt%2Bg%3D&x-amz-security-token=IQoJb3JpZ2luX2VjEAYaCXVzLWVhc3QtMSJHMEUCIDJP6XV%2B0ksluwLMghnUWpH6lUgqACUPgA612LhoEiiqAiEA6dAl3Vpo19DlsE3POoCOXRezLXSbdWIoYWE28SaPo%2FUq4gIIbxAAGgw0MTE0NjA5MTgzMzIiDMAvCBvMOefTBJ1Loiq%2FAtXfQALlu3SikrZt0yr%2F%2F0XcaZpFJQVaJqWyfBKhYUVDtMx73vcDu7LYmjDWP%2BQP50xR%2FwXR%2ByeJnn00i7HbEpih4UrlvF7AdLwfJ2jeCnF0Z%2BMpbUOecX25UEvVxng6O1CF%2BMb5fk1aVOPTQKyAv4r5jTxXWdkqmEDX%2BgLx4mGxot9nLMF5aodXteo1C74PUgRr5I4BqhT9M0oTt%2Bs5TMHL2Zy%2BstyuVy9jxlBslBXqnV3jFTrBmlCw7zIQIM9BhccQCqPYB6OBRqEBkiX3rEzqQYrMxIDe0q6KSIK3HaU5v%2BMvLh8MCSBQx8Y6LsQyP15LnCwtjCu%2FTfpCuaV6mRKAGvowdrRjYfKHTOYKknpXg%2BcxE7ADfw8XBXqAWJzmV9uijUfv%2BaVJ%2FW19tB8856wOCnJoJfW56zYTQ6s7q0sw67OjngY6ngFkGdX0SS5UAl%2BWsJWRPmqJUDm2rsnEwoHWAwonZ%2Bf%2FfBc9peVnZce3UZDnvMjurwR3ABDtHzZP7tyvuZWErbls52WZAba8ls6dY055zjCAj9BdBn9IFgChfWQ6x3XNAukogStSIxKMa3ft6EcxVcfu0CprN7WK4IJxZS9He%2FFtJybZuihdU984HAk4re4ExGy80irIGT4uod2YRp4Sgw%3D%3D\",\"Key\":\"khimung@gmail.com/myvideo.mp4\"}"
-			 */
+			// $('#upload-new-ads').click(function(){
+			// 	new Boxy('#ads-box', {title: 'Upload Ads', modal: true});
+			// });
 
 			$("form#data").submit(function(e) {
+				console.log(api_endpoint);
+				alert('function called');
+				$("#loading")
+						.ajaxStart(function(){
+							$(this).show();
+						})
+						.ajaxComplete(function(){
+							$(this).hide();
+						});
 				e.preventDefault();
+
 				var formData = new FormData(this);
-				var fileName = $('input[type=file]').val();
-				var cleanFileName = fileName.split('\\').pop(); // clean from C:\fakepath OR C:\fake_path
+				let photo = document.getElementById("upload-image").files[0];
+				formData.append('file', photo);
+
+				console.log(photo.name);
+				var cleanFileName = photo.name.split('\\').pop(); // clean from C:\fakepath OR C:\fake_path
 				console.log('clean file name : '+ cleanFileName);
 
 				$.ajax({
 					type: "GET",
-					url: "https://ply0trldv5.execute-api.us-east-1.amazonaws.com/Prod/sign-url/"+ getCookieValue('atid') +"/" + cleanFileName,
+					url: api_endpoint + "/sign-url/"+ getCookieValue('identity') +"/" + cleanFileName,
 					crossDomain: true,
 					headers: {
 						'Authorization': 'Bearer ' + token
@@ -93,44 +104,29 @@
 					dataType: 'json',
 					success: function (signedURL) {
 						console.log('success ' + signedURL);
+						var json = $.parseJSON(JSON.stringify(signedURL));
+
+						console.log('uploadURL ' + json.uploadURL);
 
 						//let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
-						let blobData = new Blob([new Uint8Array(array)], {type: 'video/mp4'})
-						const result = await fetch(signedURL, {
-							method: 'PUT',
-							body: blobData
-						})
+						//let blobData = new Blob([new Uint8Array(array)], {type: 'video/mp4'})
 
 						var settings = {
-							"url": "https://mrjohnny-upload-contents.s3.amazonaws.com/khimung%40gmail.com/cocacola.jpeg?AWSAccessKeyId=ASIAV7TH3LQ6JVKJTYNX&Content-Type=image%2Fjpeg&Expires=1674143838&Signature=t713fR%2BMjZdz4wgkd5MnlQia558%3D&x-amz-acl=public-read&x-amz-security-token=IQoJb3JpZ2luX2VjEBAaCXVzLWVhc3QtMSJIMEYCIQCM4yZ4v8RQGIl3evHD8HyNgUtp5A7PFj6AGphm2RLyFwIhAIDOkBjDJCQor6tjXckGVDTPUDwXG11%2BuHR3p2FgozEqKuICCHkQABoMNDExNDYwOTE4MzMyIgze%2F5ysJIb6nAQNNiIqvwIHRYY1HmzTuNpbuZNiUU8Uso4UxWeZFYBVQ28sq1h4Zh8ZUy1RqPFq0xmOwbM3MSqerJGMZIwlmwstkPPDHbfTFbM4BJAk1PVk3wgmnK%2Bux7j7V%2BKsDhHMxTMXZvJVC0u8PN%2FRrv6ekCGdNVK7u25QsT%2BcWMmBpAgk%2F65E9Dx%2F0wT%2FF7hD%2BtO3CnlajC9BvrV06WlMOh5Qrj39UigmxgnPhMr1iVNWSiCFZaJj8fsnXdCy%2B0D93Meu8Tb9Nrx6HGGpPi7vqygjBaDh836BYq3fGPuw0C4Fw18jG69HEVuTJdRjMBb1P0eXvCVLwijzF8JutDBd6bk1PQ2KauqwURHG0RkmZVEa3d%2B%2BccgiY6UqY7usOVlGT0Xwdg49SoM37Bwb9wI5tZKZySmtCZD%2BT0FygXv%2FlIaSIUk162nbBdwVMLHOpZ4GOp0Bey6P6%2FGRSr%2Bh4wswrqxY4IsUtI8MokLnsMmZbih7KcQA%2FfR6maOnKlugj9EQgwW9e05Ch%2BKW1xUErO6tEcmWrJsvz%2BZyn4WrjtUfgUs%2Fvzoue0H%2F4OI1YhvZMvwryLr8K2cMTnsgcHMT5gBqSDES%2Bb%2BotDJ6Mkx2qrjR4wdDmnYZzhPigwmKHvLylWbb4kjHOlXRnn3raBeNeky5SQ%3D%3D",
+							"url": json.uploadURL,
 							"method": "PUT",
+							"crossDomain": "true",
 							"timeout": 0,
 							"headers": {
 								"x-amz-acl": "public-read",
-								"Key": "khimung@gmail.com/cocacola.jpeg",
+								"Key": getCookieValue('identity') + "/" + cleanFileName,
 								"Content-Type": "image/jpeg"
 							},
-							"data": blobData
+							"data": formData
 						};
 
 						$.ajax(settings).done(function (response) {
 							console.log(response);
 						});
-
-
-						$.ajax({
-							url: window.location.pathname,
-							type: 'POST',
-							data: formData,
-							success: function (data) {
-								alert(data)
-							},
-							cache: false,
-							contentType: false,
-							processData: false
-						});
-
-						console.log(json);
 					},
 					error: function (xhr, status, error) {
 						console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
@@ -147,19 +143,46 @@
 <body>
 
 <div class="container">
-
+	<img id="loading" src="/images/loading.gif" style="display:none;">
 	<div class="row" style="margin-top:20px">
 		<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 			<form id="data" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="video_id" id="video_id" />
+				<input type="hidden" name="position_x" id="position_x" />
+				<input type="hidden" name="position_y" id="position_y" />
+				<input type="hidden" name="position_z" id="position_z" />
+				<input type="hidden" name="frame_pixel" id="frame_pixel" />
 				<fieldset>
-					<h2>Upload Video</h2>
-					<input name="image" type="file" />
+					<div class="mb-3">
+						<label for="upload-image" class="form-label">Upload Brand Image</label>
+						<input id="upload-image" name="brand_image" class="form-control" type="file"/>
+					</div>
 					</span>
+					<hr class="colorgraph">
+					<div class="form-group">
+						<label for="bid_amount">Bid Amount</label>
+						<input type="text" name="bid_amount" id="bid_amount" class="form-control input-lg" >
+					</div>
+					<div class="form-group">
+						<label for="brand_email">Email</label>
+						<input type="text" name="brand_email" id="brand_email" class="form-control input-lg" >
+					</div>
+					<div class="form-group">
+						<label for="ad_description">Ad Description/Hashtag</label>
+						<input type="text" name="ad_description" id="ad_description" class="form-control input-lg" >
+					</div>
+					<span class="button-checkbox">
+`                   <div class="form-check d-flex justify-content-center mb-5">
+						<input class="form-check-input me-2" type="checkbox" value="" id="enable_publish" />
+						<label class="form-check-label" >
+							<a href="#!">Enable Go Live</a>
+						</label>
+					</div>
 					<hr class="colorgraph">
 					<div class="row">
 						<div class="col-xs-6 col-sm-6 col-md-6">
 							<!--<button type="button" id="login" class="btn btn-primary btn-lg">Login</button>-->
-							<input type="button" id="upload" class="btn btn-lg btn-success btn-block" value="Upload Video">
+							<input type="submit" id="upload" class="btn btn-lg btn-success btn-block" value="Upload Image">
 						</div>
 						<div class="col-xs-6 col-sm-6 col-md-6">
 							<a href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/tables.html" class="btn btn-lg btn-primary btn-block">Cancel</a>

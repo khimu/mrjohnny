@@ -16,12 +16,12 @@ Parameters:
 
 Resources:
 
-#  AccessLogBucket:
-#    Type: "AWS::S3::Bucket"
-##    DeletionPolicy: Retain
-#    Properties:
-#      AccessControl: LogDeliveryWrite
-#      BucketName: 'mrjohnny-logging-for-upload-contents'
+  AccessLogBucket:
+    Type: "AWS::S3::Bucket"
+    DeletionPolicy: Retain
+    Properties:
+      AccessControl: LogDeliveryWrite
+      BucketName: 'mrjohnny-logging-for-upload-contents'
 
 
   ## S3 bucket
@@ -29,8 +29,8 @@ Resources:
     Type: AWS::S3::Bucket
     DeletionPolicy: Retain
     Properties:
-      #      LoggingConfiguration:
-      #        DestinationBucketName: !Ref AccessLogBucket
+      LoggingConfiguration:
+        DestinationBucketName: !Ref AccessLogBucket
       CorsConfiguration:
         CorsRules:
           - AllowedHeaders:

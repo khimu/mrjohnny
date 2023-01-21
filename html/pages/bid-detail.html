@@ -10,6 +10,7 @@
 	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
 	<!--<script src="//code.jquery.com/jquery-1.11.1.min.js"></script>-->
 	<!------ Include the above in your HEAD tag ---------->
+	<meta name="csrf-token" content="{{ csrf_token() }}" />
 
 	<style>
 		/* Credit to bootsnipp.com for the css for the color graph */
@@ -26,6 +27,9 @@
 	</style>
 
 	<script type="text/javascript">
+		let api_endpoint = getCookieValue('api-endpoint');
+		console.log(api_endpoint);
+
 		function setCookie(token){
 			var now = new Date();
 			var time = now.getTime();
@@ -46,6 +50,8 @@
 
 		let token = getCookieValue('atid');
 
+		console.log('token ' + token);
+
 		function get_query(){
 			var url = document.location.href;
 			var qs = url.substring(url.indexOf('?') + 1).split('&');
@@ -62,15 +68,15 @@
 		$(document).ready(function(){
 			$.ajax({
 				type: "GET",
-				url: "https://dymvd59sri.execute-api.us-east-1.amazonaws.com/Prod/bids/" + result.id,
+				url: api_endpoint + "/bids/" + result.id,
 				crossDomain: true,
 				headers: {
 					'Authorization': 'Bearer ' + token
 				},
 				dataType: 'json',
 				success: function (result) {
-					alert('success');
-					json = JSON.parse(result);
+					console.log('success');
+					json = JSON.parse(JSON.stringify(result));
 					// {"Item":{"content":"mustache","currency":"USD","frame_location":"1000","placement_y":"300","amount":"400","merchant_id":"mrjohnny","placement_x":"400","id":"86818d4f-fddb-4c05-8fbb-4d83d884ce7a"}}
 					let items = json.Items;
 					console.log(JSON.stringify(items));
@@ -123,7 +129,7 @@
 					<div class="row">
 						<div class="col-xs-6 col-sm-6 col-md-6">
 							<!--<button type="button" id="login" class="btn btn-primary btn-lg">Login</button>-->
-							<input type="button" id="login" class="btn btn-lg btn-success btn-block" value="Your Bid">
+							<input type="submit" id="login" class="btn btn-lg btn-success btn-block" value="Your Bid">
 						</div>
 						<div class="col-xs-6 col-sm-6 col-md-6">
 							<a href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/tables.html" class="btn btn-lg btn-primary btn-block">Cancel</a>
