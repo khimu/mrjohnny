@@ -5,6 +5,8 @@ AWS.config.update({ region: process.env.AWS_REGION });
 const s3 = new AWS.S3({region: 'us-east-1'});
 const URL_EXPIRATION_SECONDS = 300;
 
+const dynamo = new AWS.DynamoDB.DocumentClient();
+
 
 // Main Lambda entry point
 exports.handler = async (event) => {
@@ -19,10 +21,11 @@ exports.handler = async (event) => {
     console.log('amount is ' + formfield['amount']);
     const S3_BUCKET = process.env.UploadBucket;
     const url = `https://${S3_BUCKET}.s3.amazonaws.com/${filename}`
+    const Key = `${email}/${filename}`;
 
     let bid_id = formfield['id'];
 
-    if(bid_id===null || bid_id==="") {
+    if(!bid_id) {
         bid_id = create_UUID();
     }
 
@@ -33,7 +36,7 @@ exports.handler = async (event) => {
             bid_amount: formfield['bid_amount'],
             currency: 'USD',
             content_id: formfield['content_id'],
-            video_url: formfield['video_url'],
+            video_κευ: formfield['video_key'],
             brand_id: formfield['brand_id'],
             position_x: formfield['position_x'],
             position_y: formfield['position_y'],
@@ -41,9 +44,12 @@ exports.handler = async (event) => {
             frame_pixel: formfield['frame_pixel'],
             ad_description: formfield['ad_description'],
             bidder_email: formfield['bidder_email'],
+            creator_email: formfield['bidder_email'],
             creator_accepted: false,
-            file_name: filename,
-            image_url: url
+            filename: filename,
+            s3_bucket: S3_BUCKET,
+            image_key: Key,
+            create_date: Date.now()
         }
     };
 
@@ -97,6 +103,7 @@ const getUploadURL = async function(event, email, filename, type, extension) {
         const uploadURL = await s3.getSignedUrlPromise('putObject', s3Params)
         //const uploadURL = await s3.getSignedUrl('putObject', s3Params)
         const url= `https://${S3_BUCKET}.s3.amazonaws.com/${filename}`
+
 
         body = JSON.stringify({
             uploadURL: uploadURL,

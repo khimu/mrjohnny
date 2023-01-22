@@ -63,7 +63,7 @@ Resources:
           AttributeDataType: String
           Mutable: true
       LambdaConfig:
-        PreSignUp: "arn:aws:lambda:us-east-1:411460918332:function:SignupFlow-PreSignupFunction-jRtKAuuv7XYD"
+        PreSignUp: "arn:aws:lambda:us-east-1:411460918332:function:MrJohnnyPreSignupFunction"
       Policies:
         PasswordPolicy:
           MinimumLength: 6
@@ -92,7 +92,7 @@ Resources:
     Type: AWS::Lambda::Permission
     Properties:
       Action: lambda:InvokeFunction
-      FunctionName: "SignupFlow-PreSignupFunction-jRtKAuuv7XYD"
+      FunctionName: "MrJohnnyPreSignupFunction"
       Principal: cognito-idp.amazonaws.com
       SourceArn: !Sub 'arn:${AWS::Partition}:cognito-idp:${AWS::Region}:${AWS::AccountId}:userpool/${UserPool}'
 

@@ -248,6 +248,99 @@ Resources:
             Method: DELETE
 
 
+  ListCreatorVideosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ListCreatorVideos.js
+      Handler: ListCreatorVideos.handler
+      FunctionName: ListBrandBids
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        ListCreatorVideo:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /list-creator-videos
+            Method: GET
+
+
+  GetCreatorVideosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetCreatorVideo.js
+      Handler: GetCreatorVideo.handler
+      FunctionName: GetCreatorVideos
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        GetCreatorVideo:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /creator_video/{id}
+            Method: GET
+
+
+  DeleteCreatorVideosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: DeleteCreatorVideo.js
+      Handler: DeleteCreatorVideo.handler
+      FunctionName: DeleteCreatorVideo
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        DeleteVideo:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /creator_video/{id}
+            Method: DELETE
+
+
 
   CreatorContentSchedulerFunction:
     Type: AWS::Serverless::Function
@@ -419,11 +512,71 @@ Resources:
             Method: PUT
 
 
-  # Lambda function that handles signin and signup with the help of Cognito
-  AuthFunction:
+
+  FetchFileFromS3Function:
     Type: AWS::Serverless::Function
     Properties:
+      CodeUri: FetchFileFromS3.js
+      Handler: FetchFileFromS3.handler
+      FunctionName: FetchFileFromS3
+      Description: >-
+        Retrieve content from S3 and stream
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+          UploadBucket: !Ref BucketName
+      Policies:
+        - S3WritePolicy:
+            BucketName: !Ref S3BucketPolicy
+      Events:
+        S3Content:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /content/{key}/{filename}
+            Method: GET
+
+
+  # Lambda function that prevents the emission of confirmation emails
+  PreSignupFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs14.x
+      FunctionName: "MrJohnnyPreSignupFunction"
+      Handler: index.handler
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      InlineCode: |
+        exports.handler = async event => {
+          event.response = { autoConfirmUser: true };
+          return event;
+        };
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+
+
+  # Lambda function that handles signin and signup with the help of Cognito
+  MrJohnnyAuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: "MrJohnnyAuthFunction"
       CodeUri: functions/auth/
+      Handler: index.handler
+      Runtime: nodejs18.x
       MemorySize: 128
       Timeout: 10
       Role: !GetAtt 'LambdaExecRole.Arn'

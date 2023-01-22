@@ -1,4 +1,16 @@
+
 aws s3api create-bucket --bucket bid-lambda-function-deploy
+aws s3 cp --recursive ../html/pages/ s3://mrjohnny/pages/
+aws s3 cp ../../html/index.html s3://mrjohnny/
+aws s3 cp ../../html/pages/brand-upload.html s3://mrjohnny/pages/
+aws s3 cp ../../html/pages/creator-upload.html s3://mrjohnny/pages/
+aws s3 cp ../../html/pages/tables.html s3://mrjohnny/pages/
+
+
+
+## remove all cookies
+aws s3 cp s3://mrjohnny s3://mrjohnny --recursive --exclude "*" --include "*.html" --metadata-directive REPLACE --cache-control max-age:no-cache --content-type text/html
+
 
 Deploys Lambda Function "ListBids" using SAM
 

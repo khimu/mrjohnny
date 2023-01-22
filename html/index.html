@@ -26,11 +26,13 @@
 	</style>
 
 	<script type="text/javascript">
+		// 1 Day = 24 Hrs = 24*60*60 = 86400.
+		//var expires = (new Date(Date.now() + 86400*1000)).toUTCString();
 
 		function setCookie(name, cookie){
-			var now = new Date();
-			var time = now.getTime();
-			var expireTime = time + 1000*36000;
+			const now = new Date();
+			const time = now.getTime();
+			const expireTime = time + 3600*1000;;
 			now.setTime(expireTime);
 			document.cookie = name + '=' + cookie + ';expires='+now.toUTCString()+';path=/';
 		}
@@ -39,7 +41,7 @@
 			console.log(document.cookie);
 		}
 
-		setCookie("api-endpoint", "https://1yoo0gu0n8.execute-api.us-east-1.amazonaws.com/Prod");
+		setCookie("api-endpoint", "https://xduuqbj3se.execute-api.us-east-1.amazonaws.com/Prod");
 
 		// Attach a submit handler to the form
 		$(document).ready(function(){

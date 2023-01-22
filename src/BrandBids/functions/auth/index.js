@@ -6,13 +6,9 @@ exports.handler = async event => {
   return signIn(body);
 };
 
-const signUp = async (body) => {
+const signUp = async ({ username, password }) => {
   try {
-    // const password_match = body.password_match;
-    // const brand = body.brand;
-
-
-    await users.signUp(body.username, body.password);
+    await users.signUp(username, password);
     return createResponse({ message: "Created" }, 201);
   } catch (e) {
     console.log(e);

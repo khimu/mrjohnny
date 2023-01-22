@@ -129,7 +129,7 @@ Resources:
         SubnetIds:
         - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        lambda-console:blueprint: microservice-http-endpoint
+        service: mrjohny
       Environment:
         Variables:
           REGION:
@@ -164,7 +164,7 @@ Resources:
         SubnetIds:
         - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        lambda-console:blueprint: microservice-http-endpoint
+        service: mrjohny
       Environment:
         Variables:
           REGION:
@@ -199,7 +199,7 @@ Resources:
         SubnetIds:
         - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        lambda-console:blueprint: microservice-http-endpoint
+        service: mrjohny
       Environment:
         Variables:
           REGION:
@@ -234,7 +234,7 @@ Resources:
         SubnetIds:
         - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        lambda-console:blueprint: microservice-http-endpoint
+        service: mrjohny
       Environment:
         Variables:
           REGION:
@@ -269,7 +269,7 @@ Resources:
         SubnetIds:
         - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        lambda-console:blueprint: microservice-http-endpoint
+        service: mrjohny
       Environment:
         Variables:
           REGION:
@@ -304,7 +304,7 @@ Resources:
         SubnetIds:
         - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        lambda-console:blueprint: microservice-http-endpoint
+        service: mrjohny
       Environment:
         Variables:
           REGION:
@@ -339,7 +339,7 @@ Resources:
         SubnetIds:
         - subnet-0f0ed4f2b3e9c1a75
       Tags:
-        lambda-console:blueprint: microservice-http-endpoint
+        service: mrjohny
       Environment:
         Variables:
           REGION:
@@ -360,6 +360,192 @@ Resources:
             Method: GET
     Metadata:
       SamResourceId: SignUrlFunction
+  BrandSignUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/38e6d81bc633d8159332efa4f7f605b2
+      Handler: BrandSignUrl.handler
+      FunctionName: BrandSignUrl
+      Description: Create brand image upload record in dynamodb and return a sign
+        URL for upload / Idempotent - allows for re-submit of image if image fail
+        upload
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+          UploadBucket:
+            Ref: BucketName
+      Policies:
+      - S3WritePolicy:
+          BucketName:
+            Ref: S3BucketPolicy
+      Events:
+        BrandPutSignUrl:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /brand-sign-url/{username}/{filename}
+            Method: PUT
+    Metadata:
+      SamResourceId: BrandSignUrlFunction
+  ContentCreatorSignUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/fc3f20eb2a0a4a62e8b403ba7b4f0f5b
+      Handler: ContentCreatorSignUrl.handler
+      FunctionName: ContentCreatorSignUrl
+      Description: Create creator-content upload record in dynamodb and return a sign
+        URL for upload / Idempotent - allows for re-submit of image if image fail
+        upload
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+          UploadBucket:
+            Ref: BucketName
+      Policies:
+      - S3WritePolicy:
+          BucketName:
+            Ref: S3BucketPolicy
+      Events:
+        CreatorContentSignUrl:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /creator-sign-url/{username}/{filename}
+            Method: PUT
+    Metadata:
+      SamResourceId: ContentCreatorSignUrlFunction
+  FetchFileFromS3Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/568b28e743a33f024b1a59745095b48f
+      Handler: FetchFileFromS3.handler
+      FunctionName: FetchFileFromS3
+      Description: Retrieve content from S3 and stream
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+          UploadBucket:
+            Ref: BucketName
+      Policies:
+      - S3WritePolicy:
+          BucketName:
+            Ref: S3BucketPolicy
+      Events:
+        S3Content:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /content/{key}/{filename}
+            Method: GET
+    Metadata:
+      SamResourceId: FetchFileFromS3Function
+  PreSignupFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs14.x
+      FunctionName: MrJohnnyPreSignupFunction
+      Handler: index.handler
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      InlineCode: "exports.handler = async event => {\n  event.response = { autoConfirmUser:\
+        \ true };\n  return event;\n};\n"
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+    Metadata:
+      SamResourceId: PreSignupFunction
+  MrJohnnyAuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: MrJohnnyAuthFunction
+      CodeUri: s3://mrjohnny-deploy/9b1fb5ba6bc30b9f826a69b4569b2600
+      Handler: index.handler
+      Runtime: nodejs14.x
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Events:
+        Signup:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /signup
+            Method: POST
+            Auth:
+              Authorizer: NONE
+        Signin:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /signin
+            Method: POST
+            Auth:
+              Authorizer: NONE
+    Metadata:
+      SamResourceId: MrJohnnyAuthFunction
 Outputs:
   ApiUrl:
     Description: The target URL of the created API

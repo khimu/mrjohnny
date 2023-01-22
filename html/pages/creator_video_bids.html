@@ -81,9 +81,9 @@
 //		console.log(result);
 
 		$(document).ready(function(){
-			if( getCookieValue('atid') === null ) {
-				$(".modal-body").html("You are no longer logged in");
-				new Boxy('#popupBox', {title: 'Login message'});
+			if (!getCookieValue('atid')) {
+				alert('You are logged out');
+				//new Boxy('#popupBox', {title: 'Login message'});
 				$('#loading').hide();
 				location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
 			}

@@ -73,9 +73,9 @@
 
     // Attach a submit handler to the form
     $(document).ready(function(){
-      if( getCookieValue('atid') === null ) {
-        $(".modal-body").html("You are no longer logged in");
-        new Boxy('#popupBox', {title: 'Login message'});
+      if (!getCookieValue('atid')) {
+        alert('You are logged out');
+        //new Boxy('#popupBox', {title: 'Login message'});
         $('#loading').hide();
         location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
       }
@@ -116,7 +116,23 @@
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">table_view</i>
             </div>
-            <span class="nav-link-text ms-1">Tables</span>
+            <span class="nav-link-text ms-1">Bids & Videos</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="../pages/brand-upload.html">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">table_view</i>
+            </div>
+            <span class="nav-link-text ms-1">Brand Upload</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="../pages/create-upload.html">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">table_view</i>
+            </div>
+            <span class="nav-link-text ms-1">Create Upload</span>
           </a>
         </li>
         <li class="nav-item">

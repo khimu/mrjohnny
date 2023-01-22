@@ -20,6 +20,7 @@ exports.handler = async (event) => {
     console.log('amount is ' + formfield['amount']);
     const S3_BUCKET = process.env.UploadBucket;
     const url = `https://${S3_BUCKET}.s3.amazonaws.com/${filename}`
+    const Key = `${email}/${filename}`;
 
     let bid_id = formfield['id'];
 
@@ -28,20 +29,26 @@ exports.handler = async (event) => {
     }
 
     var params = {
-        TableName: 'bids',
+        TableName: 'creator_videos',
         Item: {
             id: bid_id,
-            bid_amount: formfield['bid_amount'],
+            enable_publish: formfield['enable_publish'],
             currency: 'USD',
-            content_id: formfield['content_id'],
-            content: formfield['content'],
-            brand_id: formfield['brand_id'],
-            position_x: formfield['position_x'],
-            position_y: formfield['position_y'],
-            position_z: formfield['position_z'],
-            frame_pixel: formfield['frame_pixel'],
-            ad_description: formfield['ad_description'],
-            bidder_email: formfield['bidder_email'],
+            kid_friendly: formfield['kid_friendly'],
+            audience_category: formfield['audience_category'],
+            end_bid_window: formfield['end_bid_window'],
+            start_bid_window: formfield['start_bid_window'],
+            open_bid_amount: formfield['open_bid_amount'],
+            platform_api_key: formfield['platform_api_key'],
+            social_media_platform: formfield['social_media_platform'],
+            scheduled_release_date: formfield['scheduled_release_date'],
+            description: formfield['description'],
+            title: formfield['title'],
+            creator_email: formfield['creator_email'],
+            filename: formfield['filename'],
+            bidder_email: formfield['key'],
+            bid_type: formfield['bid_type'],
+            create_date: Date.now(),
             creator_accepted: false,
             file_name: filename,
             image_url: url

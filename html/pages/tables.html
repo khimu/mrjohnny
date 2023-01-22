@@ -78,13 +78,13 @@
     let token = getCookieValue('atid');
     let api_endpoint = getCookieValue('api-endpoint');
 
-    console.log("api_endpoint " + api_endpoint);
+    //console.log("api_endpoint " + api_endpoint);
 
 
     $(document).ready(function(){
-      if( getCookieValue('atid') === null ) {
-        $(".modal-body").html("You are no longer logged in");
-        new Boxy('#popupBox', {title: 'Login message'});
+      if (!getCookieValue('atid')) {
+        alert('You are logged out');
+        //new Boxy('#popupBox', {title: 'Login message'});
         $('#loading').hide();
         location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
       }
@@ -160,6 +160,22 @@
               <i class="material-icons opacity-10">table_view</i>
             </div>
             <span class="nav-link-text ms-1">Tables</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="../pages/brand-upload.html">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">table_view</i>
+            </div>
+            <span class="nav-link-text ms-1">Brand Upload</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-white " href="../pages/create-upload.html">
+            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+              <i class="material-icons opacity-10">table_view</i>
+            </div>
+            <span class="nav-link-text ms-1">Create Upload</span>
           </a>
         </li>
         <li class="nav-item">
@@ -412,7 +428,7 @@
           <div class="card my-4">
             <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
               <div class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3">
-                <h6 class="text-white text-capitalize ps-3">Projects table</h6>
+                <h6 class="text-white text-capitalize ps-3">Video Content</h6>
               </div>
             </div>
             <div class="card-body px-0 pb-2">
