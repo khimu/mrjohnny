@@ -10,20 +10,38 @@ const dynamo = new AWS.DynamoDB.DocumentClient();
 
 // Main Lambda entry point
 exports.handler = async (event) => {
+    console.log(event.httpMethod);
+
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+        'Access-Control-Allow-Methods': 'PUT,HEAD,OPTIONS'
+    };
+
+    if(event.httpMethod.startsWith('OPTIONS')) {
+        return {
+            statusCode: 200,
+            headers
+        };
+    }
+
     console.log('Received event:', JSON.stringify(event, null, 2));
 
-    const formfield = querystring.parse(event.body);
+    console.log(event.body);
+
+    const obj = JSON.parse(event.body);
 
     let email = event.pathParameters.username;
     console.log('found email ' + email);
     let filename = event.pathParameters.filename;
 
-    console.log('amount is ' + formfield['amount']);
+    console.log('bid_amount is ' + obj.bid_amount);
     const S3_BUCKET = process.env.UploadBucket;
     const url = `https://${S3_BUCKET}.s3.amazonaws.com/${filename}`
     const Key = `${email}/${filename}`;
 
-    let bid_id = formfield['id'];
+    let bid_id = obj.id;
 
     if(!bid_id) {
         bid_id = create_UUID();
@@ -33,18 +51,18 @@ exports.handler = async (event) => {
         TableName: 'bids',
         Item: {
             id: bid_id,
-            bid_amount: formfield['bid_amount'],
+            bid_amount: obj.bid_amount,
             currency: 'USD',
-            content_id: formfield['content_id'],
-            video_κευ: formfield['video_key'],
-            brand_id: formfield['brand_id'],
-            position_x: formfield['position_x'],
-            position_y: formfield['position_y'],
-            position_z: formfield['position_z'],
-            frame_pixel: formfield['frame_pixel'],
-            ad_description: formfield['ad_description'],
-            bidder_email: formfield['bidder_email'],
-            creator_email: formfield['bidder_email'],
+            content_id: obj.content_id,
+            video_key: obj.video_key,
+            brand_id: obj.brand_id,
+            position_x: obj.position_x,
+            position_y: obj.position_y,
+            position_z: obj.position_z,
+            frame_pixel: obj.frame_pixel,
+            ad_description: obj.ad_description,
+            bidder_email: obj.bidder_email,
+            creator_email: obj.creator_email,
             creator_accepted: false,
             filename: filename,
             s3_bucket: S3_BUCKET,
@@ -52,6 +70,7 @@ exports.handler = async (event) => {
             create_date: Date.now()
         }
     };
+
 
     let result = await dynamo.put(params).promise();
     console.log('dynamodb result is ' + result);
@@ -96,7 +115,10 @@ const getUploadURL = async function(event, email, filename, type, extension) {
     let body;
     let statusCode = '200';
     const headers = {
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+        'Access-Control-Allow-Methods': 'PUT,HEAD,OPTIONS'
     };
 
     try {

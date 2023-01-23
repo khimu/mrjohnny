@@ -41,7 +41,7 @@
 			console.log(document.cookie);
 		}
 
-		setCookie("api-endpoint", "https://xduuqbj3se.execute-api.us-east-1.amazonaws.com/Prod");
+		setCookie("api-endpoint", "https://h2yybqeyde.execute-api.us-east-1.amazonaws.com/Prod");
 
 		// Attach a submit handler to the form
 		$(document).ready(function(){
@@ -66,6 +66,7 @@
 						// redirect to an authenticated dashboard
 					},
 					error: function (xhr, status) {
+						alert('Failed to login');
 						console.log("going into error " + JSON.stringify(xhr) + " " + status);
 					}
 				});

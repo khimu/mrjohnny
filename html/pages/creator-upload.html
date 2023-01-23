@@ -5,9 +5,9 @@
     <!--Made with love by Mutiullah Samim -->
 
     <!--Custom styles-->
-	<script src="https://code.jquery.com/jquery-3.6.0.js"></script>
-	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-	<link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
 
     <!-- CSS CDN -->
     <link rel="stylesheet"
@@ -80,6 +80,7 @@
         //		console.log(result);
 
         $(document).ready(function () {
+
             if (!getCookieValue('atid')) {
                 alert('You are logged out');
                 //new Boxy('#popupBox', {title: 'Login message'});
@@ -87,10 +88,6 @@
                 location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
             }
 
-            const key = getCookieValue('identity') + "/" + cleanFileName;
-            $("#key").attr('value', key);
-            $("#filename").attr('value', cleanFileName);
-            $("#creator-email").attr('value', getCookieValue('identity'));
 
             $("form#data").submit(function (e) {
                 $('#loading').show();
@@ -98,11 +95,26 @@
                 e.preventDefault();
                 var formData = new FormData(this);
                 let video = document.getElementById("upload-video").files[0];
-                //formData.append('file', photo);
+
+                formData.delete('upload-video');
+
+                console.log(formData.get('end_bid_window'));
 
                 console.log(video.name);
                 var cleanFileName = video.name.split('\\').pop(); // clean from C:\fakepath OR C:\fake_path
                 console.log('clean file name : ' + cleanFileName);
+
+                const key = getCookieValue('identity') + "/" + cleanFileName;
+                // $("#key").attr('value', key);
+                // $("#filename").attr('value', cleanFileName);
+                // $("#creator-email").attr('value', getCookieValue('identity'));
+                formData.append('key', key);
+                formData.append('filename', cleanFileName);
+                formData.append('creator-email', getCookieValue('identity'));
+
+                for(var pair of formData.entries()){
+                    console.log(pair[0], pair[1]);
+                }
 
                 $.ajax({
                     type: "PUT",
@@ -118,6 +130,8 @@
                         var json = $.parseJSON(JSON.stringify(signedURL));
 
                         console.log('uploadURL ' + json.uploadURL);
+
+
 
                         //let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
                         //let blobData = new Blob([new Uint8Array(array)], {type: 'video/mp4'})
@@ -135,7 +149,8 @@
                             contentType: false,
                             processData: false,
                             async: true,
-                            "data": video,
+                            data: video,
+                            timeout : 2000000,
                             //dataType: 'text/html',
                             success: function (result) {
                                 console.log("got a success");
@@ -169,7 +184,6 @@
         });
 
 
-
         $(function () {
             //$('#scheduled_release_date').datetimepicker({theme:'dark'})
             $("#scheduled_release_date").datetimepicker();
@@ -178,7 +192,8 @@
         });
 
 
-        function fetchSignUrl(url, mycallback, imageId) {
+        function fetchSignUrl(url) {
+            console.log('fetching sign url to retrieve asset');
             return $.ajax({
                 type: "GET",
                 url: url,
@@ -203,8 +218,8 @@
         async function displayProtectedImage(
             imageId, imageUrl
         ) {
-            fetchSignUrl(imageUrl).done(function(response) {
-                console.log('image url is ' + response);
+            fetchSignUrl(imageUrl).done(function (response) {
+                console.log('got s3 video url is ' + response);
                 var json = $.parseJSON(JSON.stringify(response));
                 console.log('uploadURL ' + json.uploadURL);
 
@@ -220,7 +235,7 @@
                 // Update the source of the image.
                 //const imageElement = document.getElementById(imageId);
                 //imageElement.html = dataUrl;
-            }).fail(function() {
+            }).fail(function () {
                 // An error occurred
             });
         }
@@ -234,8 +249,8 @@
     <div class="row" style="margin-top:20px">
         <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
             <form id="data" method="post" enctype="multipart/form-data">
-                <input type="hidden" name="key" id="key" />
-                <input type="hidden" name="filename" id="filename" />
+                <input type="hidden" name="key" id="key"/>
+                <input type="hidden" name="filename" id="filename"/>
                 <!--<input type="hidden" name="directory_path" id="directory_path" />-->
                 <input type="hidden" name="creator_email" id="creator_email"/>
                 <fieldset>
@@ -246,12 +261,24 @@
                     </div>
                     </span>
                     <hr class="colorgraph">
-                    <select name="bid_type" class="form-select" aria-label="Default select example">
-                        <option selected>Bid Type</option>
-                        <option value="1">Open</option>
-                        <option value="2">Flat Fee</option>
-                        <option value="3">Suggested Fee</option>
-                    </select>
+                    <div class="form-group">
+                        <label for="bid_type" class="form-label">Bid Type</label>
+                        <!--Section: Demo-->
+                        <section class="pb-4">
+                            <div class="bg-white border rounded-5">
+                                <section class="w-100 p-4 pb-4 d-flex justify-content-center">
+                                    <div style="width: 22rem;">
+                                        <select class="select" name="bid_type" id="bid_type">
+                                            <option selected value="1">Open</option>
+                                            <option value="2">Flat Fee</option>
+                                            <option value="3">Suggested Fee</option>
+                                        </select>
+                                    </div>
+                                </section>
+                            </div>
+                        </section>
+                    </div>
+                    <hr class="colorgraph">
                     <div class="form-group">
                         <label for="title">Video Title</label>
                         <input type="text" name="title" id="title" class="form-control input-lg">
@@ -272,19 +299,23 @@
                     </div>
                     <div class="form-group">
                         <label for="platform_api_key">Social Media Platform Developer API Key</label>
-                        <input type="text" name="platform_api_key" id="platform_api_key" class="form-control input-lg">
+                        <input type="text" name="platform_api_key" id="platform_api_key"
+                               class="form-control input-lg">
                     </div>
                     <div class="form-group">
                         <label for="open_bid_amount">Open Bid Amount</label>
-                        <input type="text" name="open_bid_amount" id="open_bid_amount" class="form-control input-lg">
+                        <input type="text" name="open_bid_amount" id="open_bid_amount"
+                               class="form-control input-lg">
                     </div>
                     <div class="form-group">
                         <label for="start_bid_window">Start Bid Window</label>
-                        <input type="text" name="start_bid_window" id="start_bid_window" class="form-control input-lg">
+                        <input type="text" name="start_bid_window" id="start_bid_window"
+                               class="form-control input-lg">
                     </div>
                     <div class="form-group">
                         <label for="end_bid_window">End Bid Window</label>
-                        <input type="text" name="end_bid_window" id="end_bid_window" class="form-control input-lg">
+                        <input type="text" name="end_bid_window" id="end_bid_window"
+                               class="form-control input-lg">
                     </div>
                     <div class="form-group">
                         <label for="audience_category">Audience Category</label>
@@ -293,14 +324,14 @@
                     </div>
                     <span class="button-checkbox">
                    <div class="form-check d-flex justify-content-center mb-5">
-						<input class="form-check-input me-2" type="checkbox" value="" id="kid_friendly"/>
+						<input class="form-check-input me-2" type="checkbox" value="" name="kid_friendly" id="kid_friendly"/>
 						<label class="form-check-label">
 							<a href="#!">Kid Friendly</a>
 						</label>
 					</div>
 					<span class="button-checkbox">
                    <div class="form-check d-flex justify-content-center mb-5">
-						<input class="form-check-input me-2" type="checkbox" value="" id="enable_publish"/>
+						<input class="form-check-input me-2" type="checkbox" value="" name="enable_publish" id="enable_publish"/>
 						<label class="form-check-label">
 							<a href="#!">Enable Go Live</a>
 						</label>
@@ -313,7 +344,7 @@
                                    value="Upload Video">
 						</div>
 						<div class="col-xs-6 col-sm-6 col-md-6">
-							<a href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/tables.html"
+							<a href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html"
                                class="btn btn-lg btn-primary btn-block">Cancel</a>
 						</div>
 					</div>

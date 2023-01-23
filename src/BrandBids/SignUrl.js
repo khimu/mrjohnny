@@ -9,6 +9,21 @@ const URL_EXPIRATION_SECONDS = 300;
 
 // Main Lambda entry point
 exports.handler = async (event) => {
+    console.log(event.httpMethod);
+
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+    };
+
+    if(event.httpMethod.startsWith('OPTIONS')) {
+        return {
+            statusCode: 200,
+            headers
+        };
+    }
+
     console.log('Received event:', JSON.stringify(event, null, 2));
 
     //const formfield = querystring.parse(event.body);
@@ -55,7 +70,9 @@ const getUploadURL = async function(event, email, filename, type, extension) {
     let body;
     let statusCode = '200';
     const headers = {
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
     };
 
     try {

@@ -63,6 +63,8 @@
 
         //var result = get_query();
         //console.log(result);
+        // result.creator_email
+        // result.video_key
 
         // $.each(json.adss, function(i,ads){
         // 	/** append works but for some reason its now displaying the image with html description.  description cannot accept large html  **/
@@ -87,11 +89,20 @@
 
                 var formData = new FormData(this);
                 let photo = document.getElementById("upload-image").files[0];
-                //formData.append('file', photo);
+                formData.delete('upload-image');
 
                 console.log(photo.name);
                 var cleanFileName = photo.name.split('\\').pop(); // clean from C:\fakepath OR C:\fake_path
                 console.log('clean file name : ' + cleanFileName);
+
+                // dont have yet
+                //formData.append('video_key', key);
+                formData.append('filename', cleanFileName);
+                //formData.append('creator-email', getCookieValue('identity'));
+
+                for(var pair of formData.entries()){
+                    console.log(pair[0], pair[1]);
+                }
 
                 $.ajax({
                     type: "PUT",
@@ -124,7 +135,7 @@
                             contentType: false,
                             processData: false,
                             async: true,
-                            "data": photo,
+                            data: photo,
                             //dataType: 'text/html',
                             success: function (result) {
                                 console.log("got a success");
@@ -163,11 +174,16 @@
 
         });
 
-        function fetchSignUrl(url, mycallback, imageId) {
+        function fetchSignUrl(url) {
+            console.log('fetching sign url to retrieve asset');
             return $.ajax({
                 type: "GET",
                 url: url,
                 crossDomain: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                async: true,
                 headers: {
                     'Authorization': 'Bearer ' + getCookieValue('atid')
                 },
@@ -195,7 +211,7 @@
             imageId, imageUrl
         ) {
             fetchSignUrl(imageUrl).done(function(response) {
-                console.log('image url is ' + response);
+                console.log('got s3 image url is ' + response);
 
                 var json = $.parseJSON(JSON.stringify(response));
 
@@ -298,7 +314,7 @@
                                    value="Upload Image">
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6">
-                            <a href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/tables.html"
+                            <a href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html"
                                class="btn btn-lg btn-primary btn-block">Cancel</a>
                         </div>
                     </div>

@@ -9,8 +9,11 @@ Globals:
   Api:
     Cors:
       AllowMethods: "'*'"
-      AllowHeaders: "'*'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
       AllowOrigin: "'*'"
+      Credentials: true
+
+
   Function:
     Timeout: 10
     Runtime: nodejs14.x
@@ -64,6 +67,8 @@ Resources:
                 'Bearer realm="admin"'
 
 
+
+
   LambdaExecRole:
     Type: AWS::IAM::Role
     Properties:
@@ -89,6 +94,7 @@ Resources:
                 Action:
                   - 's3:GetObject'
                   - 's3:PutObject'
+                  - 's3:PutObjectAcl'
                 Resource:
                   - "arn:aws:s3:::mrjohnny-upload-contents"
                   - "arn:aws:s3:::mrjohnny-upload-contents/*"
@@ -123,6 +129,46 @@ Resources:
                 Resource: "arn:aws:dynamodb:us-east-1:411460918332:table/*"
 
 
+
+  ## this is all bids by bidder - bidders bids
+#  CorsOptionsFunction:
+#    Type: AWS::Serverless::Function
+#    Properties:
+#      CodeUri: CorsCatchAll.js
+#      Handler: CorsCatchAll.handler
+#      FunctionName: CorsCatchAll
+#      Description: >-
+#        All preflight calls ends here
+#      MemorySize: 128
+#      Timeout: 10
+#      Role: !GetAtt 'LambdaExecRole.Arn'
+#      VpcConfig:
+#        SecurityGroupIds:
+#          - sg-0f666341436597447
+#        SubnetIds:
+#          - subnet-0f0ed4f2b3e9c1a75
+#      Tags:
+#        "service": "mrjohny"
+#      Environment:
+#        Variables:
+#          REGION: !Ref AWS::Region
+#      Events:
+#        OptionApi:
+#          Type: Api
+#          Properties:
+#            RestApiId: !Ref ServerlessApi
+#            Path: /{proxy+}
+#            Method: OPTION
+#            Auth:
+#              Authorizer: NONE
+#          Cors:
+#            AllowMethods: "'DELETE,GET,POST,PUT,HEAD,OPTIONS'"
+#            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+#            AllowOrigin: "'*'"
+#          Credentials: true
+
+
+  ## this is all bids by bidder - bidders bids
   ListBrandBidsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -150,8 +196,153 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref ServerlessApi
-            Path: /list-bids
+            Path: /listBids/{bidder_email}
             Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /listBids/{bidder_email}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'GET,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
+
+
+
+  ## list all of creators videos
+  ListAllVideosEnabledForBidFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ListAllVideosEnabledForBid.js
+      Handler: ListAllVideosEnabledForBid.handler
+      FunctionName: ListAllVideosEnabledForBid
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        ListAllVideosEnabledForBidApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /listVideosEnabled
+            Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /listVideosEnabled
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'GET,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
+
+
+  ## list all of creators videos - creator_videos table
+  ListCreatorVideosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ListCreatorVideos.js
+      Handler: ListCreatorVideos.handler
+      FunctionName: ListCreatorVideos
+      Description: >-
+        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        ListCreatorVideo:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /listCreatorVideos/{creator_email}
+            Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /listCreatorVideos/{creator_email}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+#              ApiKeyRequired: false
+          Cors:
+            AllowMethods: "'GET,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
+
+
+  ## list all of creators videos - bids table
+  ListAllBidsFilterByCreatorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: ListAllBidsFilterByCreator.js
+      Handler: ListAllBidsFilterByCreator.handler
+      FunctionName: ListAllBidsFilterByCreator
+      Description: >-
+        List all bids for creators videos
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        ListAllBidsFilterByCreatorApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /listBidsByVideos/{creator_email}
+            Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /listBidsByVideos/{creator_email}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'GET,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
 
 
   PostBrandBidsFunction:
@@ -183,7 +374,18 @@ Resources:
             RestApiId: !Ref ServerlessApi
             Path: /bids
             Method: POST
-
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /bids
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'POST,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
 
 
   GetBrandBidsFunction:
@@ -215,6 +417,18 @@ Resources:
             RestApiId: !Ref ServerlessApi
             Path: /bids/{id}
             Method: GET
+        GETOptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /bids/{id}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'DELETE,PUT,GET,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
 
 
   DeleteBrandBidsFunction:
@@ -248,35 +462,7 @@ Resources:
             Method: DELETE
 
 
-  ListCreatorVideosFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ListCreatorVideos.js
-      Handler: ListCreatorVideos.handler
-      FunctionName: ListBrandBids
-      Description: >-
-        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
-      MemorySize: 128
-      Timeout: 10
-      Role: !GetAtt 'LambdaExecRole.Arn'
-      VpcConfig:
-        SecurityGroupIds:
-          - sg-0f666341436597447
-        SubnetIds:
-          - subnet-0f0ed4f2b3e9c1a75
-      Tags:
-        "service": "mrjohny"
-      Environment:
-        Variables:
-          REGION: !Ref AWS::Region
-      Events:
-        ListCreatorVideo:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ServerlessApi
-            Path: /list-creator-videos
-            Method: GET
+
 
 
   GetCreatorVideosFunction:
@@ -310,6 +496,8 @@ Resources:
             Method: GET
 
 
+
+
   DeleteCreatorVideosFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -339,6 +527,18 @@ Resources:
             RestApiId: !Ref ServerlessApi
             Path: /creator_video/{id}
             Method: DELETE
+        DELETEOptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /creator_video/{id}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'GET,DELETE,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
 
 
 
@@ -371,6 +571,18 @@ Resources:
             RestApiId: !Ref ServerlessApi
             Path: /creator_scheduler
             Method: POST
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /creator_scheduler
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'POST,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
 
 
   PutBrandBidsFunction:
@@ -440,6 +652,19 @@ Resources:
             RestApiId: !Ref ServerlessApi
             Path: /sign-url/{username}/{filename}
             Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /sign-url/{username}/{filename}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'GET,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
+
 
 
   BrandSignUrlFunction:
@@ -475,6 +700,18 @@ Resources:
             RestApiId: !Ref ServerlessApi
             Path: /brand-sign-url/{username}/{filename}
             Method: PUT
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /brand-sign-url/{username}/{filename}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'PUT,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
 
 
   ContentCreatorSignUrlFunction:
@@ -510,6 +747,18 @@ Resources:
             RestApiId: !Ref ServerlessApi
             Path: /creator-sign-url/{username}/{filename}
             Method: PUT
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /creator-sign-url/{username}/{filename}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'PUT,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
 
 
 
@@ -543,8 +792,20 @@ Resources:
           Type: Api
           Properties:
             RestApiId: !Ref ServerlessApi
-            Path: /content/{key}/{filename}
+            Path: /content/{username}/{filename}
             Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /content/{username}/{filename}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'GET,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
 
 
   # Lambda function that prevents the emission of confirmation emails
@@ -576,7 +837,7 @@ Resources:
       FunctionName: "MrJohnnyAuthFunction"
       CodeUri: functions/auth/
       Handler: index.handler
-      Runtime: nodejs18.x
+      Runtime: nodejs16.x
       MemorySize: 128
       Timeout: 10
       Role: !GetAtt 'LambdaExecRole.Arn'

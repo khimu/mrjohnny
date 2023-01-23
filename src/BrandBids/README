@@ -7,6 +7,8 @@ aws s3 cp ../../html/pages/creator-upload.html s3://mrjohnny/pages/
 aws s3 cp ../../html/pages/tables.html s3://mrjohnny/pages/
 
 
+## zip for deployment via S3
+zip my-deployment-package.zip lambda_function.py
 
 ## remove all cookies
 aws s3 cp s3://mrjohnny s3://mrjohnny --recursive --exclude "*" --include "*.html" --metadata-directive REPLACE --cache-control max-age:no-cache --content-type text/html

@@ -4,11 +4,29 @@ const querystring = require("querystring");
 
 AWS.config.update({ region: process.env.AWS_REGION });
 const s3 = new AWS.S3({region: 'us-east-1'});
-const URL_EXPIRATION_SECONDS = 300;
+const URL_EXPIRATION_SECONDS = 1800;
+
+const dynamo = new AWS.DynamoDB.DocumentClient();
 
 
 // Main Lambda entry point
 exports.handler = async (event) => {
+    console.log(event.httpMethod);
+
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+        'Access-Control-Allow-Methods': 'PUT,HEAD,OPTIONS'
+    };
+
+    if(event.httpMethod.startsWith('OPTIONS')) {
+        return {
+            statusCode: 200,
+            headers
+        };
+    }
+
     console.log('Received event:', JSON.stringify(event, null, 2));
 
     const formfield = querystring.parse(event.body);
@@ -17,21 +35,21 @@ exports.handler = async (event) => {
     console.log('found email ' + email);
     let filename = event.pathParameters.filename;
 
-    console.log('amount is ' + formfield['amount']);
+    console.log('key is ' + formfield['key']);
     const S3_BUCKET = process.env.UploadBucket;
     const url = `https://${S3_BUCKET}.s3.amazonaws.com/${filename}`
     const Key = `${email}/${filename}`;
 
-    let bid_id = formfield['id'];
+    let video_id = formfield['id'];
 
-    if(bid_id===null || bid_id==="") {
-        bid_id = create_UUID();
+    if(!video_id) {
+        video_id = create_UUID();
     }
 
     var params = {
         TableName: 'creator_videos',
         Item: {
-            id: bid_id,
+            id: video_id,
             enable_publish: formfield['enable_publish'],
             currency: 'USD',
             kid_friendly: formfield['kid_friendly'],
@@ -46,10 +64,10 @@ exports.handler = async (event) => {
             title: formfield['title'],
             creator_email: formfield['creator_email'],
             filename: formfield['filename'],
-            bidder_email: formfield['key'],
+            bidder_email: formfield['bidder_email'],
             bid_type: formfield['bid_type'],
             create_date: Date.now(),
-            creator_accepted: false,
+            key: Key,
             file_name: filename,
             image_url: url
         }
@@ -103,7 +121,10 @@ const getUploadURL = async function(event, email, filename, type, extension) {
     let body;
     let statusCode = '200';
     const headers = {
-        'Access-Control-Allow-Origin': '*'
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+        'Access-Control-Allow-Methods': 'PUT,HEAD,OPTIONS'
     };
 
     try {

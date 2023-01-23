@@ -20,22 +20,14 @@ exports.handler = async (event, context) => {
 
     console.log('Received event:', JSON.stringify(event, null, 2));
 
-    let myid = event.pathParameters.id;
-
-    console.log("event params " + myid);
-
     let body;
     let statusCode = '200';
 
-    try {
-        const params = {
-            TableName : 'bids',
-            Key: {
-                id: myid
-            }
-        };
 
-        body = await dynamo.get(params).promise();
+    try {
+        // modify to list by creator if creator is logged in
+        // modify by bidder if bidder is logged in
+       body = await dynamo.scan({ TableName: 'bids' }).promise();
     } catch (err) {
         statusCode = '400';
         body = err.message;
@@ -43,13 +35,10 @@ exports.handler = async (event, context) => {
         body = JSON.stringify(body);
     }
 
-    console.log('Received event:', JSON.stringify(event, null, 2));
-
     return {
         statusCode,
         body,
         headers,
     };
-
 };
 

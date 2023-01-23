@@ -4,15 +4,30 @@ const querystring = require('querystring');
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
+
+
 exports.handler = async (event, context) => {
-    //console.log('Received event:', JSON.stringify(event, null, 2));
+    console.log(event.httpMethod);
+
+    const headers = {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Credentials': true,
+        'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+    };
+
+    if(event.httpMethod.startsWith('OPTIONS')) {
+        return {
+            statusCode: 200,
+            headers
+        };
+    }
+
+    console.log('Received event:', JSON.stringify(event, null, 2));
+
     const formfield = querystring.parse(event.body);
 
     let body;
     let statusCode = '200';
-    const headers = {
-        'Access-Control-Allow-Origin': '*'
-    };
     
     const today = new Date();
     const date = new Date("2020-05-12T23:50:21.817Z");

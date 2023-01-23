@@ -34,6 +34,29 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.4" rel="stylesheet" />
+
+
+  <script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '721473506169833',
+        cookie     : true,
+        xfbml      : true,
+        version    : 'v1'
+      });
+
+      FB.AppEvents.logPageView();
+
+    };
+
+    (function(d, s, id){
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) {return;}
+      js = d.createElement(s); js.id = id;
+      js.src = "https://connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+  </script>
 </head>
 
 <body class="g-sidenav-show  bg-gray-200 virtual-reality">
@@ -179,7 +202,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white " href="../pages/tables.html">
+            <a class="nav-link text-white " href="bidder_list_view.html">
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="material-icons opacity-10">table_view</i>
               </div>
@@ -195,11 +218,11 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link text-white " href="../pages/create-upload.html">
+            <a class="nav-link text-white " href="../pages/creator-upload.html">
               <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
                 <i class="material-icons opacity-10">table_view</i>
               </div>
-              <span class="nav-link-text ms-1">Create Upload</span>
+              <span class="nav-link-text ms-1">Creator Upload</span>
             </a>
           </li>
           <li class="nav-item">
