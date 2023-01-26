@@ -1,0 +1,44 @@
+.boxy-wrapper { position: absolute; }
+.boxy-wrapper.fixed { position: fixed; }
+
+  /* Modal */
+  
+  .boxy-modal-blackout { position: absolute; background-color: black; left: 0; top: 0; }
+  
+  /* Border */
+
+  .boxy-wrapper { empty-cells: show; }
+	.boxy-wrapper .top-left,
+	.boxy-wrapper .top-right,
+	.boxy-wrapper .bottom-right,
+	.boxy-wrapper .bottom-left {  }
+	
+	
+	
+	/* IE6+7 hacks for the border. IE7 should support this natively but fails in conjuction with modal blackout bg. */
+	/* NB: these must be absolute paths or URLs to your images */
+	
+	
+	.boxy-wrapper .top,
+	.boxy-wrapper .bottom { }
+	
+	.boxy-wrapper .left,
+	.boxy-wrapper .right {  }
+	
+	/* Title bar */
+	
+	.boxy-wrapper .title-bar { background-color: black; padding: 6px; position: relative; }
+	  .boxy-wrapper .title-bar.dragging { cursor: move; }
+	    .boxy-wrapper .title-bar h2 { font-size: 12px; color: white; line-height: 1; margin: 0; padding: 0; font-weight: normal; }
+	    .boxy-wrapper .title-bar .close { color: white; }
+		
+	/* Content Region */
+	
+	.boxy-inner {padding: 0;}
+	.boxy-content { }
+	
+	/* Question Boxes */
+
+    .boxy-wrapper .question { width: 350px; min-height: 80px; }
+    .boxy-wrapper .answers { text-align: right; }
+

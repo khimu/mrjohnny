@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>jQuery UI Droppable</title>
+
+    <style type="text/css">
+
+
+    </style>
+
+    <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/js/jquery-1.8.1.min.js"></script>
+    <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+    <link href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/bootstrap-5.2.3-dist/css/bootstrap.min.css"
+          rel="stylesheet" id="bootstrap-css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+    <!--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>-->
+
+
+    <!-- Enables drag and drop feature -->
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+    <script>
+        function is_cookie_exist(name) {
+            return document.cookie.split(';').some(c => {
+                return c.trim().startsWith(name + '=');
+            });
+        }
+
+        function delete_cookie(name, path, domain) {
+            if (is_cookie_exist(name)) {
+                document.cookie = name + "=" +
+                    ((path) ? ";path=" + path : "") +
+                    ((domain) ? ";domain=" + domain : "") +
+                    ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+                document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.host;
+            }
+        }
+
+        /**
+         * Called from sign out button
+         */
+        function getCookie() {
+            console.log(document.cookie);
+            delete_cookie("atid", "/", "");
+            delete_cookie("identity", "/", "");
+            console.log(document.cookie);
+            location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+        }
+
+        function getCookieValue(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        let token = getCookieValue('atid');
+        let api_endpoint = getCookieValue('api-endpoint');
+
+        //console.log("api_endpoint " + api_endpoint);
+
+
+        $(document).ready(function () {
+            if (!getCookieValue('atid')) {
+                alert('You are logged out');
+                //new Boxy('#popupBox', {title: 'Login message'});
+                $('#loading').hide();
+                delete_cookie('api-endpoint', "/", "");
+                location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+            }
+
+            let identity = getCookieValue("identity");
+            $("#identity").text(identity);
+
+            $.ajax({
+                type: "GET",
+                url: api_endpoint + "/listBidsByVideos/" + identity,
+                crossDomain: true,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                dataType: 'json',
+                success: function (result) {
+                    var json = $.parseJSON(JSON.stringify(result));
+                    console.log(JSON.stringify(json));
+                    let items = json.Items;
+                    console.log(JSON.stringify(items));
+                    for (var i in json.Items) {
+                        let row = $("#mrjohnny-template-content .mrjohnny-template-row").first().clone();
+                        console.log(JSON.stringify(items[i]));
+                        row.find(".mrjohnny-brand-image-name").html(items[i].filename);
+                        row.find(".mrjohnny-status").html(items[i].creator_accepted);
+                        row.find(".mrjohnny-brand-email").html(items[i].bidder_email);
+                        //row.find(".mrjohnny-filename").html(items[i].video_filename);
+                        //row.find(".mrjohnny-email").html(items[i].creator_email);
+                        row.find(".mrjohnny-bid-amount").html(items[i].amount);
+                        row.find(".mrjohnny-description").html(items[i].ad_description);
+                        // fix to make ajax
+                        row.find(".brand_image_id").attr('href', "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/brand-upload.html?id=" + items[i].id);
+                        row.show();
+                        row.css("visibility", "visible");
+                        $("#mrjohnny-template-content").append(row);
+                        console.log("row " + row.html());
+                    }
+                    $("#mrjohnny-template-content").trigger("create");
+                },
+                error: function (xhr, status, error) {
+                    console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+                    //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+                }
+            });
+
+            $.ajax({
+                type: "GET",
+                url: api_endpoint + "/listCreatorVideos/" + identity,
+                crossDomain: true,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                dataType: 'json',
+                success: function (result) {
+                    var json = $.parseJSON(JSON.stringify(result));
+                    console.log(JSON.stringify(json));
+                    let items = json.Items;
+                    console.log(JSON.stringify(items));
+                    for (var i in json.Items) {
+                        let row = $("#mrjohnny-creator-video-list .mrjohnny-creator-video-list-row").first().clone();
+                        console.log(JSON.stringify(items[i]));
+
+                        row.find(".video-end-bid-window").html(items[i].end_bid_window);
+                        row.find(".video-start-bid-window").html(items[i].start_bid_window);
+                        row.find(".video-description").html(items[i].description);
+                        row.find(".video-title").html(items[i].title);
+                        row.find(".video-open-bid-amount").html(items[i].open_bid_amount);
+                        row.find(".mrjohnny-bid").html(items[i].amount);
+                        // fix to make ajax
+                        row.find(".creator_video_id").attr('href', "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/creator_video_detail.html?id=" + items[i].id);
+                        row.show();
+                        row.css("visibility", "visible");
+                        $("#mrjohnny-creator-video-list").append(row);
+                        console.log("row " + row.html());
+                    }
+                    $("#mrjohnny-creator-video-list").trigger("create");
+                },
+                error: function (xhr, status, error) {
+                    console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+                    //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+                }
+            });
+        });
+
+
+    </script>
+</head>
+<body>
+
+    </body>
+</html>

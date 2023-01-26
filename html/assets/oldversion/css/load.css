@@ -1,0 +1,23 @@
+
+@import url(slotmachine.css);
+
+/* ANIMATION: Background IMAGE SWAP IN wrapper*/
+
+	.state1  {background: transparent url("../images/bg_state11.jpg") 0 0 no-repeat; height: 960px; width:640px; margin:0 auto; text-align:center;}
+	.state2  {background: transparent url("../images/bg_state9.jpg") 0 0 no-repeat; height: 960px; width:640px; margin:0 auto; text-align:center;}
+	.state3 {background: transparent url("../images/bg_state10.jpg") 0 0 no-repeat; height: 960px; width:640px; margin:0 auto; text-align:center;}
+	.state4 {background: transparent url("../images/bg_state11.jpg") 0 0 no-repeat; height: 960px; width:640px; margin:0 auto; text-align:center;}
+    .state5  {background: transparent url("../images/bg_state8.jpg") 0 0 no-repeat; height: 960px; width:640px; margin:0 auto; text-align:center;}
+	
+    .reels1 {background: transparent url("../images/bg_state8-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center; position:relative; top:0px; left:46px;}
+	.reels2 {background: transparent url("../images/bg_state9-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center; position:relative; top:0x; left:46px;}
+	.reels3 {background: transparent url("../images/bg_state10-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center; position:relative; top:0px; left:46px;}
+	.reels4 {background: transparent url("../images/bg_state8-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center;position:relative; top:0px; left:46px;}
+	
+	/*.state1 {background: transparent url("../images/bg_state8-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center; position:relative; top:0px; left:46px;}
+	.state2 {background: transparent url("../images/bg_state9-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center; position:relative; top:0x; left:46px;}
+	.state3 {background: transparent url("../images/bg_state10-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center; position:relative; top:0px; left:46px;}
+	.state4 {background: transparent url("../images/bg_state8-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center;position:relative; top:0px; left:46px;}
+*/
+
+/* END ANIMATION: Background IMAGE SWAP IN wrapper*/

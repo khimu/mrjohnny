@@ -1,0 +1,6 @@
+a {text-decoration:none; border:none;
+}
+.container {background:#2C0847;}
+.wrapper {
+	background:#2C0847 url('../images/bg_landing2.jpg') 0 0 no-repeat; text-align:center; height: 960px; vertical-align:bottom; overflow:hidden;
+}

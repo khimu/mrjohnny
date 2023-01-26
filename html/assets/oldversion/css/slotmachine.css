@@ -1,0 +1,428 @@
+.container { height:100%; width:640px; margin:0 auto; padding:0; vertical-align:top; text-align:center; overflow:hidden; background:#440f57 url("../images/bg_state11.jpg") 0 0 no-repeat;}
+.header {
+	background:transparent;
+	width:640px;
+	height:160px;
+	margin: 0;
+	text-align:center;
+}
+.headrow1 {
+	height: 160px;
+	display:inline;
+	width: 640px;
+}
+.faslogo { 
+	top: 50px;
+	left:60px;
+	padding:0;
+	margin:0;
+	width:250px;
+	height:78px;
+	background: transparent url("../images/logo_gold.png") 0 0 no-repeat;
+}
+.profileFBpic {
+	width:92px;
+	height:66px;
+	top:55px;
+	left:38px;
+	text-align:center;
+}
+.profileFBpic img {
+	width:72px;
+	height:72px;
+	top:52px;
+	left:48px;
+	text-align:center;
+}
+.profileFBpic p {
+	width:150px;
+	font: bold 12px/12px 'Century Gothic Bold', Verdana, sans-serif;
+	color:#fff;
+	text-align:center;
+	height:25px;
+	float:left;
+	position:relative;
+	top:-96px;
+	left:-29px;
+}
+.mask {
+	background: transparent url("../images/fbpic_chrome.png") 0 0 no-repeat;
+	position: relative;
+	z-index: 5;
+	height: 77px;
+	width: 91px;
+	text-align: left;
+	padding: 12px 0 0 0;
+	display: inline-block;
+	top: -85px;
+	left: 1px;
+	cursor:pointer;
+}
+.profile_loggedout {
+	width:92px;
+	height:66px;
+	top:52px;
+	left:38px;
+	text-align:center;
+}
+.profile_loggedout img {
+	width:72px;
+	height:72px;
+	top:52px;
+	left:52px;
+	text-align:center;
+}
+.profile_loggedout p {
+	width:60px;
+	font: bold 12px/12px 'Century Gothic Bold', Verdana, sans-serif;
+	color:#fff;
+	text-align:center;
+	height:25px;
+	float:left;
+	position:relative;
+	top:-96px;
+	left:-29px;
+}
+.credit_num {
+		top: 62px;
+		left: 125px;
+		padding:0;
+		margin:0;
+		width:110px;
+		color: #fff;
+		font: bold 25px/26px 'Century Gothic Bold', Verdana, sans-serif;
+		text-align:center;
+		height:auto;
+}
+.credits-num span {
+		text-align:left;
+		color:#fff;
+		font: bold 24px/21px 'Century Gothic Bold', Verdana, sans-serif;
+}
+
+.creditsajax {
+		margin:0 auto;
+		padding:0;
+		width:640px;
+		height:auto;	
+}
+
+.winners_section {
+		width:640px;
+		height:179px;
+		margin:0 auto;
+		padding:0;
+		top: 19px;
+		left: 40px;
+		text-align:left;
+		overflow:hidden;
+}
+.dynamic-winners-circle {
+	width:203px; display:inline-block; height:80px; overflow:hidden;
+}
+
+/* SCOREBOARD that contains the payout amount of most recent spin AND GIVES OTHER MESSAGING */
+	.winners_alt {
+		width: 275px;
+		height: 100px;
+		margin: 0 auto;
+		padding: 0;
+		/*top: 20px;
+		left: 45px;*/
+		top: 20px;
+		left: 180px;
+		text-align: center;
+		display: inline-block;
+		position: absolute;
+		float: left;
+		vertical-align: top;
+		overflow:hidden;
+	}
+/* SCOREBOARD 2 LINES OF MESSAGING */
+	.winners_alt p {
+		width: 220px;
+		margin: 0 auto;
+		padding:15px 0;
+		text-align: center;
+		display: inline-block;
+		font: bold 34px/34px "DitedRegular", Verdana, sans-serif;
+		color: #fff;
+		vertical-align: middle;
+		z-index:50;
+		overflow:hidden;
+		/* yellow amber txt --   text-shadow:0 0 2px #CCCCCC, 0 0 4px #CCCCCC, 0 0 9px #CCCCCC, 0 0 15px #583409, 0 0 20px #583409, 0 0 25px #583409, 0 0 30px #583409, 0 0 50px #583409, 0 0 70px #583409, 0 0 90px #583409;*/		
+}
+/* SCOREBOARD 1or2 LINES OF MESSAGING H1 FONT, UPPPERCASE */
+	p.winners_alt_h1 {		
+		font: bold 44px/36px "DitedRegular", Verdana, sans-serif;
+		text-transform:uppercase;
+		/*color: #FFF500;*/
+		color:#fff;
+		text-shadow: 0px 0px 10px rgb(255, 255, 255), 0px 0px 20px rgb(255, 255, 255), 0px 0px 30px rgb(255, 255, 255), 0px 0px 40px rgb(255, 0, 222), 0px 0px 70px rgb(255, 0, 222), 0px 0px 80px rgb(255, 0, 222), 0px 0px 100px rgb(255, 0, 222), 0px 0px 150px rgb(255, 0, 222);
+		overflow:hidden;
+}
+
+/* SCOREBOARD BIG WIN -- font turns black and bg_state6.jpg is shown, H1 FONT, UPPPERCASE */
+	p.winners_alt_h1_winstate, .bigWin {		
+		font: bold 44px/36px "DitedRegular", Verdana, sans-serif;
+		text-transform:uppercase;
+		color: #000;
+		overflow:hidden;
+}
+	@font-face {
+    font-family: 'DitedRegular';
+    src: url('Dited-webfont.ttf') format('truetype'),
+         url('Dited-webfont.svg#DitedRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+.helpButton, helpButton a {width:165px; height:132px;
+		position:absolute;
+		left: 419px;
+		top: 8px;
+		display:block;	
+}
+.helpButton:hover, helpButton_on {
+		cursor:pointer;
+		display:block;
+		background: transparent url("../images/btn_help_on.jpg") 0 0 no-repeat;
+}
+.reels_section {
+		width:640px;
+		height:256px;
+		margin: 0 auto;
+		clear:left;
+		top: 2px;
+		left: 20px;
+		text-align:left;
+}
+.spin_section {
+		display:inline;
+		width:640px;
+		height:316px;
+		margin: 0 auto;
+		top:16px;
+		left:0px;
+		text-align:center;	
+}
+.spin_section ul {
+		display: inline;
+		height: 140px;
+		margin: 0;
+		padding: 0;
+		width: 640px;
+		position: relative;
+		float: left;
+		left: 36px;
+		top: 12px;
+		list-style:none;
+}
+.spin_section ul li {
+		margin: 0;
+		padding: 0;
+		list-style:none;
+}
+/* Slot Machine */
+
+#freeappslots06_hype_container {
+	position:relative; float:left; overflow:hidden; width:544px; height:256px; display:inline-block; left:27px; background:transparent; display:inline-block; z-index:1000;
+}
+.divider-line {
+	background: transparent url("../images/divider_line.png") 0 0 no-repeat;
+	width: 544px;
+	/*height:256px;*/
+	height:7px;
+	top:128px;
+	/*top:0px;*/
+	left:1px;
+	margin:0;
+	padding:0;
+	border:none;
+	z-index:10001;
+ /* -moz-box-shadow:    13px 13px 15px 16px #000;
+  -webkit-box-shadow: 13px 13px 15px 16px #000;
+  box-shadow:         13px 13px 15px 16px #000;*/
+}
+.shadow-top {
+  -moz-box-shadow:    13px 13px 15px 16px #000;
+  -webkit-box-shadow: 13px 13px 15px 16px #000;
+  box-shadow:         13px 13px 15px 16px #000;
+  height: 100px;
+  width: 100%;
+  opacity: .6;
+  z-index: 10001;
+  position: absolute;
+  top: -100px;
+  padding: 0px;
+  margin: 0px; 	
+}
+
+.shadow-bottom {
+-moz-box-shadow:    13px 13px 15px 16px #000;
+  -webkit-box-shadow: 13px 13px 15px 16px #000;
+  box-shadow:         13px 13px 15px 16px #000;
+  height: 100px;
+  width: 100%;	
+  opacity: .6;
+  z-index: 10001;
+  position: absolute;
+  top: 0px;
+  padding: 0px;
+  margin: 0px;
+}
+.prizeIcon {
+	width:40px;
+	height:40px;
+	top:50px;
+	left:0px;
+	background:transparent;
+}
+.winnersFBpic {
+	width:92px;
+	height:67px;
+	top:35px;
+	left:39px;
+}
+.winnersFBpic p {
+	width:140px;
+	top:0px;
+	left:15px;
+	font:bold 12px/13px 'Century Gothic Bold', Verdana, sans-serif;
+	color:#fff;
+	text-align:left;
+	display:block;
+	margin:0;
+	padding:0 0 1px 0;
+}
+input[type="button"] {background-color:transparent; border:none;}
+.prizeButton {width:103px; 
+	height:109px;
+	display:inline; 
+	position: relative;
+	float: left;
+	left: 28px;
+	top: 15px;
+  	border:none;
+	cursor:pointer;
+	background: transparent url(../images/btn_prizes2.png) 0 0 no-repeat;
+}
+.prizeButton_on {
+	width:103px;
+	height:109px;
+	float: left; 
+	position: relative;
+	left: 28px;
+	top: 15px;
+  	border:none;
+	cursor:pointer;
+	background: transparent url(../images/btn_prizes_on.png) 0 0 no-repeat;
+}
+.getspinsButton {
+	width:103px;
+	height:109px;
+	position: relative;
+  	border:none;
+	float: left;
+	left: 18px;
+	top: 15px;
+	cursor:pointer;
+	background: transparent url(../images/btn_getmorespins.png) 0 0 no-repeat;
+}
+
+.getspinsButton_on {
+	width:103px;
+	height:109px;
+  	border:none;
+	position: relative;
+	left: 18px;
+	top: 15px;
+	cursor:pointer;
+	background: transparent url(../images/btn_getmorespins_on.png) 0 0 no-repeat;
+}
+.button {
+      width: 315px;
+      height: 109px;
+	  border:none;
+	  top:1px;
+	  left:24px;
+	  margin:0;
+	  padding:0;
+	  cursor:pointer;
+	  z-index:2;
+	  background: transparent url(../images/btn_spin.png) 0 0 no-repeat;
+}
+.button_on {
+      width: 315px;
+      height: 109px;
+	  top:1px;
+	  border:none;
+	  left:24px;
+	  margin:0;
+	  padding:0;
+	  z-index:1000;
+	  background: transparent url(../images/btn_spin_on.png) 0 0 no-repeat;
+}
+
+.spinButton {height:109px; width:315px; left: 0;
+    margin: 0;
+    padding: 0;
+    top: 14px; text-shadow: 0px 1px 1px #fff; font: bold 72px 'Futura', Verdana, sans-serif;
+	text-transform:uppercase;
+	z-index:2;
+}
+.spinButton_on {
+	height:109px;
+	width:315px;
+	left: 0px;
+    margin: 0;
+    padding: 0;
+    top: 14px; text-shadow: 0px 1px 1px #fff; font: bold 72px 'Futura', Verdana, sans-serif;
+	text-transform:uppercase;
+	z-index:2;
+}
+
+/* SPIN BUTTON TEXT: red layout.spinButton span {text-shadow: 0px 1px 1px #fff;font-family:'Futura', Verdana, sans-serif; text-align:center;
+	font-size:72px; font-weight:bold; z-index:20; color:#000; display:inline; z-index:5000; position:relative; top:-100px; left:-10px; 	
+}*/
+.ad_unit_bg {display:inline; height:100px; width:440px; padding: 0; margin:0; top: 5px; left: 100px; text-align:center; background:transparent url("../images/ad_unit_bg_440.jpg") 0 0 no-repeat;	
+}
+#ad_290 {display:inline-block; height:90px; width:290px; padding: 0; margin:0; top: 5px; left: 5px; text-align:left;
+}
+
+.ad_unit_bg span {display:inline; height:90px; width:74px; padding: 0; margin:0; top: 10px; left: 23px; text-align:left; background:transparent; 
+	font: bold 30px 'Century Gothic Bold Condensed', Verdana, sans-serif;
+	color:#444;
+	text-transform:uppercase;
+}
+.ad_unit_bg .ad_unit_5 {
+	display:inherit; 
+	width:25px;
+	padding: 0; 
+	margin:0;
+	top: 0px;
+	left: 15px; 
+	text-align:left;
+	background:transparent; 
+	font: bold 48px 'Futura', Verdana, sans-serif;
+	color:#FC5B03;
+}
+.footer {
+	width: 100%;
+	height: 40px;
+	font-size: 16px;
+	color: #030303;
+	text-shadow: 0px 1px 0px #E7E3E3;
+	text-align: center;
+	margin: 3px auto;
+	padding: 0px;
+	letter-spacing: 1px;
+	clear: both;
+	display:inline;
+}
+.footer a:link, .footer a:visited, .footer a:hover, .footer a:active {
+	color: #030303;
+	text-decoration: none;
+	padding: 8px;
+	display: inline-block;
+	font-size: 16px;
+}

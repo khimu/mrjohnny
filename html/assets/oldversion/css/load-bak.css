@@ -1,0 +1,12 @@
+
+@import url(slotmachine.css);
+
+/* ANIMATION: Background IMAGE SWAP IN wrapper*/
+
+	.state1 {background: transparent url("../images/bg_state8-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center; position:relative; top:417px; left:48px;}
+	.state2 {background: transparent url("../images/bg_state9-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center; position:relative; top:417px; left:48px;}
+	.state3 {background: transparent url("../images/bg_state10-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center; position:relative; top:417px; left:48px;}
+	.state4 {background: transparent url("../images/bg_state8-1.jpg") 0 0 no-repeat; height: 256px; width:544px; margin:0; text-align:center;position:relative; top:417px; left:48px;}
+
+
+/* END ANIMATION: Background IMAGE SWAP IN wrapper*/
