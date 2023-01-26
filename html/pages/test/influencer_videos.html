@@ -75,44 +75,6 @@
 
             $.ajax({
                 type: "GET",
-                url: api_endpoint + "/listBidsByVideos/" + identity,
-                crossDomain: true,
-                headers: {
-                    'Authorization': 'Bearer ' + token
-                },
-                dataType: 'json',
-                success: function (result) {
-                    var json = $.parseJSON(JSON.stringify(result));
-                    console.log(JSON.stringify(json));
-                    let items = json.Items;
-                    console.log(JSON.stringify(items));
-                    for (var i in json.Items) {
-                        let row = $("#mrjohnny-template-content .mrjohnny-template-row").first().clone();
-                        console.log(JSON.stringify(items[i]));
-                        row.find(".mrjohnny-brand-image-name").html(items[i].filename);
-                        row.find(".mrjohnny-status").html(items[i].creator_accepted);
-                        row.find(".mrjohnny-brand-email").html(items[i].bidder_email);
-                        //row.find(".mrjohnny-filename").html(items[i].video_filename);
-                        //row.find(".mrjohnny-email").html(items[i].creator_email);
-                        row.find(".mrjohnny-bid-amount").html(items[i].amount);
-                        row.find(".mrjohnny-description").html(items[i].ad_description);
-                        // fix to make ajax
-                        row.find(".brand_image_id").attr('href', "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/brand-upload.html?id=" + items[i].id);
-                        row.show();
-                        row.css("visibility", "visible");
-                        $("#mrjohnny-template-content").append(row);
-                        console.log("row " + row.html());
-                    }
-                    $("#mrjohnny-template-content").trigger("create");
-                },
-                error: function (xhr, status, error) {
-                    console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
-                    //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
-                }
-            });
-
-            $.ajax({
-                type: "GET",
                 url: api_endpoint + "/listCreatorVideos/" + identity,
                 crossDomain: true,
                 headers: {
@@ -128,14 +90,18 @@
                         let row = $("#mrjohnny-creator-video-list .mrjohnny-creator-video-list-row").first().clone();
                         console.log(JSON.stringify(items[i]));
 
-                        row.find(".video-end-bid-window").html(items[i].end_bid_window);
+                        row.find('.video_title').html(items[i].title);
+                        row.find('.video_scheduled_release_date').html(items[i].scheduled_release_date);
+                        row.find('.video_edit_view').attr('href', "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/creator_video_detail.html?id=" + items[i].id);
+
+/*                        row.find(".video-end-bid-window").html(items[i].end_bid_window);
                         row.find(".video-start-bid-window").html(items[i].start_bid_window);
                         row.find(".video-description").html(items[i].description);
                         row.find(".video-title").html(items[i].title);
                         row.find(".video-open-bid-amount").html(items[i].open_bid_amount);
                         row.find(".mrjohnny-bid").html(items[i].amount);
                         // fix to make ajax
-                        row.find(".creator_video_id").attr('href', "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/creator_video_detail.html?id=" + items[i].id);
+                        row.find(".creator_video_id").attr('href', "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/creator_video_detail.html?id=" + items[i].id);*/
                         row.show();
                         row.css("visibility", "visible");
                         $("#mrjohnny-creator-video-list").append(row);
@@ -152,8 +118,73 @@
 
 
     </script>
+
+    <style>
+        .mrjohnny-creator-video-list-row {
+        }
+
+        .video_title {
+        }
+
+        .video_scheduled_release_date{
+        }
+
+        .video_edit_view {
+
+        }
+
+    </style>
 </head>
 <body>
 
-    </body>
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    Influencer Videos
+</button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Influencer Videos</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table id="mrjohnny-creator-video-list" class="table table-success table-striped table-hover">
+                        <tr class="table-active">
+                            <th>Title</th>
+                            <th>Scheduled Release Date</th>
+                            <th></th>
+                        </tr>
+                        <tr class="mrjohnny-creator-video-list-row" style="display:none">
+                            <td class="video_title"></td>
+                            <td class="video_scheduled_release_date"></td>
+                            <td>
+                                <a href="javascript:;"
+                                   class="video_edit_view text-secondary font-weight-bold text-xs"
+                                   data-toggle="tooltip" data-original-title="Edit">
+                                    Edit
+                                </a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- End My Account Boxy -->
+    <script type="text/javascript">
+        $('#my-account').click(function(){
+            new Boxy('#boxy-my-account', {title: 'Test Boxy', modal: false});
+        });
+    </script>
+
+
+</body>
 </html>

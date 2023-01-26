@@ -53,12 +53,12 @@ exports.handler = async (event) => {
             id: bid_id,
             bid_amount: obj.bid_amount,
             currency: 'USD',
-            content_id: obj.content_id,
             video_key: obj.video_key,
-            brand_id: obj.brand_id,
+            image_key: Key,
             position_x: obj.position_x,
             position_y: obj.position_y,
-            position_z: obj.position_z,
+            html_position_x: obj.html_position_x,
+            html_position_y: obj.html_position_y,
             frame_pixel: obj.frame_pixel,
             ad_description: obj.ad_description,
             bidder_email: obj.bidder_email,
@@ -66,10 +66,10 @@ exports.handler = async (event) => {
             creator_accepted: false,
             filename: filename,
             s3_bucket: S3_BUCKET,
-            image_key: Key,
             create_date: Date.now()
         }
     };
+
 
 
     let result = await dynamo.put(params).promise();
@@ -81,7 +81,7 @@ exports.handler = async (event) => {
         type = "video";
         extension = "mp4";
     }
-    return await getUploadURL(event, email, filename, type, extension);
+    return await getUploadURL(event, email, filename, type, extension, bid_id);
 }
 
 function create_UUID(){
@@ -94,7 +94,7 @@ function create_UUID(){
     return uuid;
 }
 
-const getUploadURL = async function(event, email, filename, type, extension) {
+const getUploadURL = async function(event, email, filename, type, extension, bid_id) {
     const randomID = parseInt(Math.random() * 10000000);
     const Key = `${email}/${filename}`;
     const REGION = 'us-east-1';
@@ -131,7 +131,8 @@ const getUploadURL = async function(event, email, filename, type, extension) {
             uploadURL: uploadURL,
             Key,
             url,
-            CONTENT_TYPE
+            CONTENT_TYPE,
+            bid_id
         });
     } catch (err) {
         statusCode = '400';

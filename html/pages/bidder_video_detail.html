@@ -193,13 +193,14 @@
             }
         }
 
-        function setCookie(token) {
-            var now = new Date();
-            var time = now.getTime();
-            var expireTime = time + 1000 * 36000;
+        function setCookie(name, cookie){
+            const now = new Date();
+            const time = now.getTime();
+            const expireTime = time + 3600*1000;;
             now.setTime(expireTime);
-            document.cookie = 'cookie=' + token + ';expires=' + now.toUTCString() + ';path=/';
+            document.cookie = name + '=' + cookie + ';expires='+now.toUTCString()+';path=/';
         }
+
 
         function getCookie() {
             alert(document.cookie);
@@ -342,6 +343,76 @@
             });
         }
 
+
+        function uploadImage() {
+
+            $.ajax({
+                type: "PUT",
+                url: api_endpoint + "/brand-sign-url/" + getCookieValue('identity') + "/" + cleanFileName,
+                crossDomain: true,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                data: JSON.stringify(Object.fromEntries(formData)),
+                dataType: 'json',
+                success: function (signedURL) {
+                    console.log('success ' + signedURL);
+                    var json = $.parseJSON(JSON.stringify(signedURL));
+
+                    console.log('uploadURL ' + json.uploadURL);
+
+                    //let blobData = new Blob([new Uint8Array(array)], {type: 'image/jpeg'})
+                    //let blobData = new Blob([new Uint8Array(array)], {type: 'video/mp4'})
+
+                    $.ajax({
+                        type: "PUT",
+                        url: json.uploadURL,
+                        crossDomain: true,
+                        headers: {
+                            "x-amz-acl": "public-read",
+                            "Key": getCookieValue('identity') + "/" + cleanFileName,
+                            "Content-Type": "image/jpeg"
+                        },
+                        cache: false,
+                        contentType: false,
+                        processData: false,
+                        async: true,
+                        data: photo,
+                        //dataType: 'text/html',
+                        success: function (result) {
+                            console.log("got a success");
+                            // success is going into error even though i change type to text/html
+                            $('#loading').hide();
+                            let key = getCookieValue('identity') + "/" + cleanFileName;
+                            displayProtectedImage('container', api_endpoint + "/content/" + key);
+
+                            // console.log(result);
+                            // $(".modal-body").html("Your image is uploaded @ " + json.url);
+                            // new Boxy('#popupBox', {title: 'Possible Upload Issue'});
+                            //$('#loading').hide();
+                        },
+                        error: function (xhr, status, error) {
+                            console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+                            //$(".modal-body").html("Something went wrong.  Check if your content was successfully @ " + + json.url);
+                            //new Boxy('#popupBox2', {title: 'Possible Upload Issue'});
+                            $('#loading').hide();
+                            // check if all is wll
+                            //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+                        }
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+                    // $('#events-form-popup').click(function(){
+                    // 	new Boxy('#events-page', {title: 'Profile Upload'});
+                    // });
+                    //new Boxy('#popupBox', {title: 'Login message'});
+                    $('#loading').hide();
+                    //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+                }
+            });
+
+        }
 
     </script>
 

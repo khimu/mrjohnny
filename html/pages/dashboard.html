@@ -21,7 +21,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/favicon.png">
   <title>
-    Material Dashboard 2 by Creative Tim
+    Brandfluencer
   </title>
   <!--     Fonts and icons     -->
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
@@ -36,8 +36,194 @@
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.4" rel="stylesheet" />
 
 
-  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 
+<!--  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
+  <style type="text/css">
+    #drag {
+      /*max-width: 250px;*/
+      /*max-height: 300px;*/
+      float: left;
+      /*margin: 10px;*/
+      background-color: transparent;
+      /*padding:10px;*/
+      z-index: 1000;
+      margin-left: 0;
+      margin-right: auto;
+    }
+
+    #drop {
+      max-width: 600px;
+      max-height: 575px;
+      float: left;
+      margin-left: auto;
+      margin-right: 0;
+      /*margin: 10px;*/
+      background-color: transparent;
+      /*padding:10px;*/
+      z-index: -1;
+    }
+
+    .custom-popover {
+      --bs-popover-max-width: 200px;
+      --bs-popover-border-color: var(--bs-primary);
+      --bs-popover-header-bg: var(--bs-primary);
+      --bs-popover-header-color: var(--bs-white);
+      --bs-popover-body-padding-x: 1rem;
+      --bs-popover-body-padding-y: .5rem;
+    }
+  </style>
+  <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/js/jquery-1.8.1.min.js"></script>
+  <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+  <link href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/bootstrap-5.2.3-dist/css/bootstrap.min.css"
+        rel="stylesheet" id="bootstrap-css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+  <!-- CSS CDN --><!-- datetimepicker jQuery CDN -->
+  <link rel="stylesheet"
+        href=
+                "https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"
+  />
+  <script src=
+                  "https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js">
+  </script>
+
+
+  <link rel="stylesheet" href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fonts/icomoon/style.css">
+  <link href='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/core/main.css' rel='stylesheet' />
+  <link href='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/daygrid/main.css' rel='stylesheet' />
+  <link rel="stylesheet" href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/css/style.css">
+
+<!--  <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/jquery-3.3.1.min.js"></script>-->
+  <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/popper.min.js"></script>
+
+  <script src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/core/main.js'></script>
+  <script src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/interaction/main.js'></script>
+  <script src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/daygrid/main.js'></script>
+  <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/main.js"></script>
+
+
+  <!-- Enables drag and drop feature -->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+
+
+
+  <!-- Video Image Overlay Script -->
+  <script>
+    var vid_x = 122;
+    var vid_y = 52;
+    var vid_html_x;
+    var vid_html_y;
+    var pause_vid_at;
+
+
+    $(function () {
+      var vid = document.getElementById("video");
+      var once = false;
+
+      const video = document.getElementById('video');
+
+      function togglePlay() {
+        console.log('play click');
+        if (video.paused || video.ended) {
+          console.log('video playing');
+          $('.bi ').addClass('bi-pause-btn-fill');
+          $('.bi ').removeClass('bi-play-btn-fill');
+          video.play();
+        } else {
+          $('.bi ').addClass('bi-play-btn-fill');
+          $('.bi ').removeClass('bi-pause-btn-fill');
+          video.pause();
+        }
+      }
+
+
+
+      $('#playVideo').click(function () {
+        console.log('play click');
+        if (video.paused || video.ended) {
+          console.log('video playing');
+          $('.bi ').addClass('bi-pause-btn-fill');
+          $('.bi ').removeClass('bi-play-btn-fill');
+          video.play();
+        } else {
+          $('.bi ').addClass('bi-play-btn-fill');
+          $('.bi ').removeClass('bi-pause-btn-fill');
+          video.pause();
+        }
+      });
+
+      $("#drag").draggable();
+      $("#drop").droppable(
+              {
+                drop: function () {
+                  console.log("I am dropped ");
+                }
+              });
+
+      // $.ajaxSetup({ cache: true });
+
+      $('#drag').mouseup(function (e) {
+        vid.pause();
+
+        console.log('currentTime ' + vid.currentTime);
+        $('#video').trigger('mouseout');
+
+        var y = window.scrollY + document.querySelector('#video').getBoundingClientRect().top // Y
+        var x = window.scrollX + document.querySelector('#video').getBoundingClientRect().left // X
+
+        console.log('video ' + x + " y " + y);
+        console.log("x: " + e.pageX + " y: " + e.pageY);
+
+        vid_x = e.pageX - x;
+        vid_y = e.pageY - y;
+        vid_html_x = e.pageX;
+        vid_html_y = e.pageY;
+
+        pause_vid_at = vid.currentTime;
+
+        console.log('vid x ' + vid_x + " vid y " + vid_y);
+
+        $('#position_x').attr('value', vid_x);
+        $('#position_y').attr('value', vid_y);
+        $('#html_position_x').attr('value', vid_html_x);
+        $('#html_position_y').attr('value', vid_html_y);
+        $('#frame_pixel').attr('value', pause_vid_at);
+
+        // $('#position_x_detail').attr('value', vid_x);
+        // $('#position_y_detail').attr('value', vid_y);
+        // $('#html_position_x_detail').attr('value', vid_html_x);
+        // $('#html_position_y_detail').attr('value', vid_html_y);
+        // $('#frame_pixel_detail').attr('value', pause_vid_at);
+      });
+
+      // reset video and dynamically pace image for user
+      $("#review").click(function () {
+        console.log('got the click');
+        var vid = document.getElementById("video");
+        $('#bidder_image_upload').hide();
+        once = false;
+        vid.load();
+        vid.play();
+      });
+
+      vid.addEventListener("timeupdate", function () {
+        var vid = document.getElementById("video");
+        if (this.currentTime > pause_vid_at && once == false) {
+          once = true;
+          vid.pause();
+          $('#bidder_image_upload').show();
+          window.t = setTimeout(function () {
+            $('#bidder_image_upload').hide();
+          }, 1000);
+          //.animate({ top: vid_html_y, left: vid_html_x},1200);
+          vid.play();
+        }
+      });
+    });
+  </script>
+
+<!-- Cookie Script -->
   <script>
     function is_cookie_exist(name){
       return document.cookie.split(';').some(c => {
@@ -70,34 +256,723 @@
       const parts = value.split(`; ${name}=`);
       if (parts.length === 2) return parts.pop().split(';').shift();
     }
+  </script>
+
+  <!-- Dashboard Script -->
+  <script>
+
+    function get_query(){
+      var url = document.location.href;
+      var qs = url.substring(url.indexOf('?') + 1).split('&');
+      for(var i = 0, result = {}; i < qs.length; i++){
+        qs[i] = qs[i].split('=');
+        result[qs[i][0]] = decodeURIComponent(qs[i][1]);
+      }
+      return result;
+    }
+
+    const result = get_query();
+    console.log(result);
+    window.localStorage.setItem('video_id', result.id);
+    $('#video_id', result.id);
+
+    if(!result.id) {
+      location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/landing-page.html';
+    }
 
     // Attach a submit handler to the form
     $(document).ready(function(){
       if (!getCookieValue('atid')) {
+        $(".alert").delay(2000).slideUp(200, function() {
+          $(this).alert('close');
+        });
+        $('#loading').hide();
+        location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+      }
+
+      const identity = getCookieValue("identity");
+      $("#identity").text(identity);
+      $('#nav_title').html(identity);
+      $('#bidder_email').attr('value', identity);
+    });
+  </script>
+
+
+  <!-- Get Video Detail -->
+  <script type="text/javascript">
+
+    $(document).ready(function () {
+
+      $.ajax({
+        type: "GET",
+        url: api_endpoint + "/creator_video/" + window.localStorage.getItem('video_id'),
+        crossDomain: true,
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+        dataType: 'json',
+        success: function (result) {
+          console.log('success');
+          const json = JSON.parse(JSON.stringify(result));
+          console.log(JSON.stringify(result));
+
+          let item = json.Item;
+          console.log(JSON.stringify(item));
+
+          $('#video_id').attr('value', item.id);
+          $('#video_name').html(item.filename);
+          $('#scheduled_release_date_detail').html(item.scheduled_release_date);
+          $('#video_title_detail').html(item.title);
+          $('#video_create_date').html('value', item.create_date);
+          $('#video_bid_detail').html(item.start_bid_window + " " + item.end_bid_window + " => " + item.open_bid_amount);
+          $('#bid_type_detail').html(item.bid_type);
+          $('#video_description_detail').html(item.description + " (" + item.audience_category + ")");
+          $('#social_media_detail').html(item.social_media_platform + " (" + item.platform_api_key + ")");
+
+
+          $('#scheduled_release_date').attr('value', item.scheduled_release_date);
+          $('#video_title').attr('value', item.title);
+          const $select = document.querySelector('#bid_type');
+          $select.value = item.bid_type;
+
+          $('#video_description').attr('value', item.description);
+          $('#audience_category').attr('value', item.audience_category);
+          $('#platform_api_key').attr('value', item.platform_api_key);
+          $('#social_media_platform').attr('value', item.social_media_platform);
+          $('#open_bid_amount').attr('value', item.open_bid_amount);
+          $('#start_bid_window').attr('value', item.start_bid_window);
+          $('#end_bid_window').attr('value', item.end_bid_window);
+          $('#kid_friendly').attr('value', item.kid_friendly);
+          $('#enable_publish').attr('value', item.enable_publish);
+
+          // For Bidder
+          $('#bid_creator_email').attr('value', item.creator_email);
+          $('#bid_video_id').attr('value', item.id);
+          $('#video_key').attr('value', item.Key);
+          $('#creator_email').attr('value', item.creator_email);
+          $('#bidder_email_detail').html(item.creator_email);
+
+          $('#video_bid_detail').html('Open Bid Amount:' + item.open_bid_amount + '\n' +
+                  'Bid Window: ' + item.start_bid_window + " - " + item.end_bid_window);
+
+          if (item.enable_publish) {
+            $('#video_published_to_platform').html('Is Live');
+          } else {
+            $('#video_published_to_platform').html('Go Live');
+          }
+
+          displayProtectedImage('#video', api_endpoint + "/content/" + item.key);
+        },
+        error: function (xhr, status, error) {
+          console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+          alert("You are no longer logged in");
+          //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+        }
+      });
+
+      // need to implement onSubmit
+    });
+
+  </script>
+
+
+
+ <!-- List Create Calendar -->
+  <script>
+
+    let token = getCookieValue('atid');
+    let api_endpoint = getCookieValue('api-endpoint');
+
+    //console.log("api_endpoint " + api_endpoint);
+
+    var events = [];
+
+    $(document).ready(function () {
+      if (!getCookieValue('atid')) {
         alert('You are logged out');
         //new Boxy('#popupBox', {title: 'Login message'});
         $('#loading').hide();
+        delete_cookie('api-endpoint', "/", "");
         location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
       }
 
       let identity = getCookieValue("identity");
       $("#identity").text(identity);
 
-      // TODO
-      // check if logged in
+      $.ajax({
+        type: "GET",
+        url: api_endpoint + "/listCreatorVideos/" + identity,
+        crossDomain: true,
+        headers: {
+          'Authorization': 'Bearer ' + token
+        },
+        dataType: 'json',
+        success: function (result) {
+          var json = $.parseJSON(JSON.stringify(result));
+          console.log(JSON.stringify(json));
+          let items = json.Items;
+          console.log(JSON.stringify(items));
 
+
+          for (var i in json.Items) {
+            let row = $("#mrjohnny-creator-video-list .mrjohnny-creator-video-list-row").first().clone();
+            console.log(JSON.stringify(items[i]));
+
+            //
+            // 2020-02-16T16:00:00
+            // 2023/01/22 23:00
+
+            var format_date = items[i].scheduled_release_date.replaceAll("/", "-").replace(" ", "T") + ":00";
+            console.log(format_date);
+
+            main_item = {}
+            main_item ["title"] = items[i].title;
+            main_item ["start"] = format_date;
+            main_item ["url"] = "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html?id=" + items[i].id;
+            events.push(main_item);
+
+            if(items[i].open_bid_amount && items[i].start_bid_window) {
+              bid_item = {}
+              bid_item ["title"] = items[i].title + " (" + items[i].open_bid_amount + ")";
+              bid_item ["start"] = items[i].start_bid_window;
+              bid_item ["end"] = items[i].end_bid_window;
+              bid_item ["url"] = "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html?id=" + items[i].id;
+              events.push(bid_item);
+            }
+
+            window.localStorage.setItem(items[i].id, JSON.stringify(items[i]));
+
+            //2020-02-16T16:00:00
+
+            // {
+            //     groupId: 999,
+            //         title: 'Repeating Event',
+            //     start: '2020-02-16T16:00:00'
+            // },
+            //
+
+          }
+
+          console.log(events);
+
+          var calendarEl = document.getElementById('calendar');
+
+          console.log(events);
+
+          var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: [ 'interaction', 'dayGrid' ],
+            defaultDate: '2023-01-22',
+            editable: true,
+            eventLimit: true, // allow "more" link when too many events
+            events: events
+          });
+
+          calendar.render();
+
+        },
+        error: function (xhr, status, error) {
+          console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+          //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+        }
+      });
+    });
+
+  </script>
+
+<!-- Brand Image Upload -->
+  <script type="text/javascript">
+    let brandImageKey;
+    let selectVideoId;
+
+    $(document).ready(function () {
+      //console.log(getCookieValue('atid'));
+
+      $("form#image_upload_data").submit(function (e) {
+        console.log(api_endpoint);
+        $('#loading').show();
+        e.preventDefault();
+
+        let formData = new FormData(this);
+        const photo = document.getElementById("upload-image").files[0];
+        formData.delete('upload-image');
+
+        console.log(photo.name);
+        var cleanFileName = photo.name.split('\\').pop(); // clean from C:\fakepath OR C:\fake_path
+        console.log('clean file name : ' + cleanFileName);
+
+        for(var pair of formData.entries()){
+          console.log(pair[0], pair[1]);
+        }
+
+        const videoFields = JSON.parse(window.localStorage.getItem(selectVideoId));
+
+        brandImageKey = getCookieValue('identity') + "/" + cleanFileName;
+        formData.append('bidder_email', identity);
+        formData.append('video_key', videoFields.Key);
+        formData.append('creator_email', videoFields.creator_email);
+        formData.append('image_key', brandImageKey);
+        formData.append('filename', cleanFileName);
+
+        $('#bidder_email').attr('value', identity);
+        $('#video_key').attr('value', videoFields.Key);
+        $('#bid_creator_email').attr('value', videoFields.creator_email);
+        $('#bidder_email_detail').attr('value', videoFields.creator_email)
+        $('#image_key').attr('value', brandImageKey);
+
+
+        $.ajax({
+          type: "PUT",
+          url: api_endpoint + "/brand-sign-url/" + getCookieValue('identity') + "/" + cleanFileName,
+          crossDomain: true,
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+          data: JSON.stringify(Object.fromEntries(formData)),
+          dataType: 'json',
+          success: function (signedURL) {
+            console.log('success ' + signedURL);
+            var json = $.parseJSON(JSON.stringify(signedURL));
+
+            signedUrl = json.uploadURL;
+            console.log('uploadURL ' + json.uploadURL);
+
+            $.ajax({
+              type: "PUT",
+              url: json.uploadURL,
+              crossDomain: true,
+              headers: {
+                "x-amz-acl": "public-read",
+                "Key": getCookieValue('identity') + "/" + cleanFileName,
+                "Content-Type": "image/jpeg"
+              },
+              cache: false,
+              contentType: false,
+              processData: false,
+              async: true,
+              data: photo,
+              //dataType: 'text/html',
+              success: function (result) {
+                console.log("got a success");
+                // success is going into error even though i change type to text/html
+                $('#loading').hide();
+                let key = getCookieValue('identity') + "/" + cleanFileName;
+                displayProtectedImage('#bidder_image_upload', api_endpoint + "/content/" + key);
+                const bid_id = JSON.parse(result).bid_id;
+                console.log('bid_id from upload image is ' + bid_id);
+                window.localStorage.setItem('bid_id', bid_id);
+                $('#bid_id').attr('value', bid_id);
+              },
+              error: function (xhr, status, error) {
+                console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+                $('#loading').hide();
+                // check if all is wll
+                //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+              }
+            });
+          },
+          error: function (xhr, status, error) {
+            console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+            $('#loading').hide();
+            //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+          }
+        });
+      });
+
+    });
+
+
+    function fetchSignUrl(url) {
+      console.log('fetching sign url to retrieve asset');
+      return $.ajax({
+        type: "GET",
+        url: url,
+        crossDomain: true,
+        headers: {
+          'Authorization': 'Bearer ' + getCookieValue('atid')
+        },
+        dataType: 'json'
+      });
+    }
+
+
+    function fetchImagen(url) {
+      const headers = new Headers();
+      return fetch(url, {headers});
+    }
+
+    function arrayBufferToBase64(buffer) {
+      return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+    }
+
+    async function displayProtectedImage(
+            imageId, imageUrl
+    ) {
+      fetchSignUrl(imageUrl).done(function (response) {
+        console.log('got s3 video url is ' + response);
+        var json = $.parseJSON(JSON.stringify(response));
+        console.log('video url ' + json.uploadURL);
+
+        $(imageId).attr('src', json.uploadURL);
+
+      }).fail(function () {
+        // An error occurred
+      });
+    }
+
+  </script>
+
+  <!-- Brand form upload -->
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("form#bid_data").submit(function (e) {
+        console.log(api_endpoint);
+        $('#loading').show();
+        e.preventDefault();
+
+        var formData = new FormData(this);
+        formData.delete('upload-image');
+        if(brandImageKey) {
+          formData.append('image_key', brandImageKey);
+          formData.append('filename', brandImageKey.split('/')[1]);
+        }
+
+        for(let pair of formData.entries()){
+          console.log(pair[0], pair[1]);
+        }
+
+        $.ajax({
+          type: "PUT",
+          url: api_endpoint + "/brand-sign-url/" + brandImageKey,
+          crossDomain: true,
+          headers: {
+            'Authorization': 'Bearer ' + token
+          },
+          data: JSON.stringify(Object.fromEntries(formData)),
+          dataType: 'json',
+          success: function (signedURL) {
+            console.log('success ' + signedURL);
+            var json = $.parseJSON(JSON.stringify(signedURL));
+            console.log('uploadURL ' + json.uploadURL);
+          },
+          error: function (xhr, status, error) {
+            console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+            $('#loading').hide();
+            //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+          }
+        });
+      });
     });
 
   </script>
 </head>
 
+<!-- Modal -->
+<div class="modal fade" id="influencerVideoFormModal" tabindex="-1" aria-labelledby="influencerVideoFormModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="data" method="post" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="influencerVideoFormModalLabel">Influencer Video Form</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="id" id="video_id"/>
+          <input type="hidden" name="key" id="key"/>
+          <input type="hidden" name="filename" id="filename"/>
+          <!--<input type="hidden" name="directory_path" id="directory_path" />-->
+          <input type="hidden" name="creator_email" id="creator_email"/>
+
+<!--          <div class="row g-3" style="margin-top:20px">-->
+<!--            <div class="col"><input id="upload-video" name="upload-video" class="form-control" type="file" aria-label="Upload Video"/></div>-->
+<!--          </div>-->
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"> <select class="form-select" aria-label="Bid Type" name="bid_type" id="bid_type">
+              <option selected>Open</option>
+              <option value="1">Flat Fee</option>
+              <option value="2">Suggested Fee</option>
+            </select></div>
+            <div class="col"> <input type="text" name="title" id="video_title" class="form-control input-lg" aria-label="Video Title" placeholder="Video Title"></div>
+          </div>
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><input type="text" name="description" id="description" class="form-control input-lg" aria-label="Video Description" placeholder="Video Description"></div>
+            <div class="col"><input type="text" name="scheduled_release_date" id="scheduled_release_date" class="form-control input-lg" aria-label="Scheduled Release Date" placeholder="Scheduled Release Date"></div>
+          </div>
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><input type="text" name="social_media_platform" id="social_media_platform" class="form-control input-lg" aria-label="Publish To Platform" placeholder="Publish To Platform"></div>
+            <div class="col"><input type="text" name="platform_api_key" id="platform_api_key" class="form-control input-lg" aria-label="Social Media Platform Developer API Key" placeholder="Social Media Platform Developer API Key"></div>
+          </div>
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><input type="text" name="open_bid_amount" id="open_bid_amount" class="form-control input-lg" aria-label="Open Bid Amount" placeholder="Open Bid Amount"></div>
+            <div class="col"><input type="text" name="start_bid_window" id="start_bid_window" class="form-control input-lg" aria-label="Start Bid Window" placeholder="Start Bid Window"></div>
+          </div>
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><input type="text" name="end_bid_window" id="end_bid_window" class="form-control input-lg" aria-label="End Bid Window" placeholder="End Bid Window"></div>
+            <div class="col"><input type="text" name="audience_category" id="audience_category" class="form-control input-lg" aria-label="Audience Category" placeholder="Audience Category"></div>
+          </div>
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col">
+               <span class="button-checkbox">
+               <div class="form-check d-flex justify-content-center mb-5">
+                    <input class="form-check-input me-2" type="checkbox" value="" name="kid_friendly" id="kid_friendly"/>
+                    <label class="form-check-label">
+                        <a href="#!">Kid Friendly</a>
+                    </label>
+                </div>
+                </span>
+            </div>
+            <div class="col">
+					<span class="button-checkbox">
+                   <div class="form-check d-flex justify-content-center mb-5">
+						<input class="form-check-input me-2" type="checkbox" value="" name="enable_publish" id="enable_publish"/>
+						<label class="form-check-label">
+							<a href="#!">Enable Go Live</a>
+						</label>
+					</div>
+                    </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" id="upload" class="btn btn-primary">Upload Video</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- End My Account Boxy -->
+<script type="text/javascript">
+  $('#influencer_video_form').click(function(){
+    new Boxy('#influencerVideoFormModal', {title: 'Influencer Video Form', modal: false});
+  });
+</script>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="placeBidFormModal" tabindex="-1" aria-labelledby="placeBidFormModalModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="bid_data" method="post" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="placeBidFormModalModalLabel">Place Bid Form</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <input type="hidden" name="bid_id" id="bid_id"/>
+          <input type="hidden" name="video_key" id="video_key"/>
+          <input type="hidden" name="bid_video_id" id="bid_video_id"/>
+          <input type="hidden" name="image_key" id="image_key"/>
+          <input type="hidden" name="position_x" id="position_x"/>
+          <input type="hidden" name="position_y" id="position_y"/>
+          <input type="hidden" name="frame_pixel" id="frame_pixel"/>
+          <input type="hidden" name="html_position_x" id="html_position_x"/>
+          <input type="hidden" name="html_position_y" id="html_position_y"/>
+          <input type="hidden" name="creator_email" id="bid_creator_email"/>
+          <input type="hidden" name="bidder_email" id="bidder_email"/>
+
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><input type="text" name="bid_amount" id="bid_amount" class="form-control input-lg" aria-label="Bid Amount" placeholder="Bid Amount"></div>
+          </div>
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><input type="text" name="ad_description" id="ad_description" class="form-control input-lg" aria-label="Ad Description" placeholder="Ad Description"></div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" id="submit_bid" class="btn btn-primary">Place Bid</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- End My Account Boxy -->
+<script type="text/javascript">
+  $('#place_bid').click(function(){
+    new Boxy('#placeBidFormModal', {title: 'Place Bid Form', modal: false});
+  });
+</script>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="imageUploadFormModal" tabindex="-1" aria-labelledby="imageUploadFormModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="image_upload_data" method="post" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="imageUploadFormModalLabel">Place Bid Form</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><input id="upload-video" name="upload-video" class="form-control" type="file" aria-label="Upload Video"/></div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" id="submit_brand_image_upload" class="btn btn-primary">Upload Image</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- End My Account Boxy -->
+<script type="text/javascript">
+  $('#brand_image_upload').click(function(){
+    new Boxy('#imageUploadFormModal', {title: 'Brand Image Upload', modal: false});
+  });
+</script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="placeBidDetailModal" tabindex="-1" aria-labelledby="placeBidDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="placeBidDetailModalLabel">Video Detail</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><p>Bidder Email</div>
+            <div class="col"><p id="bidder_email_detail">kim@gmail.com</div>
+          </div>
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><p>Bid Amount</div>
+            <div class="col"><p id="bid_amount_detail">$5000</div>
+          </div>
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><p>Ad Description</div>
+            <div class="col"><p id="bid_ad_description_detail">#gosh</div>
+          </div>
+          <div class="row g-3" style="margin-top:20px">
+            <table class="table align-items-center mb-0">
+              <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">X</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Y</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Seek</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td></td>
+                <td id="position_x_detail"></td>
+                <td id="frame_pixel_detail"></td>
+                <td id="position_y_detail"></td>
+              </tr>
+              <tr>
+                <td></td>
+                <td id="html_position_x_detail"></td>
+                <td id="html_position_y_detail"></td>
+                <td></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+<!-- End My Account Boxy -->
+<script type="text/javascript">
+  $('#bid_detail').click(function(){
+    new Boxy('#placeBidDetailModal', {title: 'Bid Detail', modal: false});
+  });
+</script>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="influencerVideoDetailModal" tabindex="-1" aria-labelledby="influencerVideoDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="influencerVideoDetailModalLabel">Video Detail</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+
+        <div class="row g-3" style="margin-top:20px">
+          <div class="col"><p>Video Title</div>
+          <div class="col"><p id="video_title_detail">kim@gmail.com</div>
+        </div>
+        <div class="row g-3" style="margin-top:20px">
+          <div class="col"><p>Video Name</div>
+          <div class="col"><p id="video_name">kim@gmail.com</div>
+        </div>
+        <div class="row g-3" style="margin-top:20px">
+          <div class="col"><p>Scheduled Release Date</div>
+          <div class="col"><p id="scheduled_release_date_detail">$5000</div>
+        </div>
+        <div class="row g-3" style="margin-top:20px">
+          <div class="col"><p>Description</div>
+          <div class="col"><p id="video_description_detail">$5000</div>
+        </div>
+        <div class="row g-3" style="margin-top:20px">
+          <div class="col"><p>Video Create Date</div>
+          <div class="col"><p id="video_create_date">#gosh</div>
+        </div>
+        <div class="row g-3" style="margin-top:20px">
+          <div class="col"><p>Bid Detail</div>
+          <div class="col"><p id="video_bid_detail">#gosh</div>
+        </div>
+        <div class="row g-3" style="margin-top:20px">
+          <div class="col"><p>Social Media Platform</div>
+          <div class="col"><p id="social_media_detail">#gosh</div>
+        </div>
+        <div class="row g-3" style="margin-top:20px">
+          <div class="col"><p>Video Published To Platform</div>
+          <div class="col"><p id="video_published_to_platform">#gosh</div>
+        </div>
+        <div class="row g-3" style="margin-top:20px">
+          <div class="col"><p>Bid Type</div>
+          <div class="col"><p id="bid_type_detail">#gosh</div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- End My Account Boxy -->
+<script type="text/javascript">
+  $('#influencer_video_detail').click(function(){
+    new Boxy('#influencerVideoDetailModal', {title: 'Influencer Video Detail', modal: false});
+  });
+</script>
+
+
 <body class="g-sidenav-show  bg-gray-200">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3   bg-gradient-dark" id="sidenav-main">
+
+
+
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-gradient-dark" id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
-      <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
+      <a class="navbar-brand m-0" href="#" target="_blank">
         <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
-        <span class="ms-1 font-weight-bold text-white">Material Dashboard 2</span>
+        <span id="nav_title" class="ms-1 font-weight-bold text-white"></span>
       </a>
     </div>
     <hr class="horizontal light mt-0 mb-2">
@@ -108,105 +983,54 @@
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">dashboard</i>
             </div>
-            <span class="nav-link-text ms-1">Dashboard</span>
+            <span class="nav-link-text ms-1">Influencer</span>
           </a>
         </li>
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link text-white " href="bidder_list_view.html">-->
+<!--            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">-->
+<!--              <i class="material-icons opacity-10">table_view</i>-->
+<!--            </div>-->
+<!--            <span class="nav-link-text ms-1">Bidder Bids & Videos</span>-->
+<!--          </a>-->
+<!--        </li>-->
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link text-white " href="creator_list_view.html">-->
+<!--            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">-->
+<!--              <i class="material-icons opacity-10">table_view</i>-->
+<!--            </div>-->
+<!--            <span class="nav-link-text ms-1">Creator Bids & Videos</span>-->
+<!--          </a>-->
+<!--        </li>-->
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link text-white " href="../pages/brand-upload.html">-->
+<!--            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">-->
+<!--              <i class="material-icons opacity-10">table_view</i>-->
+<!--            </div>-->
+<!--            <span class="nav-link-text ms-1">Brand Upload</span>-->
+<!--          </a>-->
+<!--        </li>-->
         <li class="nav-item">
-          <a class="nav-link text-white " href="bidder_list_view.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">table_view</i>
-            </div>
-            <span class="nav-link-text ms-1">Bidder Bids & Videos</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="creator_list_view.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">table_view</i>
-            </div>
-            <span class="nav-link-text ms-1">Creator Bids & Videos</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/brand-upload.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">table_view</i>
-            </div>
-            <span class="nav-link-text ms-1">Brand Upload</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/creator-upload.html">
+          <a class="nav-link text-white " href="../pages/influencer_video_upload.html">
             <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
               <i class="material-icons opacity-10">table_view</i>
             </div>
             <span class="nav-link-text ms-1">Creator Upload</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/billing.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">receipt_long</i>
-            </div>
-            <span class="nav-link-text ms-1">Billing</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/virtual-reality.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">view_in_ar</i>
-            </div>
-            <span class="nav-link-text ms-1">Virtual Reality</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/rtl.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">format_textdirection_r_to_l</i>
-            </div>
-            <span class="nav-link-text ms-1">RTL</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/notifications.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">notifications</i>
-            </div>
-            <span class="nav-link-text ms-1">Notifications</span>
-          </a>
-        </li>
-        <li class="nav-item mt-3">
-          <h6 class="ps-4 ms-2 text-uppercase text-xs text-white font-weight-bolder opacity-8">Account pages</h6>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/profile.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">person</i>
-            </div>
-            <span class="nav-link-text ms-1">Profile</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/sign-in.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">login</i>
-            </div>
-            <span class="nav-link-text ms-1">Sign In</span>
-          </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/sign-up.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">assignment</i>
-            </div>
-            <span class="nav-link-text ms-1">Sign Up</span>
-          </a>
-        </li>
+<!--        <li class="nav-item">-->
+<!--          <a class="nav-link text-white " href="../pages/billing.html">-->
+<!--            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">-->
+<!--              <i class="material-icons opacity-10">receipt_long</i>-->
+<!--            </div>-->
+<!--            <span class="nav-link-text ms-1">Billing</span>-->
+<!--          </a>-->
+<!--        </li>-->
       </ul>
     </div>
     <div class="sidenav-footer position-absolute w-100 bottom-0 ">
       <div class="mx-3">
-        <a class="btn bg-gradient-primary mt-4 w-100" href="https://www.creative-tim.com/product/material-dashboard-pro?ref=sidebarfree" type="button">Upgrade to pro</a>
+
       </div>
     </div>
   </aside>
@@ -230,7 +1054,7 @@
           </div>
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
-              <a id="identity" class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="https://www.creative-tim.com/builder/material?ref=navbar-dashboard">Online Builder</a>
+              <a id="identity" class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="#">Online Builder</a>
             </li>
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:void(0);" onclick="getCookie();" class="nav-link text-body font-weight-bold px-0">
@@ -256,6 +1080,8 @@
               <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fa fa-bell cursor-pointer"></i>
               </a>
+
+              <!-- Can add ALERT here -->
               <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
                 <li class="mb-2">
                   <a class="dropdown-item border-radius-md" href="javascript:;">
@@ -326,150 +1152,22 @@
               </ul>
             </li>
           </ul>
+          <!-- END ALERT -->
         </div>
       </div>
     </nav>
     <!-- End Navbar -->
+
     <div class="container-fluid py-4">
-      <div class="row">
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-header p-3 pt-2">
-              <div class="icon icon-lg icon-shape bg-gradient-dark shadow-dark text-center border-radius-xl mt-n4 position-absolute">
-                <i class="material-icons opacity-10">weekend</i>
-              </div>
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Today's Money</p>
-                <h4 class="mb-0">$53k</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+55% </span>than last week</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-header p-3 pt-2">
-              <div class="icon icon-lg icon-shape bg-gradient-primary shadow-primary text-center border-radius-xl mt-n4 position-absolute">
-                <i class="material-icons opacity-10">person</i>
-              </div>
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Today's Users</p>
-                <h4 class="mb-0">2,300</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+3% </span>than last month</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-header p-3 pt-2">
-              <div class="icon icon-lg icon-shape bg-gradient-success shadow-success text-center border-radius-xl mt-n4 position-absolute">
-                <i class="material-icons opacity-10">person</i>
-              </div>
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">New Clients</p>
-                <h4 class="mb-0">3,462</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-danger text-sm font-weight-bolder">-2%</span> than yesterday</p>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6">
-          <div class="card">
-            <div class="card-header p-3 pt-2">
-              <div class="icon icon-lg icon-shape bg-gradient-info shadow-info text-center border-radius-xl mt-n4 position-absolute">
-                <i class="material-icons opacity-10">weekend</i>
-              </div>
-              <div class="text-end pt-1">
-                <p class="text-sm mb-0 text-capitalize">Sales</p>
-                <h4 class="mb-0">$103,430</h4>
-              </div>
-            </div>
-            <hr class="dark horizontal my-0">
-            <div class="card-footer p-3">
-              <p class="mb-0"><span class="text-success text-sm font-weight-bolder">+5% </span>than yesterday</p>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row mt-4">
-        <div class="col-lg-4 col-md-6 mt-4 mb-4">
-          <div class="card z-index-2 ">
-            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
-              <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
-                <div class="chart">
-                  <canvas id="chart-bars" class="chart-canvas" height="170"></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              <h6 class="mb-0 ">Website Views</h6>
-              <p class="text-sm ">Last Campaign Performance</p>
-              <hr class="dark horizontal">
-              <div class="d-flex ">
-                <i class="material-icons text-sm my-auto me-1">schedule</i>
-                <p class="mb-0 text-sm"> campaign sent 2 days ago </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6 mt-4 mb-4">
-          <div class="card z-index-2  ">
-            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
-              <div class="bg-gradient-success shadow-success border-radius-lg py-3 pe-1">
-                <div class="chart">
-                  <canvas id="chart-line" class="chart-canvas" height="170"></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              <h6 class="mb-0 "> Daily Sales </h6>
-              <p class="text-sm "> (<span class="font-weight-bolder">+15%</span>) increase in today sales. </p>
-              <hr class="dark horizontal">
-              <div class="d-flex ">
-                <i class="material-icons text-sm my-auto me-1">schedule</i>
-                <p class="mb-0 text-sm"> updated 4 min ago </p>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 mt-4 mb-3">
-          <div class="card z-index-2 ">
-            <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2 bg-transparent">
-              <div class="bg-gradient-dark shadow-dark border-radius-lg py-3 pe-1">
-                <div class="chart">
-                  <canvas id="chart-line-tasks" class="chart-canvas" height="170"></canvas>
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              <h6 class="mb-0 ">Completed Tasks</h6>
-              <p class="text-sm ">Last Campaign Performance</p>
-              <hr class="dark horizontal">
-              <div class="d-flex ">
-                <i class="material-icons text-sm my-auto me-1">schedule</i>
-                <p class="mb-0 text-sm">just updated</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+
+
       <div class="row mb-4">
-        <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
-          <div class="card">
-            <div class="card-header pb-0">
+        <div class="col-lg-8 col-md-6 mb-md-0 mb-4" sytle="width:700px;">
+          <div class="card"  sytle="width:700px;">
+            <div class="card-header pb-0" >
               <div class="row">
                 <div class="col-lg-6 col-7">
-                  <h6>Projects</h6>
+                  <h6>Influencer Video</h6>
                   <p class="text-sm mb-0">
                     <i class="fa fa-check text-info" aria-hidden="true"></i>
                     <span class="font-weight-bold ms-1">30 done</span> this month
@@ -481,8 +1179,8 @@
                       <i class="fa fa-ellipsis-v text-secondary"></i>
                     </a>
                     <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
+                      <li><a id="influencer_video_form" class="dropdown-item border-radius-md" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#influencerVideoFormModal">Edit</a></li>
+                      <li><a id="influencer_video_detail" class="dropdown-item border-radius-md" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#influencerVideoDetailModal">Detail</a></li>
                       <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
                     </ul>
                   </div>
@@ -490,320 +1188,55 @@
               </div>
             </div>
             <div class="card-body px-0 pb-2">
-              <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Companies</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Members</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Budget</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Completion</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-xd.svg" class="avatar avatar-sm me-3" alt="xd">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Material XD Version</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-2">
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ryan Tompson">
-                            <img src="../assets/img/team-1.jpg" alt="team1">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Romina Hadid">
-                            <img src="../assets/img/team-2.jpg" alt="team2">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alexander Smith">
-                            <img src="../assets/img/team-3.jpg" alt="team3">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jessica Doe">
-                            <img src="../assets/img/team-4.jpg" alt="team4">
-                          </a>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> $14,000 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">60%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-info w-60" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-atlassian.svg" class="avatar avatar-sm me-3" alt="atlassian">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Add Progress Track</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-2">
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Romina Hadid">
-                            <img src="../assets/img/team-2.jpg" alt="team5">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jessica Doe">
-                            <img src="../assets/img/team-4.jpg" alt="team6">
-                          </a>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> $3,000 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">10%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-info w-10" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-slack.svg" class="avatar avatar-sm me-3" alt="team7">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Fix Platform Errors</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-2">
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Romina Hadid">
-                            <img src="../assets/img/team-3.jpg" alt="team8">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jessica Doe">
-                            <img src="../assets/img/team-1.jpg" alt="team9">
-                          </a>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> Not set </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">100%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-success w-100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm me-3" alt="spotify">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Launch our Mobile App</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-2">
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ryan Tompson">
-                            <img src="../assets/img/team-4.jpg" alt="user1">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Romina Hadid">
-                            <img src="../assets/img/team-3.jpg" alt="user2">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Alexander Smith">
-                            <img src="../assets/img/team-4.jpg" alt="user3">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jessica Doe">
-                            <img src="../assets/img/team-1.jpg" alt="user4">
-                          </a>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> $20,500 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">100%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-success w-100" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-jira.svg" class="avatar avatar-sm me-3" alt="jira">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Add the New Pricing Page</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-2">
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ryan Tompson">
-                            <img src="../assets/img/team-4.jpg" alt="user5">
-                          </a>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> $500 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">25%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-info w-25" role="progressbar" aria-valuenow="25" aria-valuemin="0" aria-valuemax="25"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div>
-                            <img src="../assets/img/small-logos/logo-invision.svg" class="avatar avatar-sm me-3" alt="invision">
-                          </div>
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Redesign New Online Shop</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-2">
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ryan Tompson">
-                            <img src="../assets/img/team-1.jpg" alt="user6">
-                          </a>
-                          <a href="javascript:;" class="avatar avatar-xs rounded-circle" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Jessica Doe">
-                            <img src="../assets/img/team-4.jpg" alt="user7">
-                          </a>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> $2,000 </span>
-                      </td>
-                      <td class="align-middle">
-                        <div class="progress-wrapper w-75 mx-auto">
-                          <div class="progress-info">
-                            <div class="progress-percentage">
-                              <span class="text-xs font-weight-bold">40%</span>
-                            </div>
-                          </div>
-                          <div class="progress">
-                            <div class="progress-bar bg-gradient-info w-40" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="40"></div>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+
+              <div id="drop">
+                <p>
+                  <video id="video" style="max-width:600px">
+                    <source id="mp4" src="#"
+                            type="video/mp4"/>
+                  </video>
+                </p>
               </div>
+
             </div>
           </div>
         </div>
-        <div class="col-lg-4 col-md-6">
+
+
+
+        <div class="col-lg-4 col-md-6" style="width:200px;">
           <div class="card h-100">
             <div class="card-header pb-0">
-              <h6>Orders overview</h6>
-              <p class="text-sm">
-                <i class="fa fa-arrow-up text-success" aria-hidden="true"></i>
-                <span class="font-weight-bold">24%</span> this month
-              </p>
-            </div>
-            <div class="card-body p-3">
-              <div class="timeline timeline-one-side">
-                <div class="timeline-block mb-3">
-                  <span class="timeline-step">
-                    <i class="material-icons text-success text-gradient">notifications</i>
-                  </span>
-                  <div class="timeline-content">
-                    <h6 class="text-dark text-sm font-weight-bold mb-0">$2400, Design changes</h6>
-                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">22 DEC 7:20 PM</p>
-                  </div>
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <h6>Brand Image</h6>
+                  <p class="text-sm mb-0">
+                    <i class="fa fa-check text-info" aria-hidden="true"></i>
+                    <span class="font-weight-bold ms-1">30</span>
+                  </p>
                 </div>
-                <div class="timeline-block mb-3">
-                  <span class="timeline-step">
-                    <i class="material-icons text-danger text-gradient">code</i>
-                  </span>
-                  <div class="timeline-content">
-                    <h6 class="text-dark text-sm font-weight-bold mb-0">New order #1832412</h6>
-                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">21 DEC 11 PM</p>
-                  </div>
-                </div>
-                <div class="timeline-block mb-3">
-                  <span class="timeline-step">
-                    <i class="material-icons text-info text-gradient">shopping_cart</i>
-                  </span>
-                  <div class="timeline-content">
-                    <h6 class="text-dark text-sm font-weight-bold mb-0">Server payments for April</h6>
-                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">21 DEC 9:34 PM</p>
-                  </div>
-                </div>
-                <div class="timeline-block mb-3">
-                  <span class="timeline-step">
-                    <i class="material-icons text-warning text-gradient">credit_card</i>
-                  </span>
-                  <div class="timeline-content">
-                    <h6 class="text-dark text-sm font-weight-bold mb-0">New card added for order #4395133</h6>
-                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">20 DEC 2:20 AM</p>
-                  </div>
-                </div>
-                <div class="timeline-block mb-3">
-                  <span class="timeline-step">
-                    <i class="material-icons text-primary text-gradient">key</i>
-                  </span>
-                  <div class="timeline-content">
-                    <h6 class="text-dark text-sm font-weight-bold mb-0">Unlock packages for development</h6>
-                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">18 DEC 4:54 AM</p>
-                  </div>
-                </div>
-                <div class="timeline-block">
-                  <span class="timeline-step">
-                    <i class="material-icons text-dark text-gradient">payments</i>
-                  </span>
-                  <div class="timeline-content">
-                    <h6 class="text-dark text-sm font-weight-bold mb-0">New order #9583120</h6>
-                    <p class="text-secondary font-weight-bold text-xs mt-1 mb-0">17 DEC</p>
+                <div class="col-lg-6 col-5 my-auto text-end">
+                  <div class="dropdown float-lg-end pe-4">
+                    <a class="cursor-pointer" id="dropdownTableForBrand" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v text-secondary"></i>
+                    </a>
+                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTableForBrand">
+                      <li><a id="place_bid" class="dropdown-item border-radius-md" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#placeBidFormModal">Place Bid</a></li>
+                      <li><a id="bid_detail" class="dropdown-item border-radius-md" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#placeBidDetailModal">Bid Detail</a></li>
+                      <li><a id="playVideo" class="dropdown-item border-radius-md" href="javascript: return false;"><span class="bi bi-play-btn-fill"></span>Play</a></li>
+                      <li><a id="review" class="dropdown-item border-radius-md" href="javascript: return false;" >Review</a></li>
+                    </ul>
                   </div>
                 </div>
               </div>
+            </div>
+            <div class="card-body p-3">
+
+              <div id="drag">
+                <p><img id="bidder_image_upload"
+                        src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/coke-sm.jpeg"/></p>
+              </div>
+
             </div>
           </div>
         </div>
@@ -817,23 +1250,27 @@
                   document.write(new Date().getFullYear())
                 </script>,
                 made with <i class="fa fa-heart"></i> by
-                <a href="https://www.creative-tim.com" class="font-weight-bold" target="_blank">Creative Tim</a>
+                <a href="#" class="font-weight-bold" target="_blank">Creative Tim</a>
                 for a better web.
               </div>
             </div>
             <div class="col-lg-6">
               <ul class="nav nav-footer justify-content-center justify-content-lg-end">
                 <li class="nav-item">
-                  <a href="https://www.creative-tim.com" class="nav-link text-muted" target="_blank">Creative Tim</a>
+                  <a href="#" class="nav-link text-muted" target="_blank">Creative
+                    Tim</a>
                 </li>
                 <li class="nav-item">
-                  <a href="https://www.creative-tim.com/presentation" class="nav-link text-muted" target="_blank">About Us</a>
+                  <a href="#n" class="nav-link text-muted"
+                     target="_blank">About Us</a>
                 </li>
                 <li class="nav-item">
-                  <a href="https://www.creative-tim.com/blog" class="nav-link text-muted" target="_blank">Blog</a>
+                  <a href="#" class="nav-link text-muted"
+                     target="_blank">Blog</a>
                 </li>
                 <li class="nav-item">
-                  <a href="https://www.creative-tim.com/license" class="nav-link pe-0 text-muted" target="_blank">License</a>
+                  <a href="#" class="nav-link pe-0 text-muted"
+                     target="_blank">License</a>
                 </li>
               </ul>
             </div>
@@ -842,6 +1279,10 @@
       </footer>
     </div>
   </main>
+
+
+
+
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
       <i class="material-icons py-2">settings</i>
@@ -849,8 +1290,8 @@
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3">
         <div class="float-start">
-          <h5 class="mt-3 mb-0">Material UI Configurator</h5>
-          <p>See our dashboard options.</p>
+          <h5 class="mt-3 mb-0">Scheduled Videos</h5>
+          <p>See whats scheduled</p>
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
@@ -862,57 +1303,12 @@
       <hr class="horizontal dark my-1">
       <div class="card-body pt-sm-3 pt-0">
         <!-- Sidebar Backgrounds -->
-        <div>
-          <h6 class="mb-0">Sidebar Colors</h6>
+
+        <div class="content">
+          <div id='calendar'></div>
         </div>
-        <a href="javascript:void(0)" class="switch-trigger background-color">
-          <div class="badge-colors my-2 text-start">
-            <span class="badge filter bg-gradient-primary active" data-color="primary" onclick="sidebarColor(this)"></span>
-            <span class="badge filter bg-gradient-dark" data-color="dark" onclick="sidebarColor(this)"></span>
-            <span class="badge filter bg-gradient-info" data-color="info" onclick="sidebarColor(this)"></span>
-            <span class="badge filter bg-gradient-success" data-color="success" onclick="sidebarColor(this)"></span>
-            <span class="badge filter bg-gradient-warning" data-color="warning" onclick="sidebarColor(this)"></span>
-            <span class="badge filter bg-gradient-danger" data-color="danger" onclick="sidebarColor(this)"></span>
-          </div>
-        </a>
-        <!-- Sidenav Type -->
-        <div class="mt-3">
-          <h6 class="mb-0">Sidenav Type</h6>
-          <p class="text-sm">Choose between 2 different sidenav types.</p>
-        </div>
-        <div class="d-flex">
-          <button class="btn bg-gradient-dark px-3 mb-2 active" data-class="bg-gradient-dark" onclick="sidebarType(this)">Dark</button>
-          <button class="btn bg-gradient-dark px-3 mb-2 ms-2" data-class="bg-transparent" onclick="sidebarType(this)">Transparent</button>
-          <button class="btn bg-gradient-dark px-3 mb-2 ms-2" data-class="bg-white" onclick="sidebarType(this)">White</button>
-        </div>
-        <p class="text-sm d-xl-none d-block mt-2">You can change the sidenav type just on desktop view.</p>
-        <!-- Navbar Fixed -->
-        <div class="mt-3 d-flex">
-          <h6 class="mb-0">Navbar Fixed</h6>
-          <div class="form-check form-switch ps-0 ms-auto my-auto">
-            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
-          </div>
-        </div>
-        <hr class="horizontal dark my-3">
-        <div class="mt-2 d-flex">
-          <h6 class="mb-0">Light / Dark</h6>
-          <div class="form-check form-switch ps-0 ms-auto my-auto">
-            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="dark-version" onclick="darkMode(this)">
-          </div>
-        </div>
-        <hr class="horizontal dark my-sm-4">
-        <a class="btn bg-gradient-info w-100" href="https://www.creative-tim.com/product/material-dashboard-pro">Free Download</a>
-        <a class="btn btn-outline-dark w-100" href="https://www.creative-tim.com/learning-lab/bootstrap/overview/material-dashboard">View documentation</a>
-        <div class="w-100 text-center">
-          <a class="github-button" href="https://github.com/creativetimofficial/material-dashboard" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star creativetimofficial/material-dashboard on GitHub">Star</a>
-          <h6 class="mt-3">Thank you for sharing!</h6>
-          <a href="https://twitter.com/intent/tweet?text=Check%20Material%20UI%20Dashboard%20made%20by%20%40CreativeTim%20%23webdesign%20%23dashboard%20%23bootstrap5&amp;url=https%3A%2F%2Fwww.creative-tim.com%2Fproduct%2Fsoft-ui-dashboard" class="btn btn-dark mb-0 me-2" target="_blank">
-            <i class="fab fa-twitter me-1" aria-hidden="true"></i> Tweet
-          </a>
-          <a href="https://www.facebook.com/sharer/sharer.php?u=https://www.creative-tim.com/product/material-dashboard" class="btn btn-dark mb-0 me-2" target="_blank">
-            <i class="fab fa-facebook-square me-1" aria-hidden="true"></i> Share
-          </a>
-        </div>
+
+
       </div>
     </div>
   </div>
@@ -922,253 +1318,253 @@
   <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="../assets/js/plugins/chartjs.min.js"></script>
-  <script>
-    var ctx = document.getElementById("chart-bars").getContext("2d");
+<!--  <script>-->
+<!--    var ctx = document.getElementById("chart-bars").getContext("2d");-->
 
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["M", "T", "W", "T", "F", "S", "S"],
-        datasets: [{
-          label: "Sales",
-          tension: 0.4,
-          borderWidth: 0,
-          borderRadius: 4,
-          borderSkipped: false,
-          backgroundColor: "rgba(255, 255, 255, .8)",
-          data: [50, 20, 10, 22, 50, 10, 40],
-          maxBarThickness: 6
-        }, ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [5, 5],
-              color: 'rgba(255, 255, 255, .2)'
-            },
-            ticks: {
-              suggestedMin: 0,
-              suggestedMax: 500,
-              beginAtZero: true,
-              padding: 10,
-              font: {
-                size: 14,
-                weight: 300,
-                family: "Roboto",
-                style: 'normal',
-                lineHeight: 2
-              },
-              color: "#fff"
-            },
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [5, 5],
-              color: 'rgba(255, 255, 255, .2)'
-            },
-            ticks: {
-              display: true,
-              color: '#f8f9fa',
-              padding: 10,
-              font: {
-                size: 14,
-                weight: 300,
-                family: "Roboto",
-                style: 'normal',
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
+<!--    new Chart(ctx, {-->
+<!--      type: "bar",-->
+<!--      data: {-->
+<!--        labels: ["M", "T", "W", "T", "F", "S", "S"],-->
+<!--        datasets: [{-->
+<!--          label: "Sales",-->
+<!--          tension: 0.4,-->
+<!--          borderWidth: 0,-->
+<!--          borderRadius: 4,-->
+<!--          borderSkipped: false,-->
+<!--          backgroundColor: "rgba(255, 255, 255, .8)",-->
+<!--          data: [50, 20, 10, 22, 50, 10, 40],-->
+<!--          maxBarThickness: 6-->
+<!--        }, ],-->
+<!--      },-->
+<!--      options: {-->
+<!--        responsive: true,-->
+<!--        maintainAspectRatio: false,-->
+<!--        plugins: {-->
+<!--          legend: {-->
+<!--            display: false,-->
+<!--          }-->
+<!--        },-->
+<!--        interaction: {-->
+<!--          intersect: false,-->
+<!--          mode: 'index',-->
+<!--        },-->
+<!--        scales: {-->
+<!--          y: {-->
+<!--            grid: {-->
+<!--              drawBorder: false,-->
+<!--              display: true,-->
+<!--              drawOnChartArea: true,-->
+<!--              drawTicks: false,-->
+<!--              borderDash: [5, 5],-->
+<!--              color: 'rgba(255, 255, 255, .2)'-->
+<!--            },-->
+<!--            ticks: {-->
+<!--              suggestedMin: 0,-->
+<!--              suggestedMax: 500,-->
+<!--              beginAtZero: true,-->
+<!--              padding: 10,-->
+<!--              font: {-->
+<!--                size: 14,-->
+<!--                weight: 300,-->
+<!--                family: "Roboto",-->
+<!--                style: 'normal',-->
+<!--                lineHeight: 2-->
+<!--              },-->
+<!--              color: "#fff"-->
+<!--            },-->
+<!--          },-->
+<!--          x: {-->
+<!--            grid: {-->
+<!--              drawBorder: false,-->
+<!--              display: true,-->
+<!--              drawOnChartArea: true,-->
+<!--              drawTicks: false,-->
+<!--              borderDash: [5, 5],-->
+<!--              color: 'rgba(255, 255, 255, .2)'-->
+<!--            },-->
+<!--            ticks: {-->
+<!--              display: true,-->
+<!--              color: '#f8f9fa',-->
+<!--              padding: 10,-->
+<!--              font: {-->
+<!--                size: 14,-->
+<!--                weight: 300,-->
+<!--                family: "Roboto",-->
+<!--                style: 'normal',-->
+<!--                lineHeight: 2-->
+<!--              },-->
+<!--            }-->
+<!--          },-->
+<!--        },-->
+<!--      },-->
+<!--    });-->
 
 
-    var ctx2 = document.getElementById("chart-line").getContext("2d");
+<!--    var ctx2 = document.getElementById("chart-line").getContext("2d");-->
 
-    new Chart(ctx2, {
-      type: "line",
-      data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-          label: "Mobile apps",
-          tension: 0,
-          borderWidth: 0,
-          pointRadius: 5,
-          pointBackgroundColor: "rgba(255, 255, 255, .8)",
-          pointBorderColor: "transparent",
-          borderColor: "rgba(255, 255, 255, .8)",
-          borderColor: "rgba(255, 255, 255, .8)",
-          borderWidth: 4,
-          backgroundColor: "transparent",
-          fill: true,
-          data: [50, 40, 300, 320, 500, 350, 200, 230, 500],
-          maxBarThickness: 6
+<!--    new Chart(ctx2, {-->
+<!--      type: "line",-->
+<!--      data: {-->
+<!--        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],-->
+<!--        datasets: [{-->
+<!--          label: "Mobile apps",-->
+<!--          tension: 0,-->
+<!--          borderWidth: 0,-->
+<!--          pointRadius: 5,-->
+<!--          pointBackgroundColor: "rgba(255, 255, 255, .8)",-->
+<!--          pointBorderColor: "transparent",-->
+<!--          borderColor: "rgba(255, 255, 255, .8)",-->
+<!--          borderColor: "rgba(255, 255, 255, .8)",-->
+<!--          borderWidth: 4,-->
+<!--          backgroundColor: "transparent",-->
+<!--          fill: true,-->
+<!--          data: [50, 40, 300, 320, 500, 350, 200, 230, 500],-->
+<!--          maxBarThickness: 6-->
 
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [5, 5],
-              color: 'rgba(255, 255, 255, .2)'
-            },
-            ticks: {
-              display: true,
-              color: '#f8f9fa',
-              padding: 10,
-              font: {
-                size: 14,
-                weight: 300,
-                family: "Roboto",
-                style: 'normal',
-                lineHeight: 2
-              },
-            }
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              color: '#f8f9fa',
-              padding: 10,
-              font: {
-                size: 14,
-                weight: 300,
-                family: "Roboto",
-                style: 'normal',
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
+<!--        }],-->
+<!--      },-->
+<!--      options: {-->
+<!--        responsive: true,-->
+<!--        maintainAspectRatio: false,-->
+<!--        plugins: {-->
+<!--          legend: {-->
+<!--            display: false,-->
+<!--          }-->
+<!--        },-->
+<!--        interaction: {-->
+<!--          intersect: false,-->
+<!--          mode: 'index',-->
+<!--        },-->
+<!--        scales: {-->
+<!--          y: {-->
+<!--            grid: {-->
+<!--              drawBorder: false,-->
+<!--              display: true,-->
+<!--              drawOnChartArea: true,-->
+<!--              drawTicks: false,-->
+<!--              borderDash: [5, 5],-->
+<!--              color: 'rgba(255, 255, 255, .2)'-->
+<!--            },-->
+<!--            ticks: {-->
+<!--              display: true,-->
+<!--              color: '#f8f9fa',-->
+<!--              padding: 10,-->
+<!--              font: {-->
+<!--                size: 14,-->
+<!--                weight: 300,-->
+<!--                family: "Roboto",-->
+<!--                style: 'normal',-->
+<!--                lineHeight: 2-->
+<!--              },-->
+<!--            }-->
+<!--          },-->
+<!--          x: {-->
+<!--            grid: {-->
+<!--              drawBorder: false,-->
+<!--              display: false,-->
+<!--              drawOnChartArea: false,-->
+<!--              drawTicks: false,-->
+<!--              borderDash: [5, 5]-->
+<!--            },-->
+<!--            ticks: {-->
+<!--              display: true,-->
+<!--              color: '#f8f9fa',-->
+<!--              padding: 10,-->
+<!--              font: {-->
+<!--                size: 14,-->
+<!--                weight: 300,-->
+<!--                family: "Roboto",-->
+<!--                style: 'normal',-->
+<!--                lineHeight: 2-->
+<!--              },-->
+<!--            }-->
+<!--          },-->
+<!--        },-->
+<!--      },-->
+<!--    });-->
 
-    var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");
+<!--    var ctx3 = document.getElementById("chart-line-tasks").getContext("2d");-->
 
-    new Chart(ctx3, {
-      type: "line",
-      data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-          label: "Mobile apps",
-          tension: 0,
-          borderWidth: 0,
-          pointRadius: 5,
-          pointBackgroundColor: "rgba(255, 255, 255, .8)",
-          pointBorderColor: "transparent",
-          borderColor: "rgba(255, 255, 255, .8)",
-          borderWidth: 4,
-          backgroundColor: "transparent",
-          fill: true,
-          data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-          maxBarThickness: 6
+<!--    new Chart(ctx3, {-->
+<!--      type: "line",-->
+<!--      data: {-->
+<!--        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],-->
+<!--        datasets: [{-->
+<!--          label: "Mobile apps",-->
+<!--          tension: 0,-->
+<!--          borderWidth: 0,-->
+<!--          pointRadius: 5,-->
+<!--          pointBackgroundColor: "rgba(255, 255, 255, .8)",-->
+<!--          pointBorderColor: "transparent",-->
+<!--          borderColor: "rgba(255, 255, 255, .8)",-->
+<!--          borderWidth: 4,-->
+<!--          backgroundColor: "transparent",-->
+<!--          fill: true,-->
+<!--          data: [50, 40, 300, 220, 500, 250, 400, 230, 500],-->
+<!--          maxBarThickness: 6-->
 
-        }],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [5, 5],
-              color: 'rgba(255, 255, 255, .2)'
-            },
-            ticks: {
-              display: true,
-              padding: 10,
-              color: '#f8f9fa',
-              font: {
-                size: 14,
-                weight: 300,
-                family: "Roboto",
-                style: 'normal',
-                lineHeight: 2
-              },
-            }
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              color: '#f8f9fa',
-              padding: 10,
-              font: {
-                size: 14,
-                weight: 300,
-                family: "Roboto",
-                style: 'normal',
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
-  </script>
+<!--        }],-->
+<!--      },-->
+<!--      options: {-->
+<!--        responsive: true,-->
+<!--        maintainAspectRatio: false,-->
+<!--        plugins: {-->
+<!--          legend: {-->
+<!--            display: false,-->
+<!--          }-->
+<!--        },-->
+<!--        interaction: {-->
+<!--          intersect: false,-->
+<!--          mode: 'index',-->
+<!--        },-->
+<!--        scales: {-->
+<!--          y: {-->
+<!--            grid: {-->
+<!--              drawBorder: false,-->
+<!--              display: true,-->
+<!--              drawOnChartArea: true,-->
+<!--              drawTicks: false,-->
+<!--              borderDash: [5, 5],-->
+<!--              color: 'rgba(255, 255, 255, .2)'-->
+<!--            },-->
+<!--            ticks: {-->
+<!--              display: true,-->
+<!--              padding: 10,-->
+<!--              color: '#f8f9fa',-->
+<!--              font: {-->
+<!--                size: 14,-->
+<!--                weight: 300,-->
+<!--                family: "Roboto",-->
+<!--                style: 'normal',-->
+<!--                lineHeight: 2-->
+<!--              },-->
+<!--            }-->
+<!--          },-->
+<!--          x: {-->
+<!--            grid: {-->
+<!--              drawBorder: false,-->
+<!--              display: false,-->
+<!--              drawOnChartArea: false,-->
+<!--              drawTicks: false,-->
+<!--              borderDash: [5, 5]-->
+<!--            },-->
+<!--            ticks: {-->
+<!--              display: true,-->
+<!--              color: '#f8f9fa',-->
+<!--              padding: 10,-->
+<!--              font: {-->
+<!--                size: 14,-->
+<!--                weight: 300,-->
+<!--                family: "Roboto",-->
+<!--                style: 'normal',-->
+<!--                lineHeight: 2-->
+<!--              },-->
+<!--            }-->
+<!--          },-->
+<!--        },-->
+<!--      },-->
+<!--    });-->
+<!--  </script>-->
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {

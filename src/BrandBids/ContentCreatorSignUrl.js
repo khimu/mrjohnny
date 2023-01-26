@@ -29,18 +29,18 @@ exports.handler = async (event) => {
 
     console.log('Received event:', JSON.stringify(event, null, 2));
 
-    const formfield = querystring.parse(event.body);
+    const obj = JSON.parse(event.body);
 
     let email = event.pathParameters.username;
     console.log('found email ' + email);
     let filename = event.pathParameters.filename;
 
-    console.log('key is ' + formfield['key']);
+    console.log('key is ' + obj.key);
     const S3_BUCKET = process.env.UploadBucket;
     const url = `https://${S3_BUCKET}.s3.amazonaws.com/${filename}`
     const Key = `${email}/${filename}`;
 
-    let video_id = formfield['id'];
+    let video_id = obj.id;
 
     if(!video_id) {
         video_id = create_UUID();
@@ -50,22 +50,22 @@ exports.handler = async (event) => {
         TableName: 'creator_videos',
         Item: {
             id: video_id,
-            enable_publish: formfield['enable_publish'],
+            enable_publish: obj.enable_publish,
             currency: 'USD',
-            kid_friendly: formfield['kid_friendly'],
-            audience_category: formfield['audience_category'],
-            end_bid_window: formfield['end_bid_window'],
-            start_bid_window: formfield['start_bid_window'],
-            open_bid_amount: formfield['open_bid_amount'],
-            platform_api_key: formfield['platform_api_key'],
-            social_media_platform: formfield['social_media_platform'],
-            scheduled_release_date: formfield['scheduled_release_date'],
-            description: formfield['description'],
-            title: formfield['title'],
-            creator_email: formfield['creator_email'],
-            filename: formfield['filename'],
-            bidder_email: formfield['bidder_email'],
-            bid_type: formfield['bid_type'],
+            kid_friendly: obj.kid_friendly,
+            audience_category: obj.audience_category,
+            end_bid_window: obj.end_bid_window,
+            start_bid_window: obj.start_bid_window,
+            open_bid_amount: obj.open_bid_amount,
+            platform_api_key: obj.platform_api_key,
+            social_media_platform: obj.social_media_platform,
+            scheduled_release_date: obj.scheduled_release_date,
+            description: obj.description,
+            title: obj.title,
+            creator_email: obj.creator_email,
+            filename: obj.filename,
+            bidder_email: obj.bidder_email,
+            bid_type: obj.bid_type,
             create_date: Date.now(),
             key: Key,
             file_name: filename,

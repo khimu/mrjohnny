@@ -221,15 +221,27 @@
             fetchSignUrl(imageUrl).done(function (response) {
                 console.log('got s3 video url is ' + response);
                 var json = $.parseJSON(JSON.stringify(response));
-                console.log('uploadURL ' + json.uploadURL);
+                console.log('video url ' + json.uploadURL);
+
+                // const vidSrc = document.createElement("source");
+                // vidSrc.type = 'video/mp4';
+                // vidSrc.src = json.uploadURL;
+                //
+                // const vid = document.createElement('video');
+                // vid.height = '400px';
+                // vid.width = '400px';
+                // vid.appendChild(vidSrc);
+                // document.body.appendChild(vid);
+
+                window.location = json.uploadURL;
 
                 //const img = document.createElement('img');
-                $("#creator-video-src").src = json.uploadURL;
+                //$("#creator-video-src").src = json.uploadURL;
                 //img.src = json.uploadURL;
                 //document.body.appendChild(img);
                 //document.body.html = img;
                 //$('#container').html(img);
-                $("#video-element").show();
+                //$("#video-element").show();
 
 
                 // Update the source of the image.
@@ -353,12 +365,12 @@
         </div>
     </div>
 
-    <div id="video-element" style="visibility: hidden">
-        <video id="creator-video" width="400" height="350" controls poster=
-                "">
-            <source id="creator-video-src" src="#" type="video/mp4">
-        </video>
-    </div>
+<!--    <div id="video-element" style="visibility: hidden">-->
+<!--        <video id="creator-video" width="400" height="350" controls poster=-->
+<!--                "">-->
+<!--            <source id="creator-video-src" src="#" type="video/mp4">-->
+<!--        </video>-->
+<!--    </div>-->
 
 </div>
 </body>

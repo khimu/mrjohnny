@@ -119,7 +119,7 @@
                         row.find(".mrjohnny-bid-amount").html(items[i].amount);
                         row.find(".mrjohnny-description").html(items[i].ad_description);
                         // fix to make ajax
-                        row.find(".mrjohnny-id").attr('href', "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/brand-upload.html?id=" + items[i].id);
+                        row.find(".brand_image_id").attr('href', "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/brand-upload.html?id=" + items[i].id);
                         row.show();
                         row.css("visibility", "visible");
                         $("#mrjohnny-template-content").append(row);
@@ -157,7 +157,7 @@
                         row.find(".video-open-bid-amount").html(items[i].open_bid_amount);
                         row.find(".mrjohnny-bid").html(items[i].amount);
                         // fix to make ajax
-                        row.find(".mrjohnny-id").attr('href', "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/bid-detail.html?id=" + items[i].id);
+                        row.find(".creator_video_id").attr('href', "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/creator_video_detail.html?id=" + items[i].id);
                         row.show();
                         row.css("visibility", "visible");
                         $("#mrjohnny-creator-video-list").append(row);
@@ -491,13 +491,12 @@
                                     </td>
                                     <td class="align-middle">
                                         <a href="javascript:;"
-                                           class="mrjohnny-id text-secondary font-weight-bold text-xs"
+                                           class="brand_image_id text-secondary font-weight-bold text-xs"
                                            data-toggle="tooltip" data-original-title="Edit user">
-                                            Edit
+                                            View
                                         </a>
                                     </td>
                                 </tr>
-
                                 </tbody>
                             </table>
                         </div>
@@ -595,9 +594,11 @@
                                         </div>
                                     </td>
                                     <td class="align-middle">
-                                        <button class="btn btn-link text-secondary mb-0">
-                                            <i class="fa fa-ellipsis-v text-xs"></i>
-                                        </button>
+                                        <a href="javascript:;"
+                                           class="creator_video_id text-secondary font-weight-bold text-xs"
+                                           data-toggle="tooltip" data-original-title="Edit user">
+                                            View
+                                        </a>
                                     </td>
                                 </tr>
                                 </tbody>

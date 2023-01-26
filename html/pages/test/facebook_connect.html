@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Test Boxy</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="viewport" content="width=640, maximum-scale=1.0" />
+    <meta name="MobileOptimized" content="width" />
+    <meta name="HandheldFriendly" content="true" />
+    <link rel="apple-touch-startup-image" sizes="640x960" href="apple-touch-startup-image.jpg" />
+
+
+
+    <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/js/jquery-1.8.1.min.js"></script>
+    <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+    <link href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/bootstrap-5.2.3-dist/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+
+    <script>
+        $.getScript(document.location.protocol + '//connect.facebook.net/en_US/all.js');
+        // var snd = new Audio('Slot_Machine_Win_Coins_Muic.mp3'); snd.load(); snd.play();
+
+
+
+        $(document).live("facebook:ready", function(){
+            // this will not work because it cannot log in automatically.  must be user invoked with a click
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    accessToken = response.authResponse.accessToken;
+                    userId = response.authResponse.userID;
+                    FB.api('/767755023?fields=name', function(response) {
+                        alert(response.name);
+                        fbId = response.id;
+                        fbLike();
+                    });
+                } else {
+                    //user cancelled login or did not grant authorization
+                }
+            }, {scope:'email', perms:'publish_stream'});
+        });
+
+
+        // this will log in
+        $('#fb-like').live('click', function(){
+            FB.login(function(response) {
+                if (response.authResponse) {
+                    accessToken = response.authResponse.accessToken;
+                    userId = response.authResponse.userID;
+                    FB.api('/767755023?fields=name', function(response) {
+                        alert(response.name);
+                        fbId = response.id;
+                        fbLike();
+                    });
+                } else {
+                    //user cancelled login or did not grant authorization
+                }
+
+                // <!--//public_profile,email, publish_actions,instagram_manage_comments,-->
+            }, {scope:'email', perms:'publish_stream'});
+        });
+
+
+        $(document).ready(function(){
+            if(window.FB) {
+                facebookReady();
+            } else {
+                window.fbAsyncInit = facebookReady;
+            }
+            function facebookReady(){
+
+                FB.init({
+                    appId  : '721473506169833',
+                    status : true,
+                    cookie : true,
+                    xfbml  : true
+                });
+
+                FB.getLoginStatus(function(response) {
+                    //alert('getLoginStatus');
+                    // need to update user session for both logged in and out
+                    alert('facebook response ' + response);
+
+                    if (response.status != 'connected') {
+                        //alert('facebook not logged in');
+                        alert('got logged out');
+                    }else{
+                        //alert('facebook logged in ' + response.authResponse.userID);
+                        accessToken = response.authResponse.accessToken;
+                        FB.api('/me?fields=name,id,email', function(response) {
+                            alert('called from getLoginStatus');
+                            fbId = response.id;
+                            userEmail = response.email;
+
+                            //updateUserSession(response.id, accessToken,response.email);
+                            //alert('user email ' + userEmail);
+                            $(document).trigger("facebook:ready");
+                        });
+                        notifyFriends();
+                    }
+                });
+
+
+            } // end facebookReady();
+
+            if(window.FB) {
+                facebookReady();
+            } else {
+                window.fbAsyncInit = facebookReady;
+            }
+
+        }); // end document().ready
+
+
+        function notifyFriends(){
+            FB.api("/me/friends?fields=name,id", handleFriends);
+        }
+
+
+        function handleFriends(response) {
+            //alert('handleFriends');
+            var friends = response.data;
+            //alert(friends);
+            var friendsList = "";
+
+            var friendsIdNameMap = {};
+
+            for (var i = 0; i < friends.length; i++) {
+                if(typeof friends[i].name === "undefined"){
+                    friendsIdNameMap[friends[i].id] = 'Private';
+                    friendsList += friends[i].id + ",";
+                }else{
+                    var names = friends[i].name.split(' ', 2);
+                    if(names.length > 1){
+                        var name = names[0] + " " + names[1].substring(0, 1);
+                        $('#list-group-item').append('<li class="list-group-item list-group-item-primary">' + name + '</li>')
+                        friendsIdNameMap[friends[i].id] = name;
+                        friendsList += friends[i].id + ",";
+                    } else {
+                        friendsIdNameMap[friends[i].id] = friends[i].name;
+                        friendsList += friends[i].id + ",";
+                    }
+                }
+            }
+        }
+
+    </script>
+
+</head>
+<body>
+
+<div class="container">
+    <div id="fb-root"></div>
+    <a href="#" class='btn btn-primary' id="fb-like">Like Us On Facebook</a>
+
+<!--    <fb:login-button scope=""-->
+<!--                     onlogin="checkLoginState();">-->
+<!--    </fb:login-button>-->
+
+    <ul class="list-group">
+        <li class="list-group-item">My Friends</li>
+    </ul>
+</div><!-- end .container -->
+
+</body>
+</html>

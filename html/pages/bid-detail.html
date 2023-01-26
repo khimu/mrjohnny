@@ -84,7 +84,7 @@
 						// http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/bid-detail.html
 
 						console.log(JSON.stringify(items[i]));
-						$('#id').attr('value', json.id);
+						$('#bid_id').attr('value', json.id);
 						$('#amount').attr('value', json.amount);
 						$('#content').attr('value', json.content);
 						$('#merchant_id').attr('value', json.merchant_id);
@@ -108,7 +108,7 @@
 	<div class="row" style="margin-top:20px">
 		<div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
 			<form id="bidForm" role="form">
-				<input type="hidden" name="id" id="id" class="form-control input-lg" />
+				<input type="hidden" name="id" id="bid_id" class="form-control input-lg" />
 				<fieldset>
 					<h2>Place Your Bid</h2>
 					<hr class="colorgraph">

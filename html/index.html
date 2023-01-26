@@ -29,6 +29,12 @@
 		// 1 Day = 24 Hrs = 24*60*60 = 86400.
 		//var expires = (new Date(Date.now() + 86400*1000)).toUTCString();
 
+		function getCookieValue(name) {
+			const value = `; ${document.cookie}`;
+			const parts = value.split(`; ${name}=`);
+			if (parts.length === 2) return parts.pop().split(';').shift();
+		}
+
 		function setCookie(name, cookie){
 			const now = new Date();
 			const time = now.getTime();
@@ -45,6 +51,10 @@
 
 		// Attach a submit handler to the form
 		$(document).ready(function(){
+			if (getCookieValue('atid')) {
+				location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/landing-page.html';
+			}
+
 			$( "#login" ).click(function() {
 
 				// Get some values from elements on the page:
@@ -62,7 +72,7 @@
 						$("#result").html("You are all logged in");
 						setCookie("atid", response.token);
 						setCookie("identity", email);
-						location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html';
+						location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/landing-page.html';
 						// redirect to an authenticated dashboard
 					},
 					error: function (xhr, status) {
