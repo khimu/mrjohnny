@@ -120,6 +120,11 @@
 
     var events = [];
 
+    function loadUrl(url, video_id) {
+      window.localStorage.setItem('video_id', video_id);
+      window.location.href = url;
+    }
+
     $(document).ready(function () {
       if (!getCookieValue('atid')) {
         alert('You are logged out');
@@ -155,13 +160,13 @@
             // 2020-02-16T16:00:00
             // 2023/01/22 23:00
 
-            var format_date = items[i].scheduled_release_date.replaceAll("/", "-").replace(" ", "T") + ":00";
+            var format_date = items[i].scheduled_release_date.replaceAll("/", "-").replace(" ", "T");
             console.log(format_date);
 
             main_item = {}
             main_item ["title"] = items[i].title;
             main_item ["start"] = format_date;
-            main_item ["url"] = "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html?id=" + items[i].id;
+            main_item ["url"] = "javascript: loadUrl('http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html', '" + items[i].id + "')";
             events.push(main_item);
 
             if(items[i].open_bid_amount && items[i].start_bid_window) {
@@ -169,7 +174,7 @@
               bid_item ["title"] = items[i].title + " (" + items[i].open_bid_amount + ")";
               bid_item ["start"] = items[i].start_bid_window;
               bid_item ["end"] = items[i].end_bid_window;
-              bid_item ["url"] = "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html?id=" + items[i].id;
+              bid_item ["url"] = "loadUrl('http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html', '" + items[i].id + "')";
               events.push(bid_item);
             }
 
@@ -192,7 +197,7 @@
 
           var calendar = new FullCalendar.Calendar(calendarEl, {
             plugins: [ 'interaction', 'dayGrid' ],
-            defaultDate: '2023-01-22',
+            defaultDate: Date.now(),
             editable: true,
             eventLimit: true, // allow "more" link when too many events
             events: events
@@ -226,7 +231,9 @@
       $('#creator_upload').datepicker({
         onSelect: function(dateText, inst) {
           selectedDate = dateText;
-          location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/influencer_video_upload.html?selectedDate=' + selectedDate;
+          window.localStorage.setItem('selectedDate', selectedDate);
+          console.log(window.localStorage.getItem('selectedDate'));
+          window.location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/influencer_video_upload.html';
         }
       });
 
@@ -249,45 +256,45 @@
   </script>
 
 
-  <style>
-    .datetimepicker{ z-index:9999!important; }
-    #scheduled_release_date {
-      z-index:9999!important;
-    }
+<!--  <style>-->
+<!--    .datetimepicker{ z-index:9999!important; }-->
+<!--    #scheduled_release_date {-->
+<!--      z-index:9999!important;-->
+<!--    }-->
 
-  </style>
+<!--  </style>-->
 
 </head>
 
 
-<!-- Modal -->
-<div class="modal fade" id="schedulingVideo" tabindex="-1" aria-labelledby="schedulingVideoLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <!--      <form id="calendar_data" method="post" enctype="multipart/form-data">-->
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="schedulingVideoLabel">Set Time</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div style="height:150px"><input type="text" name="scheduled_release_date" id="new_scheduled_release_date" class="form-control input-lg" aria-label="Scheduled Release Date" placeholder="Scheduled Release Date"></div>
-      </div>
+<!--&lt;!&ndash; Modal &ndash;&gt;-->
+<!--<div class="modal fade" id="schedulingVideo" tabindex="-1" aria-labelledby="schedulingVideoLabel" aria-hidden="true">-->
+<!--  <div class="modal-dialog">-->
+<!--    <div class="modal-content">-->
+<!--      &lt;!&ndash;      <form id="calendar_data" method="post" enctype="multipart/form-data">&ndash;&gt;-->
+<!--      <div class="modal-header">-->
+<!--        <h1 class="modal-title fs-5" id="schedulingVideoLabel">Set Time</h1>-->
+<!--        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--      </div>-->
+<!--      <div class="modal-body">-->
+<!--        <div style="height:150px"><input type="text" name="scheduled_release_date" id="new_scheduled_release_date" class="form-control input-lg" aria-label="Scheduled Release Date" placeholder="Scheduled Release Date"></div>-->
+<!--      </div>-->
 
-      <div class="modal-footer">
-        <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" id="new_video_upload" class="btn btn-primary">Set</button>
-      </div>
-      <!--      </form>-->
-    </div>
-  </div>
-</div>
+<!--      <div class="modal-footer">-->
+<!--        <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--        <button type="submit" id="new_video_upload" class="btn btn-primary">Set</button>-->
+<!--      </div>-->
+<!--      &lt;!&ndash;      </form>&ndash;&gt;-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
-<!-- End My Account Boxy -->
-<script type="text/javascript">
-  $('#get_time').click(function(){
-    new Boxy('#schedulingVideo', {title: 'Schedule A Video', modal: false});
-  });
-</script>
+<!--&lt;!&ndash; End My Account Boxy &ndash;&gt;-->
+<!--<script type="text/javascript">-->
+<!--  $('#get_time').click(function(){-->
+<!--    new Boxy('#schedulingVideo', {title: 'Schedule A Video', modal: false});-->
+<!--  });-->
+<!--</script>-->
 
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -296,7 +303,7 @@
       <i class="fas fa-times p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href=" https://demos.creative-tim.com/material-dashboard/pages/dashboard " target="_blank">
         <img src="../assets/img/logo-ct.png" class="navbar-brand-img h-100" alt="main_logo">
-        <span class="ms-1 font-weight-bold text-white">Material Dashboard 2</span>
+        <span class="ms-1 font-weight-bold text-white" id="nav_title"></span>
       </a>
     </div>
     <hr class="horizontal light mt-0 mb-2">
@@ -305,11 +312,6 @@
         <li style="padding:0px;margin:0px;" class="nav-item">
           <a style="padding:0px;margin:0px;" class="nav-link text-white" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#schedulingVideo">
             <div id="creator_upload"></div>
-          </a>
-        </li>
-        <li style="padding:0px;margin:0px;" class="nav-item">
-          <a style="padding:0px;margin:0px;" class="nav-link text-white" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#schedulingVideo">
-            Test
           </a>
         </li>
       </ul>
@@ -327,9 +329,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Map</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Calendar</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Map</h6>
+          <h6 class="font-weight-bolder mb-0">Calendar</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -340,7 +342,7 @@
           </div>
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
-              <a class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="#">Online Builder</a>
+              <a id="identity" class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="#">Online Builder</a>
             </li>
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:void(0);" onclick="getCookie();" class="nav-link text-body font-weight-bold px-0">

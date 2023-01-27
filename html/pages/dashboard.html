@@ -72,6 +72,8 @@
       --bs-popover-body-padding-y: .5rem;
     }
   </style>
+
+  <!--  <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/jquery-3.3.1.min.js"></script>-->
   <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/js/jquery-1.8.1.min.js"></script>
   <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
   <link href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/bootstrap-5.2.3-dist/css/bootstrap.min.css"
@@ -98,10 +100,10 @@
   <link href='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/daygrid/main.css' rel='stylesheet' />
   <link rel="stylesheet" href="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/css/style.css">
 
-<!--  <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/jquery-3.3.1.min.js"></script>-->
+
   <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/popper.min.js"></script>
 
-  <sc`ript src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/core/main.js'></script>
+  <script src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/core/main.js'></script>
   <script src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/interaction/main.js'></script>
   <script src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/daygrid/main.js'></script>
   <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/main.js"></script>
@@ -264,22 +266,22 @@
   <!-- Dashboard Script -->
   <script>
 
-    function get_query(){
-      var url = document.location.href;
-      var qs = url.substring(url.indexOf('?') + 1).split('&');
-      for(var i = 0, result = {}; i < qs.length; i++){
-        qs[i] = qs[i].split('=');
-        result[qs[i][0]] = decodeURIComponent(qs[i][1]);
-      }
-      return result;
-    }
+    // function get_query(){
+    //   var url = document.location.href;
+    //   var qs = url.substring(url.indexOf('?') + 1).split('&');
+    //   for(var i = 0, result = {}; i < qs.length; i++){
+    //     qs[i] = qs[i].split('=');
+    //     result[qs[i][0]] = decodeURIComponent(qs[i][1]);
+    //   }
+    //   return result;
+    // }
+    //
+    // const result = get_query();
+    // console.log(result);
 
-    const result = get_query();
-    console.log(result);
-    window.localStorage.setItem('video_id', result.id);
-    $('#video_id', result.id);
+    const video_id = window.localStorage.getItem('video_id');
 
-    if(!result.id) {
+    if(!video_id) {
       location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/landing-page.html';
     }
 
@@ -293,6 +295,7 @@
         location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
       }
 
+      $('#video_id', video_id);
       const identity = getCookieValue("identity");
       $("#identity").text(identity);
       $('#nav_title').html(identity);
@@ -322,29 +325,43 @@
           let item = json.Item;
           console.log(JSON.stringify(item));
 
+
+
           $('#video_id').attr('value', item.id);
           $('#video_name').html(item.filename);
           $('#scheduled_release_date_detail').html(item.scheduled_release_date);
           $('#video_title_detail').html(item.title);
-          $('#video_create_date').html('value', item.create_date);
-          $('#video_bid_detail').html(item.start_bid_window + " " + item.end_bid_window + " => " + item.open_bid_amount);
+          $('#video_create_date').html(item.create_date);
+
+          $('#start_window').html(item.start_bid_window);
+          $('#end_window').html(item.end_bid_window);
+          $('#open_bid_amount_detail').html(item.open_bid_amount);
           $('#bid_type_detail').html(item.bid_type);
           $('#video_description_detail').html(item.description + " (" + item.audience_category + ")");
           $('#social_media_detail').html(item.social_media_platform + " (" + item.platform_api_key + ")");
 
 
-          $('#scheduled_release_date').attr('value', item.scheduled_release_date);
           $('#video_title').attr('value', item.title);
           const $select = document.querySelector('#bid_type');
           $select.value = item.bid_type;
+
+
+          $('#scheduled_release_date').datetimepicker({format:'Y/m/d h:i:s'});
+          $("#start_bid_window").datetimepicker({format:'Y/m/d h:i:s'});
+          $("#end_bid_window").datetimepicker({format:'Y/m/d h:i:s'});
+
+
+          $('#scheduled_release_date').attr('value', item.scheduled_release_date);
+          $('#end_bid_window').attr('value', item.end_bid_window);
+          $('#start_bid_window').attr('value', item.start_bid_window);
+
+
 
           $('#video_description').attr('value', item.description);
           $('#audience_category').attr('value', item.audience_category);
           $('#platform_api_key').attr('value', item.platform_api_key);
           $('#social_media_platform').attr('value', item.social_media_platform);
           $('#open_bid_amount').attr('value', item.open_bid_amount);
-          $('#start_bid_window').attr('value', item.start_bid_window);
-          $('#end_bid_window').attr('value', item.end_bid_window);
           $('#kid_friendly').attr('value', item.kid_friendly);
           $('#enable_publish').attr('value', item.enable_publish);
 
@@ -361,7 +378,7 @@
           if (item.enable_publish) {
             $('#video_published_to_platform').html('Is Live');
           } else {
-            $('#video_published_to_platform').html('Go Live');
+            $('#video_published_to_platform').html('Not Live');
           }
 
           displayProtectedImage('#video', api_endpoint + "/content/" + item.key);
@@ -425,13 +442,13 @@
             // 2020-02-16T16:00:00
             // 2023/01/22 23:00
 
-            var format_date = items[i].scheduled_release_date.replaceAll("/", "-").replace(" ", "T") + ":00";
+            var format_date = items[i].scheduled_release_date.replaceAll("/", "-").replace(" ", "T");
             console.log(format_date);
 
             main_item = {}
             main_item ["title"] = items[i].title;
             main_item ["start"] = format_date;
-            main_item ["url"] = "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html?id=" + items[i].id;
+            main_item ["url"] = "javascript: loadUrl('http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html', '" + items[i].id + "')";
             events.push(main_item);
 
             if(items[i].open_bid_amount && items[i].start_bid_window) {
@@ -439,7 +456,7 @@
               bid_item ["title"] = items[i].title + " (" + items[i].open_bid_amount + ")";
               bid_item ["start"] = items[i].start_bid_window;
               bid_item ["end"] = items[i].end_bid_window;
-              bid_item ["url"] = "http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html?id=" + items[i].id;
+              bid_item ["url"] = "javascript: loadUrl('http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/dashboard.html', '" + items[i].id + "')";
               events.push(bid_item);
             }
 
@@ -479,6 +496,11 @@
         }
       });
     });
+
+    function loadUrl(url, video_id) {
+      window.localStorage.setItem('video_id', video_id);
+      window.location.href = url;
+    }
 
   </script>
 
@@ -672,77 +694,73 @@
   <script>
 
     $(document).ready(function () {
-      $("body").delegate(".datetimepicker", "focusin", function(){
-        $(this).datetimepicker();
-      });
-      $("body").delegate("#creator_upload_time", "focusin", function(){
-        $(this).datetimepicker();
-      });
 
       let selectedDate = "";
       $('#creator_upload').datepicker({
         onSelect: function(dateText, inst) {
           selectedDate = dateText;
+          window.localStorage.setItem('selectedDate', selectedDate);
+          window.location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/influencer_video_upload.html';
           //new Boxy('#schedulingVideo', {title: 'Schedule A Video', modal: false});
         }
       });
       //$("#creator_upload").datepicker();
 
 
-      $('#scheduled_release_date').datetimepicker({
-        dateFormat: '',
-        datepicker:false,
-        pickDate: false,
-        format:'H:i:s',
-        timeOnly:true
-      });
+      // $('#scheduled_release_date').datetimepicker({
+      //   dateFormat: '',
+      //   datepicker:false,
+      //   pickDate: false,
+      //   format:'H:i:s',
+      //   timeOnly:true
+      // });
 
 
-      $('#new_video_upload').click(function() {
-        location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/influencer_video_upload.html?selectedDate=' + selectedDate;
-      });
+      // $('#new_video_upload').click(function() {
+      //   location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/influencer_video_upload.html?selectedDate=' + selectedDate;
+      // });
     });
   </script>
 
-  <style>
-    .datetimepicker{ z-index:9999!important; }
-    #creator_upload_time {
-      z-index:9999!important;
-    }
+<!--  <style>-->
+<!--    .datetimepicker{ z-index:9999!important; }-->
+<!--    #creator_upload_time {-->
+<!--      z-index:9999!important;-->
+<!--    }-->
 
-  </style>
+<!--  </style>-->
 
 </head>
 
 
-<!-- Modal -->
-<div class="modal fade" id="schedulingVideo" tabindex="-1" aria-labelledby="schedulingVideoLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-<!--      <form id="calendar_data" method="post" enctype="multipart/form-data">-->
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="schedulingVideoLabel">Set Time</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <input type="text" name="scheduled_release_date" id="new_scheduled_release_date" class="form-control input-lg" aria-label="Scheduled Release Date" placeholder="Scheduled Release Date">
-        </div>
+<!--&lt;!&ndash; Modal &ndash;&gt;-->
+<!--<div class="modal fade" id="schedulingVideo" tabindex="-1" aria-labelledby="schedulingVideoLabel" aria-hidden="true">-->
+<!--  <div class="modal-dialog">-->
+<!--    <div class="modal-content">-->
+<!--&lt;!&ndash;      <form id="calendar_data" method="post" enctype="multipart/form-data">&ndash;&gt;-->
+<!--        <div class="modal-header">-->
+<!--          <h1 class="modal-title fs-5" id="schedulingVideoLabel">Set Time</h1>-->
+<!--          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--        </div>-->
+<!--        <div class="modal-body">-->
+<!--          <input type="text" name="scheduled_release_date" id="new_scheduled_release_date" class="form-control input-lg" aria-label="Scheduled Release Date" placeholder="Scheduled Release Date">-->
+<!--        </div>-->
 
-        <div class="modal-footer">
-          <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" id="new_video_upload" class="btn btn-primary">Set</button>
-        </div>
-<!--      </form>-->
-    </div>
-  </div>
-</div>
+<!--        <div class="modal-footer">-->
+<!--          <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--          <button type="submit" id="new_video_upload" class="btn btn-primary">Set</button>-->
+<!--        </div>-->
+<!--&lt;!&ndash;      </form>&ndash;&gt;-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
-<!-- End My Account Boxy -->
-<script type="text/javascript">
-  $('#get_time').click(function(){
-    new Boxy('#schedulingVideo', {title: 'Schedule A Video', modal: false});
-  });
-</script>
+<!--&lt;!&ndash; End My Account Boxy &ndash;&gt;-->
+<!--<script type="text/javascript">-->
+<!--  $('#get_time').click(function(){-->
+<!--    new Boxy('#schedulingVideo', {title: 'Schedule A Video', modal: false});-->
+<!--  });-->
+<!--</script>-->
 
 
 <!-- Modal -->
@@ -822,11 +840,11 @@
 </div>
 
 <!-- End My Account Boxy -->
-<script type="text/javascript">
-  $('#influencer_video_form').click(function(){
-    new Boxy('#influencerVideoFormModal', {title: 'Influencer Video Form', modal: false});
-  });
-</script>
+<!--<script type="text/javascript">-->
+<!--  $('#influencer_video_form').click(function(){-->
+<!--    new Boxy('#influencerVideoFormModal', {title: 'Influencer Video Form', modal: false});-->
+<!--  });-->
+<!--</script>-->
 
 
 
@@ -872,11 +890,11 @@
 </div>
 
 <!-- End My Account Boxy -->
-<script type="text/javascript">
-  $('#place_bid').click(function(){
-    new Boxy('#placeBidFormModal', {title: 'Place Bid Form', modal: false});
-  });
-</script>
+<!--<script type="text/javascript">-->
+<!--  $('#place_bid').click(function(){-->
+<!--    new Boxy('#placeBidFormModal', {title: 'Place Bid Form', modal: false});-->
+<!--  });-->
+<!--</script>-->
 
 
 
@@ -907,11 +925,11 @@
 </div>
 
 <!-- End My Account Boxy -->
-<script type="text/javascript">
-  $('#brand_image_upload').click(function(){
-    new Boxy('#imageUploadFormModal', {title: 'Brand Image Upload', modal: false});
-  });
-</script>
+<!--<script type="text/javascript">-->
+<!--  $('#brand_image_upload').click(function(){-->
+<!--    new Boxy('#imageUploadFormModal', {title: 'Brand Image Upload', modal: false});-->
+<!--  });-->
+<!--</script>-->
 
 
 <!-- Modal -->
@@ -924,42 +942,19 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          <div class="row g-3" style="margin-top:20px">
-            <div class="col"><p>Bidder Email</div>
-            <div class="col"><p id="bidder_email_detail">kim@gmail.com</div>
-          </div>
-          <div class="row g-3" style="margin-top:20px">
-            <div class="col"><p>Bid Amount</div>
-            <div class="col"><p id="bid_amount_detail">$5000</div>
-          </div>
-          <div class="row g-3" style="margin-top:20px">
-            <div class="col"><p>Ad Description</div>
-            <div class="col"><p id="bid_ad_description_detail">#gosh</div>
-          </div>
-          <div class="row g-3" style="margin-top:20px">
-            <table class="table align-items-center mb-0">
-              <thead>
-              <tr>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">X</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Y</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Seek</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td></td>
-                <td id="position_x_detail"></td>
-                <td id="frame_pixel_detail"></td>
-                <td id="position_y_detail"></td>
-              </tr>
-              <tr>
-                <td></td>
-                <td id="html_position_x_detail"></td>
-                <td id="html_position_y_detail"></td>
-                <td></td>
-              </tr>
-              </tbody>
-            </table>
+          <div class="card border-success mb-3">
+            <div class="card-header bg-transparent border-success">
+              <span id="bidder_email_detail"></span>
+            </div>
+            <div class="card-body text-success">
+              <h5 class="card-title"><small class="text-muted"><span id="bid_ad_description_detail"></span></small></h5>
+              <p class="card-text"><small class="text-muted">Image (x, y) => (<span id="position_x_detail"></span>, <span id="position_y_detail"></span>)</small></p>
+              <p class="card-text"><small class="text-muted">Screen (x, y) => (<span id="html_position_x_detail"></span>, <span id="html_position_y_detail"></span>)</small></p>
+              <p class="card-text"><small class="text-muted">Frame <span id="frame_pixel_detail"></span></small></p>
+            </div>
+            <div class="card-footer bg-transparent border-success" style="text-align:center;color:black;">
+              <p class="card-text"><small class="text-muted">Bid Amount <span id="bid_amount_detail"></span></small></p>
+            </div>
           </div>
         </div>
         <div class="modal-footer">
@@ -970,11 +965,11 @@
 </div>
 
 <!-- End My Account Boxy -->
-<script type="text/javascript">
-  $('#bid_detail').click(function(){
-    new Boxy('#placeBidDetailModal', {title: 'Bid Detail', modal: false});
-  });
-</script>
+<!--<script type="text/javascript">-->
+<!--  $('#bid_detail').click(function(){-->
+<!--    new Boxy('#placeBidDetailModal', {title: 'Bid Detail', modal: false});-->
+<!--  });-->
+<!--</script>-->
 
 
 
@@ -988,42 +983,22 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-
-        <div class="row g-3" style="margin-top:20px">
-          <div class="col"><p>Video Title</div>
-          <div class="col"><p id="video_title_detail">kim@gmail.com</div>
-        </div>
-        <div class="row g-3" style="margin-top:20px">
-          <div class="col"><p>Video Name</div>
-          <div class="col"><p id="video_name">kim@gmail.com</div>
-        </div>
-        <div class="row g-3" style="margin-top:20px">
-          <div class="col"><p>Scheduled Release Date</div>
-          <div class="col"><p id="scheduled_release_date_detail">$5000</div>
-        </div>
-        <div class="row g-3" style="margin-top:20px">
-          <div class="col"><p>Description</div>
-          <div class="col"><p id="video_description_detail">$5000</div>
-        </div>
-        <div class="row g-3" style="margin-top:20px">
-          <div class="col"><p>Video Create Date</div>
-          <div class="col"><p id="video_create_date">#gosh</div>
-        </div>
-        <div class="row g-3" style="margin-top:20px">
-          <div class="col"><p>Bid Detail</div>
-          <div class="col"><p id="video_bid_detail">#gosh</div>
-        </div>
-        <div class="row g-3" style="margin-top:20px">
-          <div class="col"><p>Social Media Platform</div>
-          <div class="col"><p id="social_media_detail">#gosh</div>
-        </div>
-        <div class="row g-3" style="margin-top:20px">
-          <div class="col"><p>Video Published To Platform</div>
-          <div class="col"><p id="video_published_to_platform">#gosh</div>
-        </div>
-        <div class="row g-3" style="margin-top:20px">
-          <div class="col"><p>Bid Type</div>
-          <div class="col"><p id="bid_type_detail">#gosh</div>
+        <div class="card border-success mb-3">
+          <div class="card-header bg-transparent border-success">
+            <span id="video_title_detail"></span>
+          </div>
+          <div class="card-body text-success">
+            <h5 class="card-title"><small class="text-muted"><span id="video_name"></span></small></h5>
+            <p class="card-text">
+            <p class="card-text"><small class="text-muted">Created On @ <span id="video_create_date"></span></small></p>
+            </p>
+            <p class="card-text"><small class="text-muted"><span id="social_media_detail"></span> <span id="video_published_to_platform"></span></small></p>
+            <p class="card-text"><small class="text-muted">Bid Type <span id="bid_type_detail"></span> @ <span id="open_bid_amount_detail"></span></small></p>
+            <p class="card-text"><small class="text-muted">Scheduled Release Date @ <b><span id="scheduled_release_date_detail"></span></b></small></p>
+          </div>
+          <div class="card-footer bg-transparent border-success" style="text-align:center;color:black;">
+            <p class="card-text"><small class="text-muted"><b><span id="start_window"></span> - <span id="end_window"></span></b></small></p>
+          </div>
         </div>
       </div>
 
@@ -1035,11 +1010,11 @@
 </div>
 
 <!-- End My Account Boxy -->
-<script type="text/javascript">
-  $('#influencer_video_detail').click(function(){
-    new Boxy('#influencerVideoDetailModal', {title: 'Influencer Video Detail', modal: false});
-  });
-</script>
+<!--<script type="text/javascript">-->
+<!--  $('#influencer_video_detail').click(function(){-->
+<!--    new Boxy('#influencerVideoDetailModal', {title: 'Influencer Video Detail', modal: false});-->
+<!--  });-->
+<!--</script>-->
 
 
 <body class="g-sidenav-show  bg-gray-200">
