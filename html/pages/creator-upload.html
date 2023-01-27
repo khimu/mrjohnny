@@ -76,8 +76,10 @@
             return result;
         }
 
-        //		var result = get_query();
-        //		console.log(result);
+        		var result = get_query();
+        		console.log(result);
+
+                console.log('selectedDate ' + result.selectedDate);
 
         $(document).ready(function () {
 
@@ -265,6 +267,7 @@
                 <input type="hidden" name="filename" id="filename"/>
                 <!--<input type="hidden" name="directory_path" id="directory_path" />-->
                 <input type="hidden" name="creator_email" id="creator_email"/>
+                <input type="hidden" name="scheduled_release_date" id="scheduled_release_date"/>
                 <fieldset>
                     </span>
                     <div class="mb-3">
@@ -299,11 +302,11 @@
                         <label for="description">Description</label>
                         <input type="text" name="description" id="description" class="form-control input-lg">
                     </div>
-                    <div class="form-group">
-                        <label for="scheduled_release_date">Scheduled Release Date</label>
-                        <input type="text" name="scheduled_release_date" id="scheduled_release_date"
-                               class="form-control input-lg">
-                    </div>
+<!--                    <div class="form-group">-->
+<!--                        <label for="scheduled_release_date">Scheduled Release Date</label>-->
+<!--                        <input type="text" name="scheduled_release_date" id="scheduled_release_date"-->
+<!--                               class="form-control input-lg">-->
+<!--                    </div>-->
                     <div class="form-group">
                         <label for="social_media_platform">Publish To Platform</label>
                         <input type="text" name="social_media_platform" id="social_media_platform"

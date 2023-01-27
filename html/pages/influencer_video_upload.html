@@ -127,19 +127,33 @@
         }
     </style>
 
-    <script type="text/javascript">
-        let api_endpoint = getCookieValue('api-endpoint');
 
-        function setCookie(token) {
-            var now = new Date();
-            var time = now.getTime();
-            var expireTime = time + 1000 * 36000;
-            now.setTime(expireTime);
-            document.cookie = 'cookie=' + token + ';expires=' + now.toUTCString() + ';path=/';
+    <script>
+        function is_cookie_exist(name) {
+            return document.cookie.split(';').some(c => {
+                return c.trim().startsWith(name + '=');
+            });
         }
 
+        function delete_cookie(name, path, domain) {
+            if (is_cookie_exist(name)) {
+                document.cookie = name + "=" +
+                    ((path) ? ";path=" + path : "") +
+                    ((domain) ? ";domain=" + domain : "") +
+                    ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+                document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.host;
+            }
+        }
+
+        /**
+         * Called from sign out button
+         */
         function getCookie() {
-            alert(document.cookie);
+            console.log(document.cookie);
+            delete_cookie("atid", "/", "");
+            delete_cookie("identity", "/", "");
+            console.log(document.cookie);
+            location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
         }
 
         function getCookieValue(name) {
@@ -148,7 +162,15 @@
             if (parts.length === 2) return parts.pop().split(';').shift();
         }
 
-        let token = getCookieValue('atid');
+        // Attach a submit handler to the form
+        $(document).ready(function () {
+            if (!getCookieValue('atid')) {
+                alert('You are logged out');
+                //new Boxy('#popupBox', {title: 'Login message'});
+                $('#loading').hide();
+                location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+            }
+        });
 
         function get_query() {
             var url = document.location.href;
@@ -160,8 +182,47 @@
             return result;
         }
 
-        //		var result = get_query();
-        //		console.log(result);
+        let result = get_query();
+        console.log(result);
+        console.log('selectedDate ' + result.selectedDate);
+
+        const scheduled_release_date =  Date.parse(result.selectedDate);
+        console.log(scheduled_release_date);
+        const token = getCookieValue('atid');
+        const api_endpoint = getCookieValue('api-endpoint');
+        const identity = getCookieValue("identity");
+        $("#identity").text(identity);
+        $('#nav_title').html(identity);
+    </script>
+
+    <!-- Initialize Calendar -->
+    <script>
+
+        $(function () {
+            //$('#scheduled_release_date').datetimepicker({theme:'dark'})
+            //$("#scheduled_release_date").datetimepicker();
+            
+            $('#scheduled_release_date').datetimepicker({
+                defaultDate: scheduled_release_date,
+                datepicker:false,
+                pickDate: false,
+                format:'H:i:s',
+                timeOnly:true
+            });
+
+            // $('#scheduled_release_date').datetimepicker({
+            //     defaultDate: scheduled_release_date
+            // });
+
+            $("#start_bid_window").datetimepicker();
+            $("#end_bid_window").datetimepicker();
+        });
+
+    </script>
+
+
+    <!-- Video Upload And redirect -->
+    <script type="text/javascript">
 
         $(document).ready(function () {
 
@@ -172,6 +233,7 @@
                 location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
             }
 
+            //$('#scheduled_release_date').attr('value', scheduled_release_date);
 
             $("form#data").submit(function (e) {
                 $('#loading').show();
@@ -210,7 +272,7 @@
                     data: JSON.stringify(Object.fromEntries(formData)),
                     dataType: 'json',
                     success: function (signedURL) {
-                        console.log('success ' + signedURL);
+                        console.log('success ' + JSON.stringify(signedURL));
                         var json = $.parseJSON(JSON.stringify(signedURL));
 
                         console.log('uploadURL ' + json.uploadURL);
@@ -267,12 +329,6 @@
         });
 
 
-        $(function () {
-            //$('#scheduled_release_date').datetimepicker({theme:'dark'})
-            $("#scheduled_release_date").datetimepicker();
-            $("#start_bid_window").datetimepicker();
-            $("#end_bid_window").datetimepicker();
-        });
 
 
         function fetchSignUrl(url) {
@@ -306,30 +362,7 @@
                 var json = $.parseJSON(JSON.stringify(response));
                 console.log('video url ' + json.uploadURL);
 
-                // const vidSrc = document.createElement("source");
-                // vidSrc.type = 'video/mp4';
-                // vidSrc.src = json.uploadURL;
-                //
-                // const vid = document.createElement('video');
-                // vid.height = '400px';
-                // vid.width = '400px';
-                // vid.appendChild(vidSrc);
-                // document.body.appendChild(vid);
 
-                window.location = json.uploadURL;
-
-                //const img = document.createElement('img');
-                //$("#creator-video-src").src = json.uploadURL;
-                //img.src = json.uploadURL;
-                //document.body.appendChild(img);
-                //document.body.html = img;
-                //$('#container').html(img);
-                //$("#video-element").show();
-
-
-                // Update the source of the image.
-                //const imageElement = document.getElementById(imageId);
-                //imageElement.html = dataUrl;
             }).fail(function () {
                 // An error occurred
             });
@@ -337,99 +370,8 @@
 
     </script>
 
+    <!-- Display calendar -->
     <script>
-        function is_cookie_exist(name) {
-            return document.cookie.split(';').some(c => {
-                return c.trim().startsWith(name + '=');
-            });
-        }
-
-        function delete_cookie(name, path, domain) {
-            if (is_cookie_exist(name)) {
-                document.cookie = name + "=" +
-                    ((path) ? ";path=" + path : "") +
-                    ((domain) ? ";domain=" + domain : "") +
-                    ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
-                document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.host;
-            }
-        }
-
-        /**
-         * Called from sign out button
-         */
-        function getCookie() {
-            console.log(document.cookie);
-            delete_cookie("atid", "/", "");
-            delete_cookie("identity", "/", "");
-            console.log(document.cookie);
-            location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
-        }
-
-        function getCookieValue(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        }
-
-        // Attach a submit handler to the form
-        $(document).ready(function () {
-            if (!getCookieValue('atid')) {
-                alert('You are logged out');
-                //new Boxy('#popupBox', {title: 'Login message'});
-                $('#loading').hide();
-                location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
-            }
-
-            let identity = getCookieValue("identity");
-            $("#identity").text(identity);
-            $('#nav_title').html(identity);
-
-            // TODO
-            // check if logged in
-
-        });
-
-    </script>
-
-
-    <script>
-        function is_cookie_exist(name) {
-            return document.cookie.split(';').some(c => {
-                return c.trim().startsWith(name + '=');
-            });
-        }
-
-        function delete_cookie(name, path, domain) {
-            if (is_cookie_exist(name)) {
-                document.cookie = name + "=" +
-                    ((path) ? ";path=" + path : "") +
-                    ((domain) ? ";domain=" + domain : "") +
-                    ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
-                document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.host;
-            }
-        }
-
-        /**
-         * Called from sign out button
-         */
-        function getCookie() {
-            console.log(document.cookie);
-            delete_cookie("atid", "/", "");
-            delete_cookie("identity", "/", "");
-            console.log(document.cookie);
-            location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
-        }
-
-        function getCookieValue(name) {
-            const value = `; ${document.cookie}`;
-            const parts = value.split(`; ${name}=`);
-            if (parts.length === 2) return parts.pop().split(';').shift();
-        }
-
-        let token = getCookieValue('atid');
-        let api_endpoint = getCookieValue('api-endpoint');
-
-        //console.log("api_endpoint " + api_endpoint);
 
         var events = [];
 
@@ -520,22 +462,6 @@
                 }
             });
         });
-        //
-        // document.addEventListener('DOMContentLoaded', function() {
-        //     var calendarEl = document.getElementById('calendar');
-        //
-        //     console.log(events);
-        //
-        //     var calendar = new FullCalendar.Calendar(calendarEl, {
-        //         plugins: [ 'interaction', 'dayGrid' ],
-        //         defaultDate: '2023-01-22',
-        //         editable: true,
-        //         eventLimit: true, // allow "more" link when too many events
-        //         events: events
-        //     });
-        //
-        //     calendar.render();
-        // })
 
     </script>
 
@@ -771,6 +697,7 @@
                                 <input type="hidden" name="filename" id="filename"/>
                                 <!--<input type="hidden" name="directory_path" id="directory_path" />-->
                                 <input type="hidden" name="creator_email" id="creator_email"/>
+<!--                                <input type="hidden" name="scheduled_release_date" id="scheduled_release_date"/>-->
 
                                 <div class="row g-3" style="margin-top:20px">
                                     <div class="col"><input id="upload-video" name="upload-video" class="form-control"

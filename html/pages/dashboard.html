@@ -80,11 +80,16 @@
 
   <!-- CSS CDN --><!-- datetimepicker jQuery CDN -->
   <link rel="stylesheet"
-        href=
-                "https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"
   />
-  <script src=
-                  "https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js">
+  <link rel="stylesheet"
+        href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"
+  />
+  <link rel="stylesheet"
+        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"
+  />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js">
   </script>
 
 
@@ -96,17 +101,15 @@
 <!--  <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/jquery-3.3.1.min.js"></script>-->
   <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/popper.min.js"></script>
 
-  <script src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/core/main.js'></script>
+  <sc`ript src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/core/main.js'></script>
   <script src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/interaction/main.js'></script>
   <script src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/daygrid/main.js'></script>
   <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/main.js"></script>
 
 
+
   <!-- Enables drag and drop feature -->
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-
-
-
 
   <!-- Video Image Overlay Script -->
   <script>
@@ -664,7 +667,83 @@
     });
 
   </script>
+
+
+  <script>
+
+    $(document).ready(function () {
+      $("body").delegate(".datetimepicker", "focusin", function(){
+        $(this).datetimepicker();
+      });
+      $("body").delegate("#creator_upload_time", "focusin", function(){
+        $(this).datetimepicker();
+      });
+
+      let selectedDate = "";
+      $('#creator_upload').datepicker({
+        onSelect: function(dateText, inst) {
+          selectedDate = dateText;
+          //new Boxy('#schedulingVideo', {title: 'Schedule A Video', modal: false});
+        }
+      });
+      //$("#creator_upload").datepicker();
+
+
+      $('#scheduled_release_date').datetimepicker({
+        dateFormat: '',
+        datepicker:false,
+        pickDate: false,
+        format:'H:i:s',
+        timeOnly:true
+      });
+
+
+      $('#new_video_upload').click(function() {
+        location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/influencer_video_upload.html?selectedDate=' + selectedDate;
+      });
+    });
+  </script>
+
+  <style>
+    .datetimepicker{ z-index:9999!important; }
+    #creator_upload_time {
+      z-index:9999!important;
+    }
+
+  </style>
+
 </head>
+
+
+<!-- Modal -->
+<div class="modal fade" id="schedulingVideo" tabindex="-1" aria-labelledby="schedulingVideoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+<!--      <form id="calendar_data" method="post" enctype="multipart/form-data">-->
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="schedulingVideoLabel">Set Time</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="text" name="scheduled_release_date" id="new_scheduled_release_date" class="form-control input-lg" aria-label="Scheduled Release Date" placeholder="Scheduled Release Date">
+        </div>
+
+        <div class="modal-footer">
+          <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" id="new_video_upload" class="btn btn-primary">Set</button>
+        </div>
+<!--      </form>-->
+    </div>
+  </div>
+</div>
+
+<!-- End My Account Boxy -->
+<script type="text/javascript">
+  $('#get_time').click(function(){
+    new Boxy('#schedulingVideo', {title: 'Schedule A Video', modal: false});
+  });
+</script>
+
 
 <!-- Modal -->
 <div class="modal fade" id="influencerVideoFormModal" tabindex="-1" aria-labelledby="influencerVideoFormModalLabel" aria-hidden="true">
@@ -978,14 +1057,7 @@
     <hr class="horizontal light mt-0 mb-2">
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link text-white active bg-gradient-primary" href="../pages/dashboard.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">dashboard</i>
-            </div>
-            <span class="nav-link-text ms-1">Influencer</span>
-          </a>
-        </li>
+
 <!--        <li class="nav-item">-->
 <!--          <a class="nav-link text-white " href="bidder_list_view.html">-->
 <!--            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">-->
@@ -1010,12 +1082,12 @@
 <!--            <span class="nav-link-text ms-1">Brand Upload</span>-->
 <!--          </a>-->
 <!--        </li>-->
-        <li class="nav-item">
-          <a class="nav-link text-white " href="../pages/influencer_video_upload.html">
-            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
-              <i class="material-icons opacity-10">table_view</i>
-            </div>
-            <span class="nav-link-text ms-1">Creator Upload</span>
+        <li style="padding:0px;margin:0px;" class="nav-item">
+          <a style="padding:0px;margin:0px;" class="nav-link text-white" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#schedulingVideo">
+<!--            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">-->
+<!--              <i class="material-icons opacity-10">table_view</i>-->
+<!--            </div>-->
+            <div id="creator_upload"></div>
           </a>
         </li>
 <!--        <li class="nav-item">-->
@@ -1054,7 +1126,7 @@
           </div>
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
-              <a id="identity" class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="#">Online Builder</a>
+              <a id="identity" class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="/pages/landing-page.html">Online Builder</a>
             </li>
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:void(0);" onclick="getCookie();" class="nav-link text-body font-weight-bold px-0">
