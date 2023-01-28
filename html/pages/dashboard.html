@@ -108,10 +108,79 @@
   <script src='http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/daygrid/main.js'></script>
   <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/main.js"></script>
 
-
-
   <!-- Enables drag and drop feature -->
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <!-- Cookie Script -->
+  <script>
+    function is_cookie_exist(name){
+      return document.cookie.split(';').some(c => {
+        return c.trim().startsWith(name + '=');
+      });
+    }
+    function delete_cookie( name, path, domain ) {
+      if( is_cookie_exist( name ) ) {
+        document.cookie = name + "=" +
+                ((path) ? ";path="+path:"")+
+                ((domain)?";domain="+domain:"") +
+                ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+        document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.host;
+      }
+    }
+
+    /**
+     * Called from sign out button
+     */
+    function getCookie(){
+      console.log(document.cookie);
+      delete_cookie("atid", "/", "");
+      delete_cookie("identity", "/", "");
+      console.log(document.cookie);
+      location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+    }
+
+    function getCookieValue(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+  </script>
+
+  <!-- Initialize Variables -->
+  <script>
+    window.token = window.sessionStorage.getItem(getCookieValue('mysession'));
+    window.api_endpoint = window.localStorage.getItem('api-endpoint');
+    window.video_id = window.localStorage.getItem('video_id');
+    window.identity = window.localStorage.getItem('identity');
+
+    // console.log('DEBUG================');
+    // console.log(window.token);
+    // console.log(window.api_endpoint);
+    // console.log(window.video_id);
+    // console.log(window.identity);
+    // console.log('DEBUG================');
+
+    $(document).ready(function() {
+      if (!window.token) {
+        $(".alert").delay(2000).slideUp(200, function () {
+          $(this).alert('close');
+        });
+        $('#loading').hide();
+        location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+      }
+    });
+
+    function logout() {
+      window.sessionStorage.clear();
+      window.localStorage.clear();
+      location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+    }
+
+    if(!window.video_id) {
+      location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/landing-page.html';
+    }
+
+  </script>
 
   <!-- Video Image Overlay Script -->
   <script>
@@ -228,93 +297,34 @@
     });
   </script>
 
-<!-- Cookie Script -->
-  <script>
-    function is_cookie_exist(name){
-      return document.cookie.split(';').some(c => {
-        return c.trim().startsWith(name + '=');
-      });
-    }
-    function delete_cookie( name, path, domain ) {
-      if( is_cookie_exist( name ) ) {
-        document.cookie = name + "=" +
-                ((path) ? ";path="+path:"")+
-                ((domain)?";domain="+domain:"") +
-                ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
-        document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.host;
-      }
-    }
-
-    /**
-     * Called from sign out button
-     */
-    function getCookie(){
-      console.log(document.cookie);
-      delete_cookie("atid", "/", "");
-      delete_cookie("identity", "/", "");
-      console.log(document.cookie);
-      location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
-    }
-
-    function getCookieValue(name) {
-      const value = `; ${document.cookie}`;
-      const parts = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-  </script>
 
   <!-- Dashboard Script -->
   <script>
 
-    // function get_query(){
-    //   var url = document.location.href;
-    //   var qs = url.substring(url.indexOf('?') + 1).split('&');
-    //   for(var i = 0, result = {}; i < qs.length; i++){
-    //     qs[i] = qs[i].split('=');
-    //     result[qs[i][0]] = decodeURIComponent(qs[i][1]);
-    //   }
-    //   return result;
-    // }
-    //
-    // const result = get_query();
-    // console.log(result);
-
-    const video_id = window.localStorage.getItem('video_id');
-
-    if(!video_id) {
-      location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/landing-page.html';
-    }
-
     // Attach a submit handler to the form
     $(document).ready(function(){
-      if (!getCookieValue('atid')) {
-        $(".alert").delay(2000).slideUp(200, function() {
-          $(this).alert('close');
-        });
-        $('#loading').hide();
-        location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
-      }
-
-      $('#video_id', video_id);
-      const identity = getCookieValue("identity");
-      $("#identity").text(identity);
-      $('#nav_title').html(identity);
-      $('#bidder_email').attr('value', identity);
+      $('#video_id', window.video_id);
+      $("#identity").text(window.identity);
+      $('#nav_title').html(window.identity);
+      console.log('bidder email is ' + window.identity);
+      window.localStorage.setItem('bidder_email', window.identity);
+      console.log('bidder email from cache is ' + window.localStorage.getItem('bidder_email'));
     });
   </script>
-
 
   <!-- Get Video Detail -->
   <script type="text/javascript">
 
     $(document).ready(function () {
+      console.log('video id ' + window.video_id);
+      console.log('api_endpoint' + window.api_endpoint);
 
       $.ajax({
         type: "GET",
-        url: api_endpoint + "/creator_video/" + window.localStorage.getItem('video_id'),
+        url: window.api_endpoint + "/creator_video/" + window.video_id,
         crossDomain: true,
         headers: {
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer ' + window.token
         },
         dataType: 'json',
         success: function (result) {
@@ -325,9 +335,9 @@
           let item = json.Item;
           console.log(JSON.stringify(item));
 
+          window.localStorage.setItem('video_key', item.key);
+          console.log('video key', item.key);
 
-
-          $('#video_id').attr('value', item.id);
           $('#video_name').html(item.filename);
           $('#scheduled_release_date_detail').html(item.scheduled_release_date);
           $('#video_title_detail').html(item.title);
@@ -356,7 +366,6 @@
           $('#start_bid_window').attr('value', item.start_bid_window);
 
 
-
           $('#video_description').attr('value', item.description);
           $('#audience_category').attr('value', item.audience_category);
           $('#platform_api_key').attr('value', item.platform_api_key);
@@ -366,11 +375,11 @@
           $('#enable_publish').attr('value', item.enable_publish);
 
           // For Bidder
-          $('#bid_creator_email').attr('value', item.creator_email);
-          $('#bid_video_id').attr('value', item.id);
-          $('#video_key').attr('value', item.Key);
-          $('#creator_email').attr('value', item.creator_email);
           $('#bidder_email_detail').html(item.creator_email);
+
+          // this is redundant but just in case i missed something
+          window.localStorage.setItem('video_key', item.key);
+          window.localStorage.setItem('creator_email', item.creator_email)
 
           $('#video_bid_detail').html('Open Bid Amount:' + item.open_bid_amount + '\n' +
                   'Bid Window: ' + item.start_bid_window + " - " + item.end_bid_window);
@@ -381,7 +390,9 @@
             $('#video_published_to_platform').html('Not Live');
           }
 
-          displayProtectedImage('#video', api_endpoint + "/content/" + item.key);
+          displayProtectedImage('#video', window.api_endpoint + "/content/" + item.key);
+
+          getBidDetail();
         },
         error: function (xhr, status, error) {
           console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
@@ -389,42 +400,26 @@
           //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
         }
       });
-
       // need to implement onSubmit
     });
 
   </script>
 
-
-
  <!-- List Create Calendar -->
   <script>
-
-    let token = getCookieValue('atid');
-    let api_endpoint = getCookieValue('api-endpoint');
 
     //console.log("api_endpoint " + api_endpoint);
 
     var events = [];
 
     $(document).ready(function () {
-      if (!getCookieValue('atid')) {
-        alert('You are logged out');
-        //new Boxy('#popupBox', {title: 'Login message'});
-        $('#loading').hide();
-        delete_cookie('api-endpoint', "/", "");
-        location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
-      }
-
-      let identity = getCookieValue("identity");
-      $("#identity").text(identity);
 
       $.ajax({
         type: "GET",
-        url: api_endpoint + "/listCreatorVideos/" + identity,
+        url: window.api_endpoint + "/listCreatorVideos/" + window.identity,
         crossDomain: true,
         headers: {
-          'Authorization': 'Bearer ' + token
+          'Authorization': 'Bearer ' + window.token
         },
         dataType: 'json',
         success: function (result) {
@@ -463,14 +458,12 @@
             window.localStorage.setItem(items[i].id, JSON.stringify(items[i]));
 
             //2020-02-16T16:00:00
-
             // {
             //     groupId: 999,
             //         title: 'Repeating Event',
             //     start: '2020-02-16T16:00:00'
             // },
             //
-
           }
 
           console.log(events);
@@ -507,13 +500,11 @@
 <!-- Brand Image Upload -->
   <script type="text/javascript">
     let brandImageKey;
-    let selectVideoId;
 
     $(document).ready(function () {
-      //console.log(getCookieValue('atid'));
 
       $("form#image_upload_data").submit(function (e) {
-        console.log(api_endpoint);
+        console.log(window.api_endpoint);
         $('#loading').show();
         e.preventDefault();
 
@@ -521,90 +512,96 @@
         const photo = document.getElementById("upload-image").files[0];
         formData.delete('upload-image');
 
-        console.log(photo.name);
-        var cleanFileName = photo.name.split('\\').pop(); // clean from C:\fakepath OR C:\fake_path
-        console.log('clean file name : ' + cleanFileName);
+        if(photo) {
+          console.log(photo.name);
+          var cleanFileName = photo.name.split('\\').pop(); // clean from C:\fakepath OR C:\fake_path
+          console.log('clean file name : ' + cleanFileName);
 
-        for(var pair of formData.entries()){
-          console.log(pair[0], pair[1]);
-        }
-
-        const videoFields = JSON.parse(window.localStorage.getItem(selectVideoId));
-
-        brandImageKey = getCookieValue('identity') + "/" + cleanFileName;
-        formData.append('bidder_email', identity);
-        formData.append('video_key', videoFields.Key);
-        formData.append('creator_email', videoFields.creator_email);
-        formData.append('image_key', brandImageKey);
-        formData.append('filename', cleanFileName);
-
-        $('#bidder_email').attr('value', identity);
-        $('#video_key').attr('value', videoFields.Key);
-        $('#bid_creator_email').attr('value', videoFields.creator_email);
-        $('#bidder_email_detail').attr('value', videoFields.creator_email)
-        $('#image_key').attr('value', brandImageKey);
-
-
-        $.ajax({
-          type: "PUT",
-          url: api_endpoint + "/brand-sign-url/" + getCookieValue('identity') + "/" + cleanFileName,
-          crossDomain: true,
-          headers: {
-            'Authorization': 'Bearer ' + token
-          },
-          data: JSON.stringify(Object.fromEntries(formData)),
-          dataType: 'json',
-          success: function (signedURL) {
-            console.log('success ' + signedURL);
-            var json = $.parseJSON(JSON.stringify(signedURL));
-
-            signedUrl = json.uploadURL;
-            console.log('uploadURL ' + json.uploadURL);
-
-            $.ajax({
-              type: "PUT",
-              url: json.uploadURL,
-              crossDomain: true,
-              headers: {
-                "x-amz-acl": "public-read",
-                "Key": getCookieValue('identity') + "/" + cleanFileName,
-                "Content-Type": "image/jpeg"
-              },
-              cache: false,
-              contentType: false,
-              processData: false,
-              async: true,
-              data: photo,
-              //dataType: 'text/html',
-              success: function (result) {
-                console.log("got a success");
-                // success is going into error even though i change type to text/html
-                $('#loading').hide();
-                let key = getCookieValue('identity') + "/" + cleanFileName;
-                displayProtectedImage('#bidder_image_upload', api_endpoint + "/content/" + key);
-                const bid_id = JSON.parse(result).bid_id;
-                console.log('bid_id from upload image is ' + bid_id);
-                window.localStorage.setItem('bid_id', bid_id);
-                $('#bid_id').attr('value', bid_id);
-              },
-              error: function (xhr, status, error) {
-                console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
-                $('#loading').hide();
-                // check if all is wll
-                //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
-              }
-            });
-          },
-          error: function (xhr, status, error) {
-            console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
-            $('#loading').hide();
-            //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+          for (var pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
           }
-        });
+
+          const videoFields = JSON.parse(window.localStorage.getItem(window.video_id));
+          console.log('identity is ' + window.identity);
+
+          brandImageKey = window.identity + "/" + cleanFileName;
+          formData.append('bidder_email', window.identity);
+          formData.append('video_key', videoFields.key);
+          formData.append('video_id', window.video_id);
+          formData.append('creator_email', videoFields.creator_email);
+          formData.append('image_key', brandImageKey);
+          formData.append('filename', cleanFileName);
+
+          $('#bidder_email_detail').attr('value', videoFields.creator_email)
+
+          window.localStorage.setItem('image_key', brandImageKey);
+          window.localStorage.setItem('creator_email', videoFields.creator_email);
+          window.localStorage.setItem('video_key', videoFields.Key);
+
+          $.ajax({
+            type: "PUT",
+            url: window.api_endpoint + "/brand-sign-url/" + window.identity + "/" + cleanFileName,
+            crossDomain: true,
+            headers: {
+              'Authorization': 'Bearer ' + window.token
+            },
+            data: JSON.stringify(Object.fromEntries(formData)),
+            dataType: 'json',
+            success: function (signedURL) {
+              console.log('success ' + signedURL);
+              var json = $.parseJSON(JSON.stringify(signedURL));
+              console.log('signUrl json ' + json);
+              console.log('uploadURL ' + json.uploadURL);
+
+              $.ajax({
+                type: "PUT",
+                url: json.uploadURL,
+                crossDomain: true,
+                headers: {
+                  "x-amz-acl": "public-read",
+                  "Key": window.identity + "/" + cleanFileName,
+                  "Content-Type": "image/jpeg"
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+                async: true,
+                data: photo,
+                //dataType: 'text/html',
+                success: function (result) {
+                  console.log("got a success");
+                  // success is going into error even though i change type to text/html
+                  $('#loading').hide();
+
+                  $('.modal.in').modal('hide');
+
+                  let key = window.identity + "/" + cleanFileName;
+                  displayProtectedImage('#bidder_image_upload', window.api_endpoint + "/content/" + key);
+                  console.log('result from ' + json.brand_image_id);
+
+                  //const brand_image_id = json.brand_image_id;
+                  //console.log('brand_image_id from upload image is ' + brand_image_id);
+                  window.localStorage.setItem('brand_image_id', json.brand_image_id);
+                },
+                error: function (xhr, status, error) {
+                  console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+                  $('#loading').hide();
+                  $('.modal.in').modal('hide')
+                  // check if all is wll
+                  //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+                }
+              });
+            },
+            error: function (xhr, status, error) {
+              console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+              $('#loading').hide();
+              $('.modal.in').modal('hide')
+              //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+            }
+          });
+        }
       });
-
     });
-
 
     function fetchSignUrl(url) {
       console.log('fetching sign url to retrieve asset');
@@ -613,20 +610,10 @@
         url: url,
         crossDomain: true,
         headers: {
-          'Authorization': 'Bearer ' + getCookieValue('atid')
+          'Authorization': 'Bearer ' + window.token
         },
         dataType: 'json'
       });
-    }
-
-
-    function fetchImagen(url) {
-      const headers = new Headers();
-      return fetch(url, {headers});
-    }
-
-    function arrayBufferToBase64(buffer) {
-      return btoa(String.fromCharCode(...new Uint8Array(buffer)));
     }
 
     async function displayProtectedImage(
@@ -640,61 +627,150 @@
         $(imageId).attr('src', json.uploadURL);
 
       }).fail(function () {
-        // An error occurred
+        $('.modal.in').modal('hide');
       });
     }
 
   </script>
 
-  <!-- Brand form upload -->
+  <!-- Submit Bid Post -->
   <script type="text/javascript">
     $(document).ready(function () {
       $("form#bid_data").submit(function (e) {
-        console.log(api_endpoint);
+        console.log(window.api_endpoint);
         $('#loading').show();
         e.preventDefault();
 
         var formData = new FormData(this);
         formData.delete('upload-image');
+
+        brandImageKey = window.localStorage.getItem('image_key');
+        const brandImageId = window.localStorage.getItem('brand_image_id');
+
         if(brandImageKey) {
           formData.append('image_key', brandImageKey);
           formData.append('filename', brandImageKey.split('/')[1]);
-        }
 
-        for(let pair of formData.entries()){
-          console.log(pair[0], pair[1]);
-        }
-
-        $.ajax({
-          type: "PUT",
-          url: api_endpoint + "/brand-sign-url/" + brandImageKey,
-          crossDomain: true,
-          headers: {
-            'Authorization': 'Bearer ' + token
-          },
-          data: JSON.stringify(Object.fromEntries(formData)),
-          dataType: 'json',
-          success: function (signedURL) {
-            console.log('success ' + signedURL);
-            var json = $.parseJSON(JSON.stringify(signedURL));
-            console.log('uploadURL ' + json.uploadURL);
-          },
-          error: function (xhr, status, error) {
-            console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
-            $('#loading').hide();
-            //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+          for (let pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
           }
-        });
+
+          formData.append('bidder_email', window.identity);
+          formData.append('video_key', window.localStorage.getItem('video_key'));
+          formData.append('video_id', window.video_id);
+          formData.append('creator_email', window.localStorage.getItem('creator_email'));
+          formData.append('id', brandImageId);
+
+          $.ajax({
+            type: "POST",
+            url: window.api_endpoint + "/bids",
+            crossDomain: true,
+            headers: {
+              'Authorization': 'Bearer ' + window.token
+            },
+            data: JSON.stringify(Object.fromEntries(formData)),
+            dataType: 'json',
+            success: function (bidResponse) {
+              $('.modal.in').modal('hide');
+              console.log('success ' + JSON.stringify(bidResponse));
+              console.log('id should match what was posted' + JSON.parse(bidResponse).brand_image_id);
+
+              getBidDetail();
+            },
+            error: function (xhr, status, error) {
+              console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+              $('.modal.in').modal('hide');
+              $('#loading').hide();
+              //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+            }
+          });
+        }
       });
     });
 
   </script>
 
+  <!-- Get Bid Detail If One Exist - Get By Creator And Bidder And Image Key -->
+  <script>
+    function getBidDetail() {
+      console.log('Getting fresh bid detail');
+      const creatorEmail = window.localStorage.getItem('creator_email');
+      const bidderEmail = window.localStorage.getItem('bidder_email');
+      const videoKey = window.localStorage.getItem('video_key');
 
+      $.ajax({
+        type: "GET",
+        url: window.api_endpoint + "/bids-query/" + bidderEmail + "/" + videoKey,
+        crossDomain: true,
+        headers: {
+          'Authorization': 'Bearer ' + window.token
+        },
+        dataType: 'json',
+        success: function (result) {
+          console.log('success');
+          const json = JSON.parse(JSON.stringify(result));
+          // {"Item":{"content":"mustache","currency":"USD","frame_location":"1000","placement_y":"300","amount":"400","merchant_id":"mrjohnny","placement_x":"400","id":"86818d4f-fddb-4c05-8fbb-4d83d884ce7a"}}
+          const items = json.Items;
+          console.log(JSON.stringify(items));
+          if(items.length > 0) {
+            const item = items.pop();
+            $('#bid_amount').attr('value', item.bid_amount);
+            $('#image_key').attr('value', item.image_key);
+            // bidder_email: obj.bidder_email,
+            // video_key: obj.video_key,
+            // video_id: obj.video_id,
+            // creator_email: obj.creator_email,
+            // ad_description: obj.ad_description,
+            // position_x: obj.position_x,
+            // position_y: obj.position_y,
+            // frame_pixel: obj.frame_pixel,
+            // html_position_x: obj.html_position_x,
+            // html_position_y: obj.html_position_y,
+            // creator_accepted: false,
+            // created_on: Date.now()
+
+            console.log('update is successful when this is filled ' + item.position_y);
+
+            $('#position_x_detail').html(item.position_x);
+            $('#position_y_detail').html(item.position_y);
+            $('#html_position_x_detail').html(item.html_position_x);
+            $('#html_position_y_detail').html(item.html_position_y);
+            $('#frame_pixel_detail').html(item.frame_pixel);
+
+            console.log('position_x ' + item.position_x);
+            console.log('position_y ' + item.position_y);
+            console.log('html_position_x ' + item.html_position_x);
+            console.log('html_position_y ' + item.html_position_y);
+            console.log('frame_pixel ' + item.frame_pixel);
+
+            // if image src is not empty
+            // y.style.marginLeft = '100px';
+            // y.style.maringTop = '-60px';
+            // y.classList.add('yourCssClass')
+            //$(imageId).attr('src', json.uploadURL);
+
+            console.log('id to retrieve bid and post to ' + item.id);
+            window.localStorage.setItem('brand_image_id', item.id);
+            window.localStorage.setItem("image_key", item.image_key);
+            if(! $('#bidder_image_upload').attr('src')) {  // only retrieve image if img src is empty
+              displayProtectedImage('#bidder_image_upload', window.api_endpoint + "/content/" + item.image_key);
+            }
+          }
+        },
+        error: function (xhr, status, error) {
+          console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+          //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+        }
+      });
+
+      // need to implement onSubmit
+    }
+  </script>
+
+  <!-- Jump to Create Video Form -->
   <script>
 
     $(document).ready(function () {
-
       let selectedDate = "";
       $('#creator_upload').datepicker({
         onSelect: function(dateText, inst) {
@@ -704,8 +780,8 @@
           //new Boxy('#schedulingVideo', {title: 'Schedule A Video', modal: false});
         }
       });
-      //$("#creator_upload").datepicker();
 
+      //$("#creator_upload").datepicker();
 
       // $('#scheduled_release_date').datetimepicker({
       //   dateFormat: '',
@@ -715,14 +791,26 @@
       //   timeOnly:true
       // });
 
-
       // $('#new_video_upload').click(function() {
       //   location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/influencer_video_upload.html?selectedDate=' + selectedDate;
       // });
     });
   </script>
 
-<!--  <style>-->
+  <style>
+    .loading-progress{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -50px;
+      margin-left: -50px;
+      width: 100px;
+      height: 100px;
+    }
+
+  </style>
+
+  <!--  <style>-->
 <!--    .datetimepicker{ z-index:9999!important; }-->
 <!--    #creator_upload_time {-->
 <!--      z-index:9999!important;-->
@@ -732,6 +820,7 @@
 
 </head>
 
+<img id="loading" src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/loading.gif" style="display:none;" class="loading-progress">
 
 <!--&lt;!&ndash; Modal &ndash;&gt;-->
 <!--<div class="modal fade" id="schedulingVideo" tabindex="-1" aria-labelledby="schedulingVideoLabel" aria-hidden="true">-->
@@ -755,12 +844,6 @@
 <!--  </div>-->
 <!--</div>-->
 
-<!--&lt;!&ndash; End My Account Boxy &ndash;&gt;-->
-<!--<script type="text/javascript">-->
-<!--  $('#get_time').click(function(){-->
-<!--    new Boxy('#schedulingVideo', {title: 'Schedule A Video', modal: false});-->
-<!--  });-->
-<!--</script>-->
 
 
 <!-- Modal -->
@@ -810,7 +893,7 @@
             <div class="col">
                <span class="button-checkbox">
                <div class="form-check d-flex justify-content-center mb-5">
-                    <input class="form-check-input me-2" type="checkbox" value="" name="kid_friendly" id="kid_friendly"/>
+                    <input class="form-check-input me-2" type="checkbox" value="false" name="kid_friendly" id="kid_friendly"/>
                     <label class="form-check-label">
                         <a href="#!">Kid Friendly</a>
                     </label>
@@ -820,7 +903,7 @@
             <div class="col">
 					<span class="button-checkbox">
                    <div class="form-check d-flex justify-content-center mb-5">
-						<input class="form-check-input me-2" type="checkbox" value="" name="enable_publish" id="enable_publish"/>
+						<input class="form-check-input me-2" type="checkbox" value="false" name="enable_publish" id="enable_publish"/>
 						<label class="form-check-label">
 							<a href="#!">Enable Go Live</a>
 						</label>
@@ -839,12 +922,6 @@
   </div>
 </div>
 
-<!-- End My Account Boxy -->
-<!--<script type="text/javascript">-->
-<!--  $('#influencer_video_form').click(function(){-->
-<!--    new Boxy('#influencerVideoFormModal', {title: 'Influencer Video Form', modal: false});-->
-<!--  });-->
-<!--</script>-->
 
 
 
@@ -858,18 +935,11 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-
-          <input type="hidden" name="bid_id" id="bid_id"/>
-          <input type="hidden" name="video_key" id="video_key"/>
-          <input type="hidden" name="bid_video_id" id="bid_video_id"/>
-          <input type="hidden" name="image_key" id="image_key"/>
           <input type="hidden" name="position_x" id="position_x"/>
           <input type="hidden" name="position_y" id="position_y"/>
           <input type="hidden" name="frame_pixel" id="frame_pixel"/>
           <input type="hidden" name="html_position_x" id="html_position_x"/>
           <input type="hidden" name="html_position_y" id="html_position_y"/>
-          <input type="hidden" name="creator_email" id="bid_creator_email"/>
-          <input type="hidden" name="bidder_email" id="bidder_email"/>
 
           <div class="row g-3" style="margin-top:20px">
             <div class="col"><input type="text" name="bid_amount" id="bid_amount" class="form-control input-lg" aria-label="Bid Amount" placeholder="Bid Amount"></div>
@@ -889,12 +959,6 @@
   </div>
 </div>
 
-<!-- End My Account Boxy -->
-<!--<script type="text/javascript">-->
-<!--  $('#place_bid').click(function(){-->
-<!--    new Boxy('#placeBidFormModal', {title: 'Place Bid Form', modal: false});-->
-<!--  });-->
-<!--</script>-->
 
 
 
@@ -904,13 +968,13 @@
     <div class="modal-content">
       <form id="image_upload_data" method="post" enctype="multipart/form-data">
         <div class="modal-header">
-          <h1 class="modal-title fs-5" id="imageUploadFormModalLabel">Place Bid Form</h1>
+          <h1 class="modal-title fs-5" id="imageUploadFormModalLabel">Upload Brand Image</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
 
           <div class="row g-3" style="margin-top:20px">
-            <div class="col"><input id="upload-video" name="upload-video" class="form-control" type="file" aria-label="Upload Video"/></div>
+            <div class="col"><input id="upload-image" name="upload-image" class="form-control" type="file" aria-label="Upload Image"/></div>
           </div>
 
         </div>
@@ -924,12 +988,6 @@
   </div>
 </div>
 
-<!-- End My Account Boxy -->
-<!--<script type="text/javascript">-->
-<!--  $('#brand_image_upload').click(function(){-->
-<!--    new Boxy('#imageUploadFormModal', {title: 'Brand Image Upload', modal: false});-->
-<!--  });-->
-<!--</script>-->
 
 
 <!-- Modal -->
@@ -964,12 +1022,6 @@
   </div>
 </div>
 
-<!-- End My Account Boxy -->
-<!--<script type="text/javascript">-->
-<!--  $('#bid_detail').click(function(){-->
-<!--    new Boxy('#placeBidDetailModal', {title: 'Bid Detail', modal: false});-->
-<!--  });-->
-<!--</script>-->
 
 
 
@@ -1009,12 +1061,6 @@
   </div>
 </div>
 
-<!-- End My Account Boxy -->
-<!--<script type="text/javascript">-->
-<!--  $('#influencer_video_detail').click(function(){-->
-<!--    new Boxy('#influencerVideoDetailModal', {title: 'Influencer Video Detail', modal: false});-->
-<!--  });-->
-<!--</script>-->
 
 
 <body class="g-sidenav-show  bg-gray-200">
@@ -1058,7 +1104,7 @@
 <!--          </a>-->
 <!--        </li>-->
         <li style="padding:0px;margin:0px;" class="nav-item">
-          <a style="padding:0px;margin:0px;" class="nav-link text-white" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#schedulingVideo">
+          <a style="padding:0px;margin:0px;" class="nav-link text-white" href="javascript:;" data-bs-toggle="modal" data-bs-target="#schedulingVideo">
 <!--            <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">-->
 <!--              <i class="material-icons opacity-10">table_view</i>-->
 <!--            </div>-->
@@ -1104,7 +1150,7 @@
               <a id="identity" class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="/pages/landing-page.html">Online Builder</a>
             </li>
             <li class="nav-item d-flex align-items-center">
-              <a href="javascript:void(0);" onclick="getCookie();" class="nav-link text-body font-weight-bold px-0">
+              <a href="javascript:logout();" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
                 <span class="d-sm-inline d-none">Sign Out</span>
               </a>
@@ -1226,8 +1272,8 @@
                       <i class="fa fa-ellipsis-v text-secondary"></i>
                     </a>
                     <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                      <li><a id="influencer_video_form" class="dropdown-item border-radius-md" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#influencerVideoFormModal">Edit</a></li>
-                      <li><a id="influencer_video_detail" class="dropdown-item border-radius-md" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#influencerVideoDetailModal">Detail</a></li>
+                      <li><a id="influencer_video_form" class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#influencerVideoFormModal">Edit</a></li>
+                      <li><a id="influencer_video_detail" class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#influencerVideoDetailModal">Detail</a></li>
                       <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
                     </ul>
                   </div>
@@ -1268,10 +1314,11 @@
                       <i class="fa fa-ellipsis-v text-secondary"></i>
                     </a>
                     <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTableForBrand">
-                      <li><a id="place_bid" class="dropdown-item border-radius-md" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#placeBidFormModal">Place Bid</a></li>
-                      <li><a id="bid_detail" class="dropdown-item border-radius-md" href="javascript: return false;" data-bs-toggle="modal" data-bs-target="#placeBidDetailModal">Bid Detail</a></li>
-                      <li><a id="playVideo" class="dropdown-item border-radius-md" href="javascript: return false;"><span class="bi bi-play-btn-fill"></span>Play</a></li>
-                      <li><a id="review" class="dropdown-item border-radius-md" href="javascript: return false;" >Review</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#imageUploadFormModal">Brand Upload</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#placeBidFormModal">Place Bid</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#placeBidDetailModal">Bid Detail</a></li>
+                      <li><a id="playVideo" class="dropdown-item border-radius-md" href="javascript:;"><span class="bi bi-play-btn-fill"></span>Play</a></li>
+                      <li><a id="review" class="dropdown-item border-radius-md" href="javascript:;" >Review</a></li>
                     </ul>
                   </div>
                 </div>
@@ -1280,8 +1327,7 @@
             <div class="card-body p-3">
 
               <div id="drag">
-                <p><img id="bidder_image_upload"
-                        src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/coke-sm.jpeg"/></p>
+                <p><img id="bidder_image_upload" src=""/></p>
               </div>
 
             </div>

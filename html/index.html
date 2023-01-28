@@ -25,7 +25,7 @@
 		}
 	</style>
 
-	<script type="text/javascript">
+	<script>
 		// 1 Day = 24 Hrs = 24*60*60 = 86400.
 		//var expires = (new Date(Date.now() + 86400*1000)).toUTCString();
 
@@ -47,12 +47,20 @@
 			console.log(document.cookie);
 		}
 
-		setCookie("api-endpoint", "https://h2yybqeyde.execute-api.us-east-1.amazonaws.com/Prod");
+		window.token = window.sessionStorage.getItem(getCookieValue('mysession'));
+	</script>
+
+
+	<script type="text/javascript">
+		//setCookie("api-endpoint", "https://vlab4b6dth.execute-api.us-east-1.amazonaws.com/Prod");
 
 		// Attach a submit handler to the form
 		$(document).ready(function(){
-			if (getCookieValue('atid')) {
+			if (window.token) {
 				location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/landing-page.html';
+			} else {
+				window.sessionStorage.clear();
+				window.localStorage.clear();
 			}
 
 			$( "#login" ).click(function() {
@@ -70,8 +78,11 @@
 					dataType: "json",
 					success: function (response) {
 						$("#result").html("You are all logged in");
-						setCookie("atid", response.token);
-						setCookie("identity", email);
+						const randomID = parseInt(Math.random() * 10000000);
+						setCookie("mysession", randomID);
+						window.sessionStorage.setItem(getCookieValue('mysession'), response.token);
+						window.localStorage.setItem('identity', email);
+						window.localStorage.setItem("api-endpoint", "https://vlab4b6dth.execute-api.us-east-1.amazonaws.com/Prod");
 						location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/landing-page.html';
 						// redirect to an authenticated dashboard
 					},

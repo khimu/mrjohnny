@@ -76,7 +76,8 @@ exports.handler = async (event) => {
             bid_type: obj.bid_type,
             create_date: Date.now(),
             key: Key,
-            image_url: url
+            image_url: url,
+            creator_accepted: false
         }
     };
 

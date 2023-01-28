@@ -117,8 +117,7 @@ Resources:
       CodeUri: s3://mrjohnny-deploy/c54999776aa0abefff5c9ab495e06d54
       Handler: ListBids.handler
       FunctionName: ListBrandBids
-      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
+      Description: ''
       MemorySize: 128
       Timeout: 10
       Role:
@@ -165,8 +164,7 @@ Resources:
       CodeUri: s3://mrjohnny-deploy/98731a31e321dac0bdf878089d0396e5
       Handler: ListAllVideosEnabledForBid.handler
       FunctionName: ListAllVideosEnabledForBid
-      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
+      Description: ''
       MemorySize: 128
       Timeout: 10
       Role:
@@ -213,8 +211,7 @@ Resources:
       CodeUri: s3://mrjohnny-deploy/add7f96213b52e40751f3b5722c1881e
       Handler: ListCreatorVideos.handler
       FunctionName: ListCreatorVideos
-      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
+      Description: ''
       MemorySize: 128
       Timeout: 10
       Role:
@@ -305,11 +302,10 @@ Resources:
   PostBrandBidsFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://mrjohnny-deploy/d968efee90df4027691c38227ea62d6a
+      CodeUri: s3://mrjohnny-deploy/4cbe1bd916a9d6a5d5cee330f76cef71
       Handler: PostBid.handler
       FunctionName: PostBrandBids
-      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
+      Description: ''
       MemorySize: 128
       Timeout: 10
       Role:
@@ -350,14 +346,13 @@ Resources:
             AllowOrigin: '''*'''
     Metadata:
       SamResourceId: PostBrandBidsFunction
-  GetBrandBidsFunction:
+  GetBrandBidFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: s3://mrjohnny-deploy/56fdb98e8aac76e962936274674b760b
       Handler: GetBid.handler
-      FunctionName: GetBrandBids
-      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
+      FunctionName: GetBrandBid
+      Description: ''
       MemorySize: 128
       Timeout: 10
       Role:
@@ -376,7 +371,7 @@ Resources:
           REGION:
             Ref: AWS::Region
       Events:
-        GetBids:
+        GetBid:
           Type: Api
           Properties:
             RestApiId:
@@ -397,7 +392,54 @@ Resources:
             AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
             AllowOrigin: '''*'''
     Metadata:
-      SamResourceId: GetBrandBidsFunction
+      SamResourceId: GetBrandBidFunction
+  GetVideoBidFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/a8860aff31dd022e550c425e0a7bec9d
+      Handler: GetVideoBidder.handler
+      FunctionName: GetVideoBidder
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        GetVideoBid:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids-query/{bidder}/{creator}/{filename}
+            Method: GET
+        GetVideoBidOptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids-query/{bidder}/{creator}/{filename}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''DELETE,PUT,GET,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: GetVideoBidFunction
   DeleteBrandBidsFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -605,8 +647,7 @@ Resources:
       CodeUri: s3://mrjohnny-deploy/fa7ee9d4617d23532a0bef4b68237649
       Handler: SignUrl.handler
       FunctionName: SignUrl
-      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
+      Description: ''
       MemorySize: 128
       Timeout: 10
       Role:
@@ -656,7 +697,7 @@ Resources:
   BrandSignUrlFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://mrjohnny-deploy/060480b2722beb6e17f2f5d212e69cce
+      CodeUri: s3://mrjohnny-deploy/52e489fa6cfa334250311b58f957f4ff
       Handler: BrandSignUrl.handler
       FunctionName: BrandSignUrl
       Description: Create brand image upload record in dynamodb and return a sign
@@ -711,7 +752,7 @@ Resources:
   ContentCreatorSignUrlFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://mrjohnny-deploy/8798a8b421b679dc31f805cee2c9a921
+      CodeUri: s3://mrjohnny-deploy/10334a1a98352c6a50a3a39c5b301e23
       Handler: ContentCreatorSignUrl.handler
       FunctionName: ContentCreatorSignUrl
       Description: Create creator-content upload record in dynamodb and return a sign

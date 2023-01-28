@@ -176,8 +176,6 @@ Resources:
       Handler: ListBids.handler
       FunctionName: ListBrandBids
       Description: >-
-        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
       MemorySize: 128
       Timeout: 10
       Role: !GetAtt 'LambdaExecRole.Arn'
@@ -221,8 +219,6 @@ Resources:
       Handler: ListAllVideosEnabledForBid.handler
       FunctionName: ListAllVideosEnabledForBid
       Description: >-
-        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
       MemorySize: 128
       Timeout: 10
       Role: !GetAtt 'LambdaExecRole.Arn'
@@ -265,8 +261,6 @@ Resources:
       Handler: ListCreatorVideos.handler
       FunctionName: ListCreatorVideos
       Description: >-
-        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
       MemorySize: 128
       Timeout: 10
       Role: !GetAtt 'LambdaExecRole.Arn'
@@ -352,8 +346,6 @@ Resources:
       Handler: PostBid.handler
       FunctionName: PostBrandBids
       Description: >-
-        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
       MemorySize: 128
       Timeout: 10
       Role: !GetAtt 'LambdaExecRole.Arn'
@@ -388,15 +380,13 @@ Resources:
             AllowOrigin: "'*'"
 
 
-  GetBrandBidsFunction:
+  GetBrandBidFunction:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: GetBid.js
       Handler: GetBid.handler
-      FunctionName: GetBrandBids
+      FunctionName: GetBrandBid
       Description: >-
-        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
       MemorySize: 128
       Timeout: 10
       Role: !GetAtt 'LambdaExecRole.Arn'
@@ -411,7 +401,7 @@ Resources:
         Variables:
           REGION: !Ref AWS::Region
       Events:
-        GetBids:
+        GetBid:
           Type: Api
           Properties:
             RestApiId: !Ref ServerlessApi
@@ -429,6 +419,48 @@ Resources:
             AllowMethods: "'DELETE,PUT,GET,HEAD,OPTIONS'"
             AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
             AllowOrigin: "'*'"
+
+
+  GetVideoBidFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: GetVideoBidder.js
+      Handler: GetVideoBidder.handler
+      FunctionName: GetVideoBidder
+      Description: >-
+      MemorySize: 128
+      Timeout: 10
+      Role: !GetAtt 'LambdaExecRole.Arn'
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-0f666341436597447
+        SubnetIds:
+          - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        "service": "mrjohny"
+      Environment:
+        Variables:
+          REGION: !Ref AWS::Region
+      Events:
+        GetVideoBid:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /bids-query/{bidder}/{creator}/{filename}
+            Method: GET
+        GetVideoBidOptionsApi:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /bids-query/{bidder}/{creator}/{filename}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: "'DELETE,PUT,GET,HEAD,OPTIONS'"
+            AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+            AllowOrigin: "'*'"
+
 
 
   DeleteBrandBidsFunction:
@@ -626,8 +658,6 @@ Resources:
       Handler: SignUrl.handler
       FunctionName: SignUrl
       Description: >-
-        A simple backend (read/write to DynamoDB) with a RESTful API endpoint
-        using Amazon API Gateway.
       MemorySize: 128
       Timeout: 10
       Role: !GetAtt 'LambdaExecRole.Arn'

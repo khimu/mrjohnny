@@ -1,5 +1,5 @@
 const AWS = require('aws-sdk');
-const querystring = require('querystring');
+//const querystring = require('querystring');
 
 const dynamo = new AWS.DynamoDB.DocumentClient();
 
@@ -9,7 +9,8 @@ exports.handler = async (event, context) => {
     const headers = {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Credentials': true,
-        'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+        'Access-Control-Allow-Headers': 'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token',
+        'Access-Control-Allow-Methods': 'PUT,HEAD,OPTIONS'
     };
 
     if(event.httpMethod.startsWith('OPTIONS')) {
@@ -26,47 +27,47 @@ exports.handler = async (event, context) => {
 
 
     try {
-        const formfield = querystring.parse(event.body);
-        console.log('amount is ' + formfield['amount']);
+        const obj = JSON.parse(event.body);
 
-        //const obj = JSON.parse(event.body);
+        let brand_image_id = obj.id;
+
+        if(!brand_image_id) {
+            brand_image_id = create_UUID();
+        }
 
         var params = {
             TableName: 'bids',
             Item: {
-                id: create_UUID(),
-                amount: formfield['amount'],
+                id: brand_image_id,
+                amount: obj.bid_amount,
                 currency: 'USD',
-                content: formfield['content'],
-                merchant_id: formfield['merchant_id'],
-                placement_x: formfield['placement_x'],
-                placement_y: formfield['placement_y'],
-                frame_location: formfield['frame_location']
-                
-                // add email
-                
-                //amount: obj.amount,
-               // currency:obj.currency,
-               // content: obj.content,
-              //  merchant_id: obj.merchant_id,
-              //  placement_x: obj.placement_x,
-              //  placement_y:obj.placement_y,
-              //  frame_location: obj.frame_location
+                bidder_email: obj.bidder_email,
+                video_key: obj.video_key,
+                video_id: obj.video_id,
+                creator_email: obj.creator_email,
+                image_key: obj.image_key,
+                ad_description: obj.ad_description,
+                position_x: obj.position_x,
+                position_y: obj.position_y,
+                frame_pixel: obj.frame_pixel,
+                html_position_x: obj.html_position_x,
+                html_position_y: obj.html_position_y,
+                creator_accepted: false,
+                created_on: Date.now()
             }
-        };      
+        };
 
-        await dynamo.put(params).promise();
-        body = "Your bid $" + formfield['amount'] + " is in the queue";
-        //body = "Your bid " + obj.amount + " is in the queue [debug]--" + JSON.stringify(body);
-        //body = await dynamo.update(params).promise();
+        body = await dynamo.put(params).promise();
+        console.log('Dynamodb response ' + JSON.stringify(body));
+        body = JSON.stringify({
+            brand_image_id
+        });
     } catch (err) {
         statusCode = '400';
         body = err.message;
     } finally {
         body = JSON.stringify(body);
     }
-    
-    console.log(body);
 
     return {
         statusCode,
@@ -85,5 +86,3 @@ function create_UUID(){
     });
     return uuid;
 }
-
-console.log(create_UUID());

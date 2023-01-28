@@ -36,40 +36,32 @@ exports.handler = async (event) => {
     console.log('found email ' + email);
     let filename = event.pathParameters.filename;
 
-    console.log('bid_amount is ' + obj.bid_amount);
     const S3_BUCKET = process.env.UploadBucket;
     const url = `https://${S3_BUCKET}.s3.amazonaws.com/${filename}`
     const Key = `${email}/${filename}`;
 
-    let bid_id = obj.id;
+    let brand_image_id = obj.id;
 
-    if(!bid_id) {
-        bid_id = create_UUID();
+    if(!brand_image_id) {
+        brand_image_id = create_UUID();
     }
 
     var params = {
         TableName: 'bids',
         Item: {
-            id: bid_id,
-            bid_amount: obj.bid_amount,
+            id: brand_image_id,
             currency: 'USD',
-            video_key: obj.video_key,
-            image_key: Key,
-            position_x: obj.position_x,
-            position_y: obj.position_y,
-            html_position_x: obj.html_position_x,
-            html_position_y: obj.html_position_y,
-            frame_pixel: obj.frame_pixel,
-            ad_description: obj.ad_description,
             bidder_email: obj.bidder_email,
             creator_email: obj.creator_email,
+            video_key: obj.video_key,
+            video_id: obj.video_id,
+            image_key: obj.image_key,
             creator_accepted: false,
             filename: filename,
             s3_bucket: S3_BUCKET,
             create_date: Date.now()
         }
     };
-
 
 
     let result = await dynamo.put(params).promise();
@@ -81,7 +73,7 @@ exports.handler = async (event) => {
         type = "video";
         extension = "mp4";
     }
-    return await getUploadURL(event, email, filename, type, extension, bid_id);
+    return await getUploadURL(event, email, filename, type, extension, brand_image_id);
 }
 
 function create_UUID(){
@@ -94,7 +86,7 @@ function create_UUID(){
     return uuid;
 }
 
-const getUploadURL = async function(event, email, filename, type, extension, bid_id) {
+const getUploadURL = async function(event, email, filename, type, extension, brand_image_id) {
     const randomID = parseInt(Math.random() * 10000000);
     const Key = `${email}/${filename}`;
     const REGION = 'us-east-1';
@@ -132,7 +124,7 @@ const getUploadURL = async function(event, email, filename, type, extension, bid
             Key,
             url,
             CONTENT_TYPE,
-            bid_id
+            brand_image_id
         });
     } catch (err) {
         statusCode = '400';
