@@ -34,6 +34,39 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.4" rel="stylesheet" />
+
+  <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/js/jquery-1.8.1.min.js"></script>
+
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $( "#register" ).click(function() {
+        // Get some values from elements on the page:
+        var $form = $("#registerForm"),
+                email = $form.find( "input[type='email']" ).val(),
+                password = $form.find( "input[type='password']" ).val();
+
+        console.log("username " + email + " password " + password);
+
+        $.ajax({
+          url: "https://9n8r136kre.execute-api.us-east-1.amazonaws.com/Stage/signup",
+          type: "POST",
+          crossDomain: true,
+          data: JSON.stringify({ username: email, password: password }),
+          dataType: "json",
+          success: function (response) {
+            //$( "#result" ).html(response.message);
+            console.log(response.message);
+            location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/signin.html';
+          },
+          error: function (xhr, status) {
+            console.log("going into error " + JSON.stringify(xhr) + " " + status);
+          }
+        });
+
+      });
+    });
+  </script>
 </head>
 
 <body class="">
@@ -44,7 +77,7 @@
         <nav class="navbar navbar-expand-lg blur border-radius-lg top-0 z-index-3 shadow position-absolute mt-4 py-2 start-0 end-0 mx-4">
           <div class="container-fluid ps-2 pe-0">
             <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="../pages/dashboard.html">
-              Material Dashboard 2
+              BranFluencer
             </a>
             <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon mt-2">
@@ -56,18 +89,6 @@
             <div class="collapse navbar-collapse" id="navigation">
               <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                  <a class="nav-link d-flex align-items-center me-2 active" aria-current="page" href="../pages/dashboard.html">
-                    <i class="fa fa-chart-pie opacity-6 text-dark me-1"></i>
-                    Dashboard
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link me-2" href="../pages/profile.html">
-                    <i class="fa fa-user opacity-6 text-dark me-1"></i>
-                    Profile
-                  </a>
-                </li>
-                <li class="nav-item">
                   <a class="nav-link me-2" href="../pages/sign-up.html">
                     <i class="fas fa-user-circle opacity-6 text-dark me-1"></i>
                     Sign Up
@@ -78,14 +99,6 @@
                     <i class="fas fa-key opacity-6 text-dark me-1"></i>
                     Sign In
                   </a>
-                </li>
-              </ul>
-              <ul class="navbar-nav d-lg-flex d-none">
-                <li class="nav-item d-flex align-items-center">
-                  <a class="btn btn-outline-primary btn-sm mb-0 me-2" target="_blank" href="https://www.creative-tim.com/builder/material?ref=navbar-dashboard">Online Builder</a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://www.creative-tim.com/product/material-dashboard" class="btn btn-sm mb-0 me-1 bg-gradient-dark">Free download</a>
                 </li>
               </ul>
             </div>
@@ -111,27 +124,31 @@
                   <p class="mb-0">Enter your email and password to register</p>
                 </div>
                 <div class="card-body">
-                  <form role="form">
+                  <form role="form" id="registerForm">
                     <div class="input-group input-group-outline mb-3">
                       <label class="form-label">Name</label>
-                      <input type="text" class="form-control">
+                      <input type="text" name="name" id="name" class="form-control">
                     </div>
                     <div class="input-group input-group-outline mb-3">
                       <label class="form-label">Email</label>
-                      <input type="email" class="form-control">
+                      <input type="email" name="email" id="email" class="form-control">
                     </div>
                     <div class="input-group input-group-outline mb-3">
                       <label class="form-label">Password</label>
-                      <input type="password" class="form-control">
+                      <input type="password" name="password" id="password" class="form-control">
+                    </div>
+                    <div class="input-group input-group-outline mb-3">
+                      <label class="form-label">Password</label>
+                      <input type="password" name="repeat-password" id="repeat-password" class="form-control">
                     </div>
                     <div class="form-check form-check-info text-start ps-0">
-                      <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" checked>
-                      <label class="form-check-label" for="flexCheckDefault">
+                      <input class="form-check-input" type="checkbox" value="true" id="form2Example3c" checked>
+                      <label class="form-check-label" for="form2Example3c">
                         I agree the <a href="javascript:;" class="text-dark font-weight-bolder">Terms and Conditions</a>
                       </label>
                     </div>
                     <div class="text-center">
-                      <button type="button" class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">Sign Up</button>
+                      <button type="button" id="register" class="btn btn-lg bg-gradient-primary btn-lg w-100 mt-4 mb-0">Sign Up</button>
                     </div>
                   </form>
                 </div>

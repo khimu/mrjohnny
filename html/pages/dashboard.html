@@ -52,7 +52,7 @@
     }
 
     #drop {
-      max-width: 600px;
+      max-width: 100%;
       max-height: 575px;
       float: left;
       margin-left: auto;
@@ -573,7 +573,8 @@
                   // success is going into error even though i change type to text/html
                   $('#loading').hide();
 
-                  $('.modal.in').modal('hide');
+                  $('#imageUploadFormModal').hide();
+                  //$('.modal.in').modal('hide');
 
                   let key = window.identity + "/" + cleanFileName;
                   displayProtectedImage('#bidder_image_upload', window.api_endpoint + "/content/" + key);
@@ -586,7 +587,8 @@
                 error: function (xhr, status, error) {
                   console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
                   $('#loading').hide();
-                  $('.modal.in').modal('hide')
+                  $('#imageUploadFormModal').hide();
+                  //$('.modal.in').modal('hide')
                   // check if all is wll
                   //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
                 }
@@ -595,7 +597,8 @@
             error: function (xhr, status, error) {
               console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
               $('#loading').hide();
-              $('.modal.in').modal('hide')
+
+              $('#imageUploadFormModal').hide();
               //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
             }
           });
@@ -627,7 +630,8 @@
         $(imageId).attr('src', json.uploadURL);
 
       }).fail(function () {
-        $('.modal.in').modal('hide');
+        //$('#imageUploadFormModal').hide();
+        //$('.modal.in').modal('hide');
       });
     }
 
@@ -809,6 +813,63 @@
     }
 
   </style>
+
+  <script>
+    // getOrCreateInstance example
+    const popover = bootstrap.Popover.getOrCreateInstance('#example') // Returns a Bootstrap popover instance
+
+    // setContent example
+    $('#drop').setContent({
+      '.popover-header': 'Position',
+      '.popover-body': 'hello'
+    })
+
+
+
+    $('#creator_upload').setContent({
+      '.popover-header': 'Upload Video',
+      '.popover-body': 'hello'
+    })
+
+
+    // < p
+    // id = 'container' >
+    //         < button
+    // className = 'btn btn-primary btn-large selector'
+    // data - content = "<a href='http://www.hughanderson.com' target='blank' >click me, I'll try not to disappear</a>" > hover
+    // dhere < /button>
+    // </p>
+    //
+    // <a target="_top"
+    //    href="http://stackoverflow.com/questions/15989591/how-can-i-keep-bootstrap-popover-alive-while-the-popover-is-being-hovered">See
+    //   the Stack Overflow question</a>
+    // <br/>
+    //
+    // <a target="_top" href="http://www.hughanderson.com">www.hughanderson.com</a>
+
+    $('.selector').popover({
+      html: true,
+      trigger: 'manual',
+      container: $(this).attr('id'),
+      placement: 'top',
+      content: function () {
+        $return = '<div class="hover-hovercard"></div>';
+      }
+    }).on("mouseenter", function () {
+      var _this = this;
+      $(this).popover("show");
+      $(this).siblings(".popover").on("mouseleave", function () {
+        $(_this).popover('hide');
+      });
+    }).on("mouseleave", function () {
+      var _this = this;
+      setTimeout(function () {
+        if (!$(".popover:hover").length) {
+          $(_this).popover("hide")
+        }
+      }, 100);
+    });
+  </script>
 
   <!--  <style>-->
 <!--    .datetimepicker{ z-index:9999!important; }-->
@@ -1147,7 +1208,7 @@
           </div>
           <ul class="navbar-nav  justify-content-end">
             <li class="nav-item d-flex align-items-center">
-              <a id="identity" class="btn btn-outline-primary btn-sm mb-0 me-3" target="_blank" href="/pages/landing-page.html">Online Builder</a>
+              <a id="identity" class="btn btn-outline-primary btn-sm mb-0 me-3" href="/pages/landing-page.html">Online Builder</a>
             </li>
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:logout();" class="nav-link text-body font-weight-bold px-0">
@@ -1280,11 +1341,11 @@
                 </div>
               </div>
             </div>
-            <div class="card-body px-0 pb-2">
+            <div class="card-body px-0 pb-2 text-center">
 
               <div id="drop">
                 <p>
-                  <video id="video" style="max-width:600px">
+                  <video id="video" style="max-width:100%">
                     <source id="mp4" src="#"
                             type="video/mp4"/>
                   </video>

@@ -138,6 +138,8 @@
                 }
             });
         });
+
+        $(document).ready(function () { $(mouseoverClass).mouseover(function () { onLink = true; timeoutID = setTimeout(showBubble, 150); }); $(mouseoverClass).mouseout(function () { onLink = false; timeoutID = setTimeout(hideBubble, 150); }); }); function hideBubble() { clearTimeout(timeoutID); if (bubbleExists!onDiv) { $("#bubbleID").remove(); bubbleExists = false; } } function showBubble(event) { if (bubbleExists) { //--if the bubble is already visible then dont do anything }else{ //--create the bubble $("body").append("<div id='bubbleID'>"+$(this).attr("title")+"</div>"); bubbleExists=true; //--position the bubble $("#bubbleID").css({ left:event.pageX+"px", top:event.pageY+"px" }); } }
     </script>
 </head>
 <body>
@@ -160,18 +162,22 @@
         </div>
     </div>
     <div class="row justify-content-md-center">
-        <div class="col-md-auto">
+        <div class="col-md">
             <div class="btn-group" role="group" aria-label="Video Control">
                 <button id="playVideo" type="button" class="btn btn-light"><span class="bi bi-play-btn-fill"></span>
                 </button>
                 <button id="review" type="button" class="btn btn-warning">Review</button>
              </div>
         </div>
-        <div class="col-md-auto">
+        <div class="col-md">
             <div class="btn-group" role="group" aria-label="Video Control">
                 <button type="button" class="btn btn-lightg" data-bs-toggle="collapse" href="#collapseExample" role="button"
                         aria-expanded="false" aria-controls="collapseExample"><span id="upload_icon" class="glyphicon glyphicon-chevron-down"></span>Upload</button>
             </div>
+        </div>
+        <div>
+            <div>Test Test</div>
+            <span id="bubbleID">Test Bubble</span>
         </div>
     </div>
     <div class="row shadow-none p-3 mb-5 bg-light rounded" style="padding:5px; height:400px">

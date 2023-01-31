@@ -34,6 +34,137 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <!-- CSS Files -->
   <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.0.4" rel="stylesheet" />
+
+  <script src="http://mrjohnny.s3-website-us-east-1.amazonaws.com/assets/oldversion/js/jquery-1.8.1.min.js"></script>
+
+
+  <script>
+    // 1 Day = 24 Hrs = 24*60*60 = 86400.
+    //var expires = (new Date(Date.now() + 86400*1000)).toUTCString();
+
+    function getCookieValue(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
+    function setCookie(name, cookie){
+      const now = new Date();
+      const time = now.getTime();
+      const expireTime = time + 3600*1000;;
+      now.setTime(expireTime);
+      document.cookie = name + '=' + cookie + ';expires='+now.toUTCString()+';path=/';
+    }
+
+    function getCookie(){
+      console.log(document.cookie);
+    }
+
+    window.token = window.sessionStorage.getItem(getCookieValue('mysession'));
+  </script>
+
+
+  <script type="text/javascript">
+    //setCookie("api-endpoint", "https://vlab4b6dth.execute-api.us-east-1.amazonaws.com/Prod");
+
+    // Attach a submit handler to the form
+    $(document).ready(function(){
+      if (window.token) {
+        location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/landing-page.html';
+      } else {
+        window.sessionStorage.clear();
+        window.localStorage.clear();
+      }
+
+      $( "#login" ).click(function() {
+
+        // Get some values from elements on the page:
+        var $form = $("#loginForm"),
+                email = $form.find("input[type='email']").val(),
+                password = $form.find("input[type='password']").val();
+
+        $.ajax({
+          url: "https://9n8r136kre.execute-api.us-east-1.amazonaws.com/Stage/signin",
+          type: "POST",
+          crossDomain: true,
+          data: JSON.stringify({ username: email, password: password }),
+          dataType: "json",
+          success: function (response) {
+            $("#result").html("You are all logged in");
+            const randomID = parseInt(Math.random() * 10000000);
+            setCookie("mysession", randomID);
+            window.sessionStorage.setItem(getCookieValue('mysession'), response.token);
+            window.localStorage.setItem('identity', email);
+            window.localStorage.setItem("api-endpoint", "https://vlab4b6dth.execute-api.us-east-1.amazonaws.com/Prod");
+            location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/pages/landing-page.html';
+            // redirect to an authenticated dashboard
+          },
+          error: function (xhr, status) {
+            alert('Failed to login');
+            console.log("going into error " + JSON.stringify(xhr) + " " + status);
+          }
+        });
+      });
+
+      $('.button-checkbox').each(function(){
+        var $widget = $(this),
+                $button = $widget.find('button'),
+                $checkbox = $widget.find('input:checkbox'),
+                color = $button.data('color'),
+                settings = {
+                  on: {
+                    icon: 'glyphicon glyphicon-check'
+                  },
+                  off: {
+                    icon: 'glyphicon glyphicon-unchecked'
+                  }
+                };
+
+        $button.on('click', function () {
+          $checkbox.prop('checked', !$checkbox.is(':checked'));
+          $checkbox.triggerHandler('change');
+          updateDisplay();
+        });
+
+        $checkbox.on('change', function () {
+          updateDisplay();
+        });
+
+        function updateDisplay() {
+          var isChecked = $checkbox.is(':checked');
+          // Set the button's state
+          $button.data('state', (isChecked) ? "on" : "off");
+
+          // Set the button's icon
+          $button.find('.state-icon')
+                  .removeClass()
+                  .addClass('state-icon ' + settings[$button.data('state')].icon);
+
+          // Update the button's color
+          if (isChecked) {
+            $button
+                    .removeClass('btn-default')
+                    .addClass('btn-' + color + ' active');
+          }
+          else
+          {
+            $button
+                    .removeClass('btn-' + color + ' active')
+                    .addClass('btn-default');
+          }
+        }
+        function init() {
+          updateDisplay();
+          // Inject the icon if applicable
+          if ($button.find('.state-icon').length == 0) {
+            $button.prepend('<i class="state-icon ' + settings[$button.data('state')].icon + '"></i>');
+          }
+        }
+        init();
+      });
+    });
+
+  </script>
 </head>
 
 <body class="bg-gray-200">
@@ -44,7 +175,7 @@
         <nav class="navbar navbar-expand-lg blur border-radius-xl top-0 z-index-3 shadow position-absolute my-3 py-2 start-0 end-0 mx-4">
           <div class="container-fluid ps-2 pe-0">
             <a class="navbar-brand font-weight-bolder ms-lg-0 ms-3 " href="../pages/dashboard.html">
-              Material Dashboard 2
+              BranFluencer
             </a>
             <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon mt-2">
@@ -56,18 +187,6 @@
             <div class="collapse navbar-collapse" id="navigation">
               <ul class="navbar-nav mx-auto">
                 <li class="nav-item">
-                  <a class="nav-link d-flex align-items-center me-2 active" aria-current="page" href="../pages/dashboard.html">
-                    <i class="fa fa-chart-pie opacity-6 text-dark me-1"></i>
-                    Dashboard
-                  </a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link me-2" href="../pages/profile.html">
-                    <i class="fa fa-user opacity-6 text-dark me-1"></i>
-                    Profile
-                  </a>
-                </li>
-                <li class="nav-item">
                   <a class="nav-link me-2" href="../pages/sign-up.html">
                     <i class="fas fa-user-circle opacity-6 text-dark me-1"></i>
                     Sign Up
@@ -78,14 +197,6 @@
                     <i class="fas fa-key opacity-6 text-dark me-1"></i>
                     Sign In
                   </a>
-                </li>
-              </ul>
-              <ul class="navbar-nav d-lg-flex d-none">
-                <li class="nav-item d-flex align-items-center">
-                  <a class="btn btn-outline-primary btn-sm mb-0 me-2" target="_blank" href="https://www.creative-tim.com/builder/material?ref=navbar-dashboard">Online Builder</a>
-                </li>
-                <li class="nav-item">
-                  <a href="https://www.creative-tim.com/product/material-dashboard" class="btn btn-sm mb-0 me-1 bg-gradient-dark">Free download</a>
                 </li>
               </ul>
             </div>
@@ -125,21 +236,21 @@
                 </div>
               </div>
               <div class="card-body">
-                <form role="form" class="text-start">
+                <form role="form" id="loginForm" class="text-start">
                   <div class="input-group input-group-outline my-3">
                     <label class="form-label">Email</label>
-                    <input type="email" class="form-control">
+                    <input type="email" name="email" id="email" class="form-control">
                   </div>
                   <div class="input-group input-group-outline mb-3">
                     <label class="form-label">Password</label>
-                    <input type="password" class="form-control">
+                    <input type="password" name="password" id="password" class="form-control">
                   </div>
                   <div class="form-check form-switch d-flex align-items-center mb-3">
                     <input class="form-check-input" type="checkbox" id="rememberMe" checked>
                     <label class="form-check-label mb-0 ms-3" for="rememberMe">Remember me</label>
                   </div>
                   <div class="text-center">
-                    <button type="button" class="btn bg-gradient-primary w-100 my-4 mb-2">Sign in</button>
+                    <button type="button" id="login" class="btn bg-gradient-primary w-100 my-4 mb-2">Sign in</button>
                   </div>
                   <p class="mt-4 text-sm text-center">
                     Don't have an account?
