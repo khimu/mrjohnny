@@ -70,7 +70,7 @@
 		// Attach a submit handler to the form
 		$(document).ready(function(){
 			if (window.token) {
-				location.href = '/pages/landing-page.html';
+				location.href = '/pages/creator-landing-page.html';
 			} else {
 				window.sessionStorage.clear();
 				window.localStorage.clear();
@@ -84,7 +84,7 @@
 						password = $form.find("input[type='password']").val();
 
 				$.ajax({
-					url: "https://9n8r136kre.execute-api.us-east-1.amazonaws.com/Stage/signin",
+					url: "https://c9bwgz1893.execute-api.us-east-1.amazonaws.com/Prod/signin",
 					type: "POST",
 					crossDomain: true,
 					data: JSON.stringify({ username: email, password: password }),
@@ -187,13 +187,13 @@
 					<div class="collapse navbar-collapse" id="navigation">
 						<ul class="navbar-nav mx-auto">
 							<li class="nav-item">
-								<a class="nav-link me-2" href="../pages/sign-up.html">
+								<a class="nav-link me-2" href="/pages/sign-up.html">
 									<i class="fas fa-user-circle opacity-6 text-dark me-1"></i>
 									Sign Up
 								</a>
 							</li>
 							<li class="nav-item">
-								<a class="nav-link me-2" href="../pages/sign-in.html">
+								<a class="nav-link me-2" href="/pages/sign-in.html">
 									<i class="fas fa-key opacity-6 text-dark me-1"></i>
 									Sign In
 								</a>

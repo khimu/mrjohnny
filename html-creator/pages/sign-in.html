@@ -70,7 +70,7 @@
     // Attach a submit handler to the form
     $(document).ready(function(){
       if (window.token) {
-        location.href = '/pages/landing-page.html';
+        location.href = '/pages/creator-landing-page.html';
       } else {
         window.sessionStorage.clear();
         window.localStorage.clear();
@@ -84,7 +84,7 @@
                 password = $form.find("input[type='password']").val();
 
         $.ajax({
-          url: "https://9n8r136kre.execute-api.us-east-1.amazonaws.com/Stage/signin",
+          url: "https://c9bwgz1893.execute-api.us-east-1.amazonaws.com/Prod/signin",
           type: "POST",
           crossDomain: true,
           data: JSON.stringify({ username: email, password: password }),
@@ -96,7 +96,7 @@
             window.sessionStorage.setItem(getCookieValue('mysession'), response.token);
             window.localStorage.setItem('identity', email);
             window.localStorage.setItem("api-endpoint", "https://vlab4b6dth.execute-api.us-east-1.amazonaws.com/Prod");
-            location.href = '/pages/landing-page.html';
+            location.href = '/pages/creator-landing-page.html';
             // redirect to an authenticated dashboard
           },
           error: function (xhr, status) {

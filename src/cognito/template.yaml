@@ -8,18 +8,21 @@ Globals:
   Function:
     Runtime: nodejs14.x
     Handler: index.handler
-    Timeout: 10
+    Timeout: 30
     Tags:
       Application: Serverless API
-  
+
 Resources:
 
   # Lambda function that prevents the emission of confirmation emails
   PreSignupFunction:
     Type: AWS::Serverless::Function
     Properties:
+      FunctionName: PreSignupFunction
       InlineCode: |
         exports.handler = async event => {
           event.response = { autoConfirmUser: true };
           return event;
         };
+
+

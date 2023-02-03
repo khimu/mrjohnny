@@ -1,0 +1,110 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Description: "A example REST API build with serverless technology"
+
+Globals:
+  Api:
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'"
+      AllowOrigin: "'*'"
+      Credentials: true
+
+  # Configuration defaults for all Lambda functions
+  Function:
+    Runtime: nodejs14.x
+    Handler: index.handler
+    Timeout: 30 
+    Tags:
+      Application: Serverless API
+  
+Resources:
+
+  # Explicit API resource needed to configure an authorizer
+  ServerlessApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: "'*'"
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: "arn:aws:cognito-idp:us-east-1:411460918332:userpool/us-east-1_dujd8PQhP"
+        AddDefaultAuthorizerToCorsPreflight: False
+      EndpointConfiguration:
+        Type: REGIONAL
+        PayloadFormatVersion: "2.0"
+      GatewayResponses:
+        # API-Gateway responses are missing CORS headers
+        # They need to be defined in Lambda functions or here
+        UNAUTHORIZED:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: "'WWW-Authenticate'"
+              Access-Control-Allow-Origin: "'*'"
+              WWW-Authenticate: >-
+                'Bearer realm="admin"'
+
+
+  # A simple function that just returns URLs to other endpoints
+  IndexFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: BrandIndexFunction
+      CodeUri: functions/index/
+      Events:
+        Home:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /
+            Method: GET
+            # The following lines disable auth for this event
+            Auth:
+              Authorizer: NONE
+
+
+  # Lambda function that handles signin and signup with the help of Cognito
+  AuthFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: BrandAuthFunction
+      CodeUri: functions/auth/
+      Environment:
+        Variables:
+          USER_POOL_ID: "us-east-1_dujd8PQhP"
+          USER_POOL_CLIENT_ID: "1qf36u4umbjsv41inhaml8ncan"
+      # The configuration needed for Cognito usage via AWS SDK
+      Events:
+        Signup:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /signup
+            Method: POST
+            # Endpoint available for unauthorized users
+            Auth:
+              Authorizer: NONE
+        Signin:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ServerlessApi
+            Path: /signin
+            Method: POST
+            # Endpoint available for unauthorized users
+            Auth:
+              Authorizer: NONE
+
+
+
+Outputs:
+
+  # When the package.json scripts are used, this output will be stored
+  # inside a api-url file
+  BrandApiUrl:
+    Description: The target URL of the created API
+    Value: !Sub "https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+    Export:
+      Name: BrandApiUrl

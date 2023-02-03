@@ -69,11 +69,6 @@
 		// Attach a submit handler to the form
 		$(document).ready(function(){
 
-			window.localStorage.setItem("api-endpoint", "https://vlab4b6dth.execute-api.us-east-1.amazonaws.com/Prod");
-			window.localStorage.setItem("web-endpoint", "http://mrjohnny-brand.s3-website-us-east-1.amazonaws.com");
-			console.log(window.localStorage.getItem('api-endpoint'));
-			console.log(window.localStorage.getItem('web-endpoint'));
-
 			if (window.token) {
 				location.href = window.localStorage.getItem("web-endpoint") + '/pages/brand-landing-page.html';
 			} else {
@@ -89,7 +84,7 @@
 						password = $form.find("input[type='password']").val();
 
 				$.ajax({
-					url: "https://9n8r136kre.execute-api.us-east-1.amazonaws.com/Stage/signin",
+					url: "https://hprlwekejl.execute-api.us-east-1.amazonaws.com/Prod/signin",
 					type: "POST",
 					crossDomain: true,
 					data: JSON.stringify({ username: email, password: password }),
