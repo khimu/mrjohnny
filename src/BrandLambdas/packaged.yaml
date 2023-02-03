@@ -1,0 +1,866 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+  using Amazon API Gateway.
+Globals:
+  Api:
+    Cors:
+      AllowMethods: '''*'''
+      AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+      AllowOrigin: '''*'''
+      Credentials: true
+  Function:
+    Timeout: 10
+    Runtime: nodejs14.x
+    Environment:
+      Variables:
+        ENV:
+          Ref: ENV
+Parameters:
+  ENV:
+    Type: String
+    Default: Prod
+  BucketName:
+    Type: String
+    Default: mrjohnny-upload-contents
+  S3BucketPolicy:
+    Type: String
+    Default: arn:aws:s3:::mrjohnny-upload-contents
+Resources:
+  ServerlessApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: Prod
+      Cors: '''*'''
+      Auth:
+        DefaultAuthorizer: CognitoAuthorizer
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: arn:aws:cognito-idp:us-east-1:411460918332:userpool/us-east-1_dujd8PQhP
+        AddDefaultAuthorizerToCorsPreflight: false
+      EndpointConfiguration:
+        Type: REGIONAL
+        PayloadFormatVersion: '2.0'
+      GatewayResponses:
+        UNAUTHORIZED:
+          StatusCode: 401
+          ResponseParameters:
+            Headers:
+              Access-Control-Expose-Headers: '''WWW-Authenticate'''
+              Access-Control-Allow-Origin: '''*'''
+              WWW-Authenticate: '''Bearer realm="admin"'''
+    Metadata:
+      SamResourceId: ServerlessApi
+  LambdaExecRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: mrjohnny-brand-cloudformation-lambda-role
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+          - sts:AssumeRole
+      Policies:
+      - PolicyName: MrJohnnyBrandS3ByRegion
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - s3:GetObject
+            - s3:PutObject
+            - s3:PutObjectAcl
+            Resource:
+            - arn:aws:s3:::mrjohnny-upload-contents
+            - arn:aws:s3:::mrjohnny-upload-contents/*
+            - arn:aws:s3:::mrjohnny-logging-for-upload-contents
+            - arn:aws:s3:::mrjohnny-logging-for-upload-contents/*
+      - PolicyName: MrJohnnyBrandOpenPolicy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - logs:CreateLogStream
+            - logs:PutLogEvents
+            - ec2:DescribeNetworkInterfaces
+            - ec2:CreateNetworkInterface
+            - ec2:DeleteNetworkInterface
+            - ec2:DescribeInstances
+            - ec2:AttachNetworkInterface
+            Resource: '*'
+      - PolicyName: MrJohnnyBrandClosedPolicy
+        PolicyDocument:
+          Version: 2012-10-17
+          Statement:
+          - Effect: Allow
+            Action:
+            - dynamodb:DeleteItem
+            - dynamodb:GetItem
+            - dynamodb:PutItem
+            - dynamodb:Scan
+            - dynamodb:UpdateItem
+            - dynamodb:Query
+            Resource: arn:aws:dynamodb:us-east-1:411460918332:table/*
+    Metadata:
+      SamResourceId: LambdaExecRole
+  ListBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/c54999776aa0abefff5c9ab495e06d54
+      Handler: ListBids.handler
+      FunctionName: BrandListBrandBids
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        ListBids:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /listBids/{bidder_email}
+            Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /listBids/{bidder_email}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''GET,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: ListBrandBidsFunction
+  ListAllVideosEnabledForBidFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/98731a31e321dac0bdf878089d0396e5
+      Handler: ListAllVideosEnabledForBid.handler
+      FunctionName: BrandListAllVideosEnabledForBid
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        ListAllVideosEnabledForBidApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /listVideosEnabled
+            Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /listVideosEnabled
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''GET,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: ListAllVideosEnabledForBidFunction
+  ListCreatorVideosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/add7f96213b52e40751f3b5722c1881e
+      Handler: ListCreatorVideos.handler
+      FunctionName: BrandListCreatorVideos
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        ListCreatorVideo:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /listCreatorVideos/{creator_email}
+            Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /listCreatorVideos/{creator_email}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''GET,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: ListCreatorVideosFunction
+  ListAllBidsFilterByCreatorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/cf5efdc453f956100350c8264612fb5f
+      Handler: ListAllBidsFilterByCreator.handler
+      FunctionName: BrandListAllBidsFilterByCreator
+      Description: List all bids for creators videos
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        ListAllBidsFilterByCreatorApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /listBidsByVideos/{creator_email}
+            Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /listBidsByVideos/{creator_email}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''GET,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: ListAllBidsFilterByCreatorFunction
+  PostBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/d79c65e83797d62ad09884884a3e2208
+      Handler: PostBid.handler
+      FunctionName: BrandPostBrandBids
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        PostBids:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids
+            Method: POST
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''POST,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: PostBrandBidsFunction
+  GetBrandBidFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/56fdb98e8aac76e962936274674b760b
+      Handler: GetBid.handler
+      FunctionName: BrandGetBrandBid
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        GetBid:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids/{id}
+            Method: GET
+        GETOptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids/{id}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''DELETE,PUT,GET,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: GetBrandBidFunction
+  GetVideoBidFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/0707e22e2a2503b158a9a2d40ad535c1
+      Handler: GetVideoBidder.handler
+      FunctionName: BrandGetVideoBidder
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        GetVideoBid:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids-query/{bidder}/{creator}/{filename}
+            Method: GET
+        GetVideoBidOptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids-query/{bidder}/{creator}/{filename}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''DELETE,PUT,GET,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: GetVideoBidFunction
+  DeleteBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/13af8aca0fb70d04637a52ef9f143baa
+      Handler: DeleteBid.handler
+      FunctionName: BrandDeleteBrandBids
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        DeleteBids:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids/{id}
+            Method: DELETE
+    Metadata:
+      SamResourceId: DeleteBrandBidsFunction
+  GetCreatorVideosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/fd881198f0eb3e1b976918f646fc976f
+      Handler: GetCreatorVideo.handler
+      FunctionName: BrandGetCreatorVideos
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        GetCreatorVideo:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /creator_video/{id}
+            Method: GET
+    Metadata:
+      SamResourceId: GetCreatorVideosFunction
+  DeleteCreatorVideosFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/b7a4be888aee12612ddc71a2facbd993
+      Handler: DeleteCreatorVideo.handler
+      FunctionName: BrandDeleteCreatorVideo
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        DeleteVideo:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /creator_video/{id}
+            Method: DELETE
+        DELETEOptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /creator_video/{id}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''GET,DELETE,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: DeleteCreatorVideosFunction
+  CreatorContentSchedulerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/05b2d0ff55778e5887744f0a267cd0ac
+      Handler: ContentScheduler.handler
+      FunctionName: BrandCreatorContentScheduler
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        CreatorScheduler:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /creator_scheduler
+            Method: POST
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /creator_scheduler
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''POST,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: CreatorContentSchedulerFunction
+  PutBrandBidsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/490ec8f349fc7edcb9feb17b2fc42cc0
+      Handler: PutBid.handler
+      FunctionName: BrandPutBid
+      Description: A simple backend (read/write to DynamoDB) with a RESTful API endpoint
+        using Amazon API Gateway.
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+      Events:
+        PutBid:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /bids/{id}
+            Method: PUT
+    Metadata:
+      SamResourceId: PutBrandBidsFunction
+  SignUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/fa7ee9d4617d23532a0bef4b68237649
+      Handler: SignUrl.handler
+      FunctionName: BrandSignUrl
+      Description: ''
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+          UploadBucket:
+            Ref: BucketName
+      Policies:
+      - S3WritePolicy:
+          BucketName:
+            Ref: S3BucketPolicy
+      Events:
+        GetSignUrl:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /sign-url/{username}/{filename}
+            Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /sign-url/{username}/{filename}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''GET,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: SignUrlFunction
+  BrandSignUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/f420c7b3d96e9059a0a3ff8b3eb93160
+      Handler: BrandSignUrl.handler
+      FunctionName: BrandBrandSignUrl
+      Description: Create brand image upload record in dynamodb and return a sign
+        URL for upload / Idempotent - allows for re-submit of image if image fail
+        upload
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+          UploadBucket:
+            Ref: BucketName
+      Policies:
+      - S3WritePolicy:
+          BucketName:
+            Ref: S3BucketPolicy
+      Events:
+        BrandPutSignUrl:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /brand-sign-url/{username}/{filename}
+            Method: PUT
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /brand-sign-url/{username}/{filename}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''PUT,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: BrandSignUrlFunction
+  ContentCreatorSignUrlFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/10334a1a98352c6a50a3a39c5b301e23
+      Handler: ContentCreatorSignUrl.handler
+      FunctionName: BrandContentCreatorSignUrl
+      Description: Create creator-content upload record in dynamodb and return a sign
+        URL for upload / Idempotent - allows for re-submit of image if image fail
+        upload
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+          UploadBucket:
+            Ref: BucketName
+      Policies:
+      - S3WritePolicy:
+          BucketName:
+            Ref: S3BucketPolicy
+      Events:
+        CreatorContentSignUrl:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /creator-sign-url/{username}/{filename}
+            Method: PUT
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /creator-sign-url/{username}/{filename}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''PUT,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: ContentCreatorSignUrlFunction
+  FetchFileFromS3Function:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://mrjohnny-deploy/8696e692a66f0badc0c16381c71d754d
+      Handler: FetchFileFromS3.handler
+      FunctionName: BrandFetchFileFromS3
+      Description: Retrieve content from S3 and stream
+      MemorySize: 128
+      Timeout: 10
+      Role:
+        Fn::GetAtt:
+        - LambdaExecRole
+        - Arn
+      VpcConfig:
+        SecurityGroupIds:
+        - sg-0f666341436597447
+        SubnetIds:
+        - subnet-0f0ed4f2b3e9c1a75
+      Tags:
+        service: mrjohny
+      Environment:
+        Variables:
+          REGION:
+            Ref: AWS::Region
+          UploadBucket:
+            Ref: BucketName
+      Policies:
+      - S3WritePolicy:
+          BucketName:
+            Ref: S3BucketPolicy
+      Events:
+        S3Content:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /content/{username}/{filename}
+            Method: GET
+        OptionsApi:
+          Type: Api
+          Properties:
+            RestApiId:
+              Ref: ServerlessApi
+            Path: /content/{username}/{filename}
+            Method: OPTIONS
+            Auth:
+              Authorizer: NONE
+          Cors:
+            AllowMethods: '''GET,HEAD,OPTIONS'''
+            AllowHeaders: '''Content-Type,X-Amz-Date,X-Amz-Security-Token,Authorization,X-Api-Key,X-Requested-With,Accept,Access-Control-Allow-Methods,Access-Control-Allow-Origin,Access-Control-Allow-Headers'''
+            AllowOrigin: '''*'''
+    Metadata:
+      SamResourceId: FetchFileFromS3Function
+Outputs:
+  BrandApiUrl:
+    Description: The target URL of the created API
+    Value:
+      Fn::Sub: https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
+    Export:
+      Name: BrandApiUrl

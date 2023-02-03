@@ -48,22 +48,39 @@ Resources:
                 'Bearer realm="admin"'
 
 
-  # A simple function that just returns URLs to other endpoints
-  IndexFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      FunctionName: BrandIndexFunction
-      CodeUri: functions/index/
-      Events:
-        Home:
-          Type: Api
-          Properties:
-            RestApiId: !Ref ServerlessApi
-            Path: /
-            Method: GET
-            # The following lines disable auth for this event
-            Auth:
-              Authorizer: NONE
+
+#  LambdaExecRole:
+#    Type: AWS::IAM::Role
+#    Properties:
+#      RoleName: "mrjohnny-brand-auth-cloudformation-lambda-role"
+#      ManagedPolicyArns:
+#        - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+#        - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
+#      AssumeRolePolicyDocument:
+#        Version: "2012-10-17"
+#        Statement:
+#          - Effect: Allow
+#            Principal:
+#              Service:
+#                - 'lambda.amazonaws.com'
+#            Action:
+#              - 'sts:AssumeRole'
+#      Policies:
+#        - PolicyName: MrJohnnyBrandAuthOpenPolicy
+#          PolicyDocument:
+#            Version: 2012-10-17
+#            Statement:
+#              - Effect: Allow
+#                Action:
+#                  - 'logs:CreateLogStream'
+#                  - 'logs:PutLogEvents'
+#                  - 'ec2:DescribeNetworkInterfaces'
+#                  - 'ec2:CreateNetworkInterface'
+#                  - 'ec2:DeleteNetworkInterface'
+#                  - 'ec2:DescribeInstances'
+#                  - 'ec2:AttachNetworkInterface'
+#                Resource: "*"
+
 
 
   # Lambda function that handles signin and signup with the help of Cognito
@@ -76,6 +93,12 @@ Resources:
         Variables:
           USER_POOL_ID: "us-east-1_dujd8PQhP"
           USER_POOL_CLIENT_ID: "1qf36u4umbjsv41inhaml8ncan"
+#      Role: !GetAtt 'LambdaExecRole.Arn'
+#      VpcConfig:
+#        SecurityGroupIds:
+#          - sg-0f666341436597447
+#        SubnetIds:
+#          - subnet-0f0ed4f2b3e9c1a75
       # The configuration needed for Cognito usage via AWS SDK
       Events:
         Signup:
@@ -103,8 +126,8 @@ Outputs:
 
   # When the package.json scripts are used, this output will be stored
   # inside a api-url file
-  BrandApiUrl:
+  BrandSignupFlow:
     Description: The target URL of the created API
     Value: !Sub "https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
     Export:
-      Name: BrandApiUrl
+      Name: BrandSignupFlow

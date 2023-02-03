@@ -1,0 +1,38 @@
+
+aws s3api create-bucket --bucket bid-lambda-function-deploy
+aws s3 cp --recursive ../html/pages/ s3://mrjohnny/pages/
+aws s3 cp ../../html/index.html s3://mrjohnny/
+aws s3 cp ../../html/pages/brand-upload.html s3://mrjohnny/pages/
+aws s3 cp ../../html/pages/creator-upload.html s3://mrjohnny/pages/
+aws s3 cp ../../html/pages/tables.html s3://mrjohnny/pages/
+
+
+## zip for deployment via S3
+zip my-deployment-package.zip lambda_function.py
+
+## remove all cookies
+aws s3 cp s3://mrjohnny s3://mrjohnny --recursive --exclude "*" --include "*.html" --metadata-directive REPLACE --cache-control max-age:no-cache --content-type text/html
+
+
+Deploys Lambda Function "ListBids" using SAM
+
+First package your CloudFormation
+    sam package --s3-bucket mrjohnny-deploy --output-template-file packaged.yaml
+
+Then deploy your CloudFormation
+    sam deploy --template-file packaged.yaml --region us-east-1 --capabilities CAPABILITY_IAM --stack-name ListBids
+
+I'm executing the below
+    sam deploy --template-file /Users/khimung/CODE/mrjohnny/src/ListBids/packaged.yaml --stack-name ListBids
+
+Latest deploy
+	sam deploy --template-file packaged.yaml --region us-east-1 --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM --stack-name MrJohnnyCloudFormation
+
+
+sam delete 
+
+
+terraform init
+terraform plan -out tfplan.out
+terraform apply tfplan.out
+aws s3 ls $(terraform output -raw lambda_bucket_name)

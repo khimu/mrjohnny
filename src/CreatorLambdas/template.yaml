@@ -49,7 +49,7 @@ Resources:
         DefaultAuthorizer: CognitoAuthorizer
         Authorizers:
           CognitoAuthorizer:
-            UserPoolArn: "arn:aws:cognito-idp:us-east-1:411460918332:userpool/us-east-1_eqsRxbA3C"
+            UserPoolArn: "arn:aws:cognito-idp:us-east-1:411460918332:userpool/us-east-1_CKZq8GaRm"
         AddDefaultAuthorizerToCorsPreflight: False
       EndpointConfiguration:
         Type: REGIONAL
@@ -72,7 +72,7 @@ Resources:
   LambdaExecRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: "mrjohnny-cloudformation-lambda-role"
+      RoleName: "mrjohnny-creator-cloudformation-lambda-role"
       ManagedPolicyArns:
         - 'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
@@ -86,7 +86,7 @@ Resources:
             Action:
               - 'sts:AssumeRole'
       Policies:
-        - PolicyName: MrJohnnyS3ByRegion
+        - PolicyName: MrJohnnyCreatorS3ByRegion
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -100,7 +100,7 @@ Resources:
                   - "arn:aws:s3:::mrjohnny-upload-contents/*"
                   - "arn:aws:s3:::mrjohnny-logging-for-upload-contents"
                   - "arn:aws:s3:::mrjohnny-logging-for-upload-contents/*"
-        - PolicyName: MrJohnnyOpenPolicy
+        - PolicyName: MrJohnnyCreatorOpenPolicy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -114,7 +114,7 @@ Resources:
                   - 'ec2:DescribeInstances'
                   - 'ec2:AttachNetworkInterface'
                 Resource: "*"
-        - PolicyName: MrJohnnyClosedPolicy
+        - PolicyName: MrJohnnyCreatorClosedPolicy
           PolicyDocument:
             Version: 2012-10-17
             Statement:
@@ -174,7 +174,7 @@ Resources:
     Properties:
       CodeUri: ListBids.js
       Handler: ListBids.handler
-      FunctionName: ListBrandBids
+      FunctionName: CreatorListBrandBids
       Description: >-
       MemorySize: 128
       Timeout: 10
@@ -217,7 +217,7 @@ Resources:
     Properties:
       CodeUri: ListAllVideosEnabledForBid.js
       Handler: ListAllVideosEnabledForBid.handler
-      FunctionName: ListAllVideosEnabledForBid
+      FunctionName: CreatorListAllVideosEnabledForBid
       Description: >-
       MemorySize: 128
       Timeout: 10
@@ -259,7 +259,7 @@ Resources:
     Properties:
       CodeUri: ListCreatorVideos.js
       Handler: ListCreatorVideos.handler
-      FunctionName: ListCreatorVideos
+      FunctionName: CreatorListCreatorVideos
       Description: >-
       MemorySize: 128
       Timeout: 10
@@ -302,7 +302,7 @@ Resources:
     Properties:
       CodeUri: ListAllBidsFilterByCreator.js
       Handler: ListAllBidsFilterByCreator.handler
-      FunctionName: ListAllBidsFilterByCreator
+      FunctionName: CreatorListAllBidsFilterByCreator
       Description: >-
         List all bids for creators videos
       MemorySize: 128
@@ -344,7 +344,7 @@ Resources:
     Properties:
       CodeUri: PostBid.js
       Handler: PostBid.handler
-      FunctionName: PostBrandBids
+      FunctionName: CreatorPostBrandBids
       Description: >-
       MemorySize: 128
       Timeout: 10
@@ -385,7 +385,7 @@ Resources:
     Properties:
       CodeUri: GetBid.js
       Handler: GetBid.handler
-      FunctionName: GetBrandBid
+      FunctionName: CreatorGetBrandBid
       Description: >-
       MemorySize: 128
       Timeout: 10
@@ -426,7 +426,7 @@ Resources:
     Properties:
       CodeUri: GetVideoBidder.js
       Handler: GetVideoBidder.handler
-      FunctionName: GetVideoBidder
+      FunctionName: CreatorGetVideoBidder
       Description: >-
       MemorySize: 128
       Timeout: 10
@@ -468,7 +468,7 @@ Resources:
     Properties:
       CodeUri: DeleteBid.js
       Handler: DeleteBid.handler
-      FunctionName: DeleteBrandBids
+      FunctionName: CreatorDeleteBrandBids
       Description: >-
         A simple backend (read/write to DynamoDB) with a RESTful API endpoint
         using Amazon API Gateway.
@@ -502,7 +502,7 @@ Resources:
     Properties:
       CodeUri: GetCreatorVideo.js
       Handler: GetCreatorVideo.handler
-      FunctionName: GetCreatorVideos
+      FunctionName: CreatorGetCreatorVideos
       Description: >-
         A simple backend (read/write to DynamoDB) with a RESTful API endpoint
         using Amazon API Gateway.
@@ -535,7 +535,7 @@ Resources:
     Properties:
       CodeUri: DeleteCreatorVideo.js
       Handler: DeleteCreatorVideo.handler
-      FunctionName: DeleteCreatorVideo
+      FunctionName: CreatorDeleteCreatorVideo
       Description: >-
         A simple backend (read/write to DynamoDB) with a RESTful API endpoint
         using Amazon API Gateway.
@@ -579,7 +579,7 @@ Resources:
     Properties:
       CodeUri: ContentScheduler.js
       Handler: ContentScheduler.handler
-      FunctionName: CreatorContentScheduler
+      FunctionName: CreatorCreatorContentScheduler
       Description: >-
         A simple backend (read/write to DynamoDB) with a RESTful API endpoint
         using Amazon API Gateway.
@@ -622,7 +622,7 @@ Resources:
     Properties:
       CodeUri: PutBid.js
       Handler: PutBid.handler
-      FunctionName: PutBid
+      FunctionName: CreatorPutBid
       Description: >-
         A simple backend (read/write to DynamoDB) with a RESTful API endpoint
         using Amazon API Gateway.
@@ -656,7 +656,7 @@ Resources:
     Properties:
       CodeUri: SignUrl.js
       Handler: SignUrl.handler
-      FunctionName: SignUrl
+      FunctionName: CreatorSignUrl
       Description: >-
       MemorySize: 128
       Timeout: 10
@@ -702,7 +702,7 @@ Resources:
     Properties:
       CodeUri: BrandSignUrl.js
       Handler: BrandSignUrl.handler
-      FunctionName: BrandSignUrl
+      FunctionName: CreatorBrandSignUrl
       Description: >-
         Create brand image upload record in dynamodb and return a sign URL for upload /
         Idempotent - allows for re-submit of image if image fail upload
@@ -749,7 +749,7 @@ Resources:
     Properties:
       CodeUri: ContentCreatorSignUrl.js
       Handler: ContentCreatorSignUrl.handler
-      FunctionName: ContentCreatorSignUrl
+      FunctionName: CreatorContentCreatorSignUrl
       Description: >-
         Create creator-content upload record in dynamodb and return a sign URL for upload /
         Idempotent - allows for re-submit of image if image fail upload
@@ -797,7 +797,7 @@ Resources:
     Properties:
       CodeUri: FetchFileFromS3.js
       Handler: FetchFileFromS3.handler
-      FunctionName: FetchFileFromS3
+      FunctionName: CreatorFetchFileFromS3
       Description: >-
         Retrieve content from S3 and stream
       MemorySize: 128
@@ -838,36 +838,13 @@ Resources:
             AllowOrigin: "'*'"
 
 
-  # Lambda function that prevents the emission of confirmation emails
-  PreSignupFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Runtime: nodejs14.x
-      FunctionName: "MrJohnnyPreSignupFunction"
-      Handler: index.handler
-      Role: !GetAtt 'LambdaExecRole.Arn'
-      InlineCode: |
-        exports.handler = async event => {
-          event.response = { autoConfirmUser: true };
-          return event;
-        };
-      VpcConfig:
-        SecurityGroupIds:
-          - sg-0f666341436597447
-        SubnetIds:
-          - subnet-0f0ed4f2b3e9c1a75
-      Tags:
-        "service": "mrjohny"
-
-
-
 
 Outputs:
 
   # When the package.json scripts are used, this output will be stored
   # inside a api-url file
-  ApiUrl:
+  CreatorApiUrl:
     Description: The target URL of the created API
     Value: !Sub "https://${ServerlessApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
     Export:
-      Name: BidsFlow
+      Name: CreatorApiUrl
