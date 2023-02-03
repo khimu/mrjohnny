@@ -1,0 +1,145 @@
+/* HEADER SECTION */
+
+.headercredits {background: #440f57 url("../images/header_credits.jpg") 0 0 no-repeat; width: 640px;
+	height:143px;
+	text-align: center;
+	margin: 0 auto;
+}
+.headerspins {background: #440f57 url("../images/header_spins.jpg") 0 0 no-repeat;
+	width: 640px;
+	height:143px;
+	text-align: center;	
+	margin: 0 auto;
+}
+.headerPrivacy {background:#440f57 url("../images/bg_header_privacy.png") 0 0 no-repeat; width: 640px;
+	height:143px;
+	text-align: center;
+	margin: 0 auto;
+}
+.wrapper.all {
+	background:#440f57;
+}
+.playnowBtn {
+	top: 22px;
+	left: 28px;
+	padding: 0;
+	margin: 0;
+	width: 317px;
+	height: 116px;
+	position: relative;
+	float:left;
+}
+.playnow_PrivacyBtn {
+	top: 22px;
+	left: 165px;
+	padding: 0;
+	margin: 0;
+	width: 317px;
+	height: 116px;
+	position: relative;
+	float: left;
+}
+.credit_num {
+	top: 32px;
+	left: 100px;
+	padding: 0;
+	margin: 0;
+	width: 140px;
+	color: #fff;
+	font: bold 24px/26px 'Century Gothic Bold', Verdana, sans-serif;
+	text-align: center;
+	display: block;
+	text-shadow: 0px -1px 1px rgba(0, 0, 0, 0.8);
+	letter-spacing: .01em;
+}
+	.credits-num span {
+		text-align:left;
+		color:#fff;
+		font: bold 24px/21px 'Century Gothic Bold', Verdana, sans-serif;
+		display:block;
+		text-shadow: 2px -1px 1px rgba(0, 0, 0, 0.8);
+		letter-spacing: .01em;
+}
+
+/* END HEADER SECTION */
+.prizes_section {
+	background: #fff;
+	width: 640px;
+	height:auto;
+	top:0px;
+	left:0px;
+	margin:0;
+	padding:0;
+	text-align:left;
+	overflow:hidden;
+	border-top: #333 1px solid;	
+}
+
+/* END HEADER SECTION */
+.privacy_standalone {
+	text-align: left;
+	width: 610px;
+	border: none;
+	overflow: auto;
+	padding: 0 20px;
+}
+#prizeList {text-align:left; width:100%; border:none; overflow:auto;}
+.prizeList {
+	text-align: left;
+	width: 460px;
+	border: none;
+	overflow: scroll;
+	padding:0 20px;
+}
+.supplemental_body {position:relative; top:0; left:100px;}
+.prizeList h3 {text-align:left; line-height: 18px; padding:0;}
+.prizeList p {text-align:left; font-size:100%; padding:0 0 15px 0;}
+.prizeList a:link,.prizeList a:visited {color:#900;}
+.prizeList a:hover,.prizeList a:active {color:#000; text-decoration:underline;}
+td {height: 105px;}
+tr.highlight {font: bold 18px 'Century Gothic', Verdana, sans-serif; background:#d5d5d5 url("../images/bg_storelist-x.png") 0 0 repeat-x;  width: 100%; height:120px; text-align:left;}
+.highlight td {border-bottom: #CCC 1px solid; font: 18px 'Century Gothic Bold', Verdana, sans-serif; height:auto; text-align:left;vertical-align:top;}
+td.highlight {border-bottom: #CCC 1px solid; font: 18px 'Century Gothic Bold', Verdana, sans-serif; height:103px;}
+.highlight h2 {font: 30px/30px 'Century Gothic Bold', Helvetica, sans-serif; margin:0; vertical-align:top;}
+.highlight p {font: 24px/30px 'Century Gothic', Verdana, sans-serif; margin-top:0px; padding:0; width:360px; vertical-align:top;}
+.highlight span {font: 18px 'Century Gothic', Verdana, sans-serif; margin-top:0px; padding:0;}
+.highlight td.prizes {width: 100px; height:120px; text-align:center;}
+.prizes img {
+	position: relative;
+	top: 10px;
+	left: 8px;
+	width: 100px;
+	height: 100px;
+}
+.highlight td.desc, .highlight td.desc a {width: 320px; vertical-align:top; padding-left:10px; text-align:left; color:#333; text-decoration:none;}
+.highlight td.credits {width: 160px; color:#222; font-size:24px; vertical-align:top; font-weight:bold; text-align:center; letter-spacing: .01em; border-right: #CCC 1px solid; padding:10px 0;}
+.highlight td.credits a {color:#222;}
+.highlight td.spins {width: 160px; color:#222; font-size:24px; font-weight:bold; text-align:center; letter-spacing: .01em; border-right: #CCC 1px solid;}
+.highlight td.spins a {color:#222;}
+.highlight td.social {width:400px;}
+.highlight a:link{color:#111;}
+.highlight a:visited {color:#222;}
+.highlight a:hover {color:#000;}
+.highlight a:active {color:#000;}
+.highlight td span.creditNum {letter-spacing: .01em; color: #222;font-weight:bold; margin-top:2px; font-size:23px; line-height:14px; vertical-align:text-top; display:block;}
+.highlight td span.credittxt {font-size:14px; display:block; line-height:26px; text-transform:uppercase;}
+.highlight td span.getspins {font-size:16px; font-weight: bold; display:block; line-height:12px; text-transform:uppercase;}
+.privacy h2 {font-size:20px; font-weight:bold;}
+.privacy h3 {font-size:16px; font-weight:bold;}
+tr.redeem {height: 40px; color:#fff; text-align:left;}
+.redeem td.desc {width: 300px; vertical-align:top; padding-left:5px; height:40px; text-align:left;}
+.redeem td.prizes {width: 100px; height:auto; text-align:left; height:40px;}
+.redeem td.credits {width: 200px; color:#222; font-size:22px; vertical-align:top; height:40px; font-weight:bold; text-align:left; letter-spacing: .01em; border-right: #CCC 1px solid;
+}
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 12px;
+}
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); 
+}

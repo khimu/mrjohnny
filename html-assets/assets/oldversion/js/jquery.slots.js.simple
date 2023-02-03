@@ -1,0 +1,77 @@
+(function ($) {
+  "use strict";
+  // ready? .. set, go!
+
+
+    var transitionend = "webkitTransitionEnd transitionend";
+
+    // used for payout which we dont need
+/*
+    var slotsTypes = {
+      'cherry': [0, 50, 100],
+      'orange': [0, 100, 200],
+      'prune': [0, 100, 200],
+      'bell': [0, 100, 200],
+      'bar': [0, 200, 500],
+      'seven': [0, 0, 1000]
+    };
+*/
+
+    // used for payout which we dont' need
+    var slots = [
+      ['bell', 'orange', 'prune', 'orange', 'seven', 'cherry', 'bar', 'bell', 'prune'],
+      ['prune', 'orange', 'seven', 'cherry', 'bar', 'bell', 'prune', 'orange', 'cherry'],
+      ['orange', 'bell', 'orange', 'prune', 'orange', 'seven', 'cherry', 'bar', 'bell']
+    ];
+
+    // used to block the user from spinning again
+    var allowPlay = true;
+
+
+    var endSpin = function () {
+      allowPlay = false;
+
+      $('.wheel').on(transitionend, function () {
+        allowPlay = true;
+      });
+    };
+
+
+  // index - identify the wheel on the slot table
+  // wheel - identify the wheel in the html
+  // duration - how long to spin the wheel
+  // type - the winning symbol
+  function spinWheel(index, wheel, duration, type){
+    var spinPlus = 0; 
+
+          spinPlus += 3600;
+          var rotateWheel = (type + 1) * 40 + spinPlus;
+
+					$('#debug').append(rotateWheel + "<br/>");
+					$('#debug').append(slots[index][type] + "<br/>");
+
+
+          wheel.css({
+            MozTransitionDuration: duration + 'ms',
+            WebkitTransitionDuration: duration + 'ms',
+            MozTransform: 'rotateX(-' + rotateWheel + 'deg)',
+            WebkitTransform: 'rotateX(-' + rotateWheel + 'deg)'
+          });
+
+  }
+
+  $(function () {
+
+    $('#play').on('click', function () {
+			if(allowPlay){
+      	spinWheel(1, $('#wheel-1'), 50, 7);
+      	spinWheel(2, $('#wheel-2'), 60, 6);
+      	spinWheel(3, $('#wheel-3'), 70, 4);
+      	endSpin();
+			}
+    });
+
+
+    play.trigger('click');
+  });
+}(jQuery));

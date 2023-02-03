@@ -1,0 +1,16 @@
+body, html, .container {background:#354b50; background-color:#354b50; height:auto;
+	}
+	.pagebkg {background:#354b50 url("../images/fas_splash.jpg") 0 0 no-repeat; height:960px; width:640px; text-align:center; margin:0;}
+	.btn_tutorial, .btn_playnow {height:105px; width:640px; display:block; position:relative; float:left;
+	}
+	a.btn_tutorial {top: 480px; background: url("../images/btn_splash_tutorial.png") 0 0 no-repeat; border:none; box-shadow:none; text-decoration:none; text-shadow:none;}
+	a.btn_tutorial:hover, a.btn_tutorial_on {top: 480px; background: url("../images/btn_splash_tutorial_on.png") 0 0 no-repeat; border:none; box-shadow:none; text-decoration:none;}
+	.btn_playnow  {top:490px; background: url("../images/btn_splash_playnow.png") 0 0 no-repeat;}
+	.btn_playnow:hover, .btn_playnow_on  {top:490px; background: url("../images/btn_splash_playnow_on.png") 0 0 no-repeat;}
+	.winners_alt {position:relative; float:left; top:51px; left:386px; width: 188px;height: 76px; text-align:center;}
+	p.winners_alt_h1 {font: bold 31px/30px "DitedRegular", Verdana, sans-serif; text-transform: uppercase; color: white; width: 188px; text-shadow: 0px 0px 4px white, 0px 0px 10px white, 0px 0px 20px white, 0px 0px 30px #FF00DE, 0px 0px 45px #FF00DE, 0px 0px 60px #FF00DE, 0px 0px 83px #FF00DE, 0px 0px 101px #FF00DE;}
+	button {border:none; box-shadow:none; text-decoration:none; border-top:none; border-bottom:none;}
+	.ui-btn-inner {display:none; border-top:none; border-bottom:none; text-shadow: none;}
+	.ui-mobile [data-role="page"], .ui-mobile [data-role="dialog"], .ui-page {
+background: #354b50;
+}

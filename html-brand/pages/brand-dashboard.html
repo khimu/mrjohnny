@@ -1,0 +1,1282 @@
+<!--
+=========================================================
+* Material Dashboard 2 - v3.0.4
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/material-dashboard
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/img/favicon.png">
+  <title>
+    BranFluencer
+  </title>
+  <!--     Fonts and icons     -->
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+  <!-- Nucleo Icons -->
+  <link href="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/css/nucleo-svg.css" rel="stylesheet" />
+  <!-- Font Awesome Icons -->
+  <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
+  <!-- Material Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+  <!-- CSS Files -->
+  <link id="pagestyle" href="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/css/material-dashboard.css?v=3.0.4" rel="stylesheet" />
+
+
+
+<!--  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>-->
+  <style type="text/css">
+    #drag {
+      /*max-width: 250px;*/
+      /*max-height: 300px;*/
+      float: left;
+      /*margin: 10px;*/
+      background-color: transparent;
+      /*padding:10px;*/
+      z-index: 1000;
+      margin-left: 0;
+      margin-right: auto;
+    }
+
+    #drop {
+      max-width: 100%;
+      max-height: 575px;
+      float: left;
+      margin-left: auto;
+      margin-right: 0;
+      /*margin: 10px;*/
+      background-color: transparent;
+      /*padding:10px;*/
+      z-index: -1;
+    }
+
+    .custom-popover {
+      --bs-popover-max-width: 200px;
+      --bs-popover-border-color: var(--bs-primary);
+      --bs-popover-header-bg: var(--bs-primary);
+      --bs-popover-header-color: var(--bs-white);
+      --bs-popover-body-padding-x: 1rem;
+      --bs-popover-body-padding-y: .5rem;
+    }
+  </style>
+
+  <!--  <script src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/jquery-3.3.1.min.js"></script>-->
+  <script src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/oldversion/js/jquery-1.8.1.min.js"></script>
+  <script src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/bootstrap-5.2.3-dist/js/bootstrap.min.js"></script>
+  <link href="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/bootstrap-5.2.3-dist/css/bootstrap.min.css"
+        rel="stylesheet" id="bootstrap-css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+
+  <!-- CSS CDN --><!-- datetimepicker jQuery CDN -->
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css"
+  />
+  <link rel="stylesheet"
+        href="https://code.jquery.com/ui/1.12.1/themes/smoothness/jquery-ui.css"
+  />
+  <link rel="stylesheet"
+        href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css"
+  />
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js">
+  </script>
+
+
+  <link rel="stylesheet" href="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fonts/icomoon/style.css">
+  <link href='http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/core/main.css' rel='stylesheet' />
+  <link href='http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/daygrid/main.css' rel='stylesheet' />
+  <link rel="stylesheet" href="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/calendar-19/css/style.css">
+
+
+  <script src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/popper.min.js"></script>
+
+  <script src='http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/core/main.js'></script>
+  <script src='http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/interaction/main.js'></script>
+  <script src='http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/calendar-19/fullcalendar/packages/daygrid/main.js'></script>
+  <script src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/calendar-19/js/main.js"></script>
+
+  <!-- Enables drag and drop feature -->
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+  <!-- Cookie Script -->
+  <script>
+    function is_cookie_exist(name){
+      return document.cookie.split(';').some(c => {
+        return c.trim().startsWith(name + '=');
+      });
+    }
+    function delete_cookie( name, path, domain ) {
+      if( is_cookie_exist( name ) ) {
+        document.cookie = name + "=" +
+                ((path) ? ";path="+path:"")+
+                ((domain)?";domain="+domain:"") +
+                ";expires=Thu, 01 Jan 1970 00:00:01 GMT";
+        document.cookie = name + '=; Max-Age=0; path=/; domain=' + location.host;
+      }
+    }
+
+    /**
+     * Called from sign out button
+     */
+    function getCookie(){
+      console.log(document.cookie);
+      delete_cookie("atid", "/", "");
+      delete_cookie("identity", "/", "");
+      console.log(document.cookie);
+      location.href = '/index.html';
+    }
+
+    function getCookieValue(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+  </script>
+
+  <!-- Initialize Variables -->
+  <script>
+    window.token = window.sessionStorage.getItem(getCookieValue('mysession'));
+    window.api_endpoint = window.localStorage.getItem('api-endpoint');
+    window.video_id = window.localStorage.getItem('video_id');
+    window.identity = window.localStorage.getItem('identity');
+
+    console.log('identity is ' + identity);
+    console.log('api-endpoint ' + window.api_endpoint);
+
+    // console.log('DEBUG================');
+    // console.log(window.token);
+    // console.log(window.api_endpoint);
+    // console.log(window.video_id);
+    // console.log(window.identity);
+    // console.log('DEBUG================');
+
+    $(document).ready(function() {
+      if (!window.token) {
+        $(".alert").delay(2000).slideUp(200, function () {
+          $(this).alert('close');
+        });
+        $('#loading').hide();
+        location.href = '/index.html';
+      }
+    });
+
+    function logout() {
+      window.sessionStorage.clear();
+      window.localStorage.clear();
+      location.href = '/index.html';
+    }
+
+    if(!window.video_id) {
+      location.href ='/pages/brand-landing-page.html';
+
+    }
+
+  </script>
+
+  <!-- Video Image Overlay Script -->
+  <script>
+    var vid_x = 0;
+    var vid_y = 0;
+    var vid_html_x = 0;
+    var vid_html_y = 0;
+    var pause_vid_at = 0;
+
+
+    $(function () {
+      var vid = document.getElementById("video");
+      var once = false;
+
+      const video = document.getElementById('video');
+
+      function togglePlay() {
+        console.log('play click');
+        if (video.paused || video.ended) {
+          console.log('video playing');
+          $('.bi ').addClass('bi-pause-btn-fill');
+          $('.bi ').removeClass('bi-play-btn-fill');
+          video.play();
+        } else {
+          $('.bi ').addClass('bi-play-btn-fill');
+          $('.bi ').removeClass('bi-pause-btn-fill');
+          video.pause();
+        }
+      }
+
+
+
+      $('#playVideo').click(function () {
+        console.log('play click');
+        if (video.paused || video.ended) {
+          console.log('video playing');
+          $('.bi ').addClass('bi-pause-btn-fill');
+          $('.bi ').removeClass('bi-play-btn-fill');
+          video.play();
+        } else {
+          $('.bi ').addClass('bi-play-btn-fill');
+          $('.bi ').removeClass('bi-pause-btn-fill');
+          video.pause();
+        }
+      });
+
+      $("#drag").draggable();
+      $("#drop").droppable(
+              {
+                drop: function () {
+                  console.log("I am dropped ");
+                }
+              });
+
+      // $.ajaxSetup({ cache: true });
+
+      $('#drag').mouseup(function (e) {
+        vid.pause();
+
+        console.log('currentTime ' + vid.currentTime);
+        $('#video').trigger('mouseout');
+
+        var y = window.scrollY + document.querySelector('#video').getBoundingClientRect().top // Y
+        var x = window.scrollX + document.querySelector('#video').getBoundingClientRect().left // X
+
+        console.log('video ' + x + " y " + y);
+        console.log("x: " + e.pageX + " y: " + e.pageY);
+
+        vid_x = e.pageX - x;
+        vid_y = e.pageY - y;
+        vid_html_x = e.pageX;
+        vid_html_y = e.pageY;
+
+        pause_vid_at = vid.currentTime;
+
+        console.log('vid x ' + vid_x + " vid y " + vid_y);
+
+        $('#position_x').attr('value', vid_x);
+        $('#position_y').attr('value', vid_y);
+        $('#html_position_x').attr('value', vid_html_x);
+        $('#html_position_y').attr('value', vid_html_y);
+        $('#frame_pixel').attr('value', pause_vid_at);
+
+        // $('#position_x_detail').attr('value', vid_x);
+        // $('#position_y_detail').attr('value', vid_y);
+        // $('#html_position_x_detail').attr('value', vid_html_x);
+        // $('#html_position_y_detail').attr('value', vid_html_y);
+        // $('#frame_pixel_detail').attr('value', pause_vid_at);
+      });
+
+      // reset video and dynamically pace image for user
+      $("#review").click(function () {
+        console.log('got the click');
+        var vid = document.getElementById("video");
+        $('#bidder_image_upload').hide();
+        once = false;
+        vid.load();
+        vid.play();
+      });
+
+      vid.addEventListener("timeupdate", function () {
+        var vid = document.getElementById("video");
+        if (this.currentTime > pause_vid_at && once == false && pause_vid_at > 0) {
+          once = true;
+          vid.pause();
+          $('#bidder_image_upload').show();
+          window.t = setTimeout(function () {
+            $('#bidder_image_upload').hide();
+          }, 1000);
+          //.animate({ top: vid_html_y, left: vid_html_x},1200);
+          vid.play();
+        }
+      });
+    });
+  </script>
+
+
+  <!-- Dashboard Script -->
+  <script>
+
+    // Attach a submit handler to the form
+    $(document).ready(function(){
+      $('#video_id', window.video_id);
+      $("#identity").text(window.identity);
+      $('#nav_title').html(window.identity);
+      console.log('bidder email is ' + window.identity);
+      window.localStorage.setItem('bidder_email', window.identity);
+      console.log('bidder email from cache is ' + window.localStorage.getItem('bidder_email'));
+    });
+  </script>
+
+  <!-- Get Video Detail -->
+  <script type="text/javascript">
+
+    $(document).ready(function () {
+      console.log('video id ' + window.video_id);
+      console.log('api_endpoint' + window.api_endpoint);
+
+      $.ajax({
+        type: "GET",
+        url: window.api_endpoint + "/creator_video/" + window.video_id,
+        crossDomain: true,
+        headers: {
+          'Authorization': 'Bearer ' + window.token
+        },
+        dataType: 'json',
+        success: function (result) {
+          console.log('success');
+          const json = JSON.parse(JSON.stringify(result));
+          console.log(JSON.stringify(result));
+
+          let item = json.Item;
+          console.log(JSON.stringify(item));
+
+          window.localStorage.setItem('video_key', item.key);
+          console.log('video key', item.key);
+
+          //$('#video_name').html(item.filename);
+          $('#scheduled_release_date_detail').html(item.scheduled_release_date);
+          $('#video_title_detail').html(item.title);
+          $('#video_create_date').html(item.create_date);
+
+          $('#start_window').html(item.start_bid_window);
+          $('#end_window').html(item.end_bid_window);
+          $('#open_bid_amount_detail').html(item.open_bid_amount);
+          $('#bid_type_detail').html(item.bid_type);
+          $('#video_description_detail').html(item.description + " (" + item.audience_category + ")");
+          $('#social_media_detail').html(item.social_media_platform + " (" + item.platform_api_key + ")");
+
+
+          //$('#video_title').attr('value', item.title);
+          //const $select = document.querySelector('#bid_type');
+          //$select.value = item.bid_type;
+
+
+          //$('#scheduled_release_date').datetimepicker({format:'Y/m/d h:i:s'});
+          //$("#start_bid_window").datetimepicker({format:'Y/m/d h:i:s'});
+          //$("#end_bid_window").datetimepicker({format:'Y/m/d h:i:s'});
+
+
+          //$('#scheduled_release_date').attr('value', item.scheduled_release_date);
+          //$('#end_bid_window').attr('value', item.end_bid_window);
+          //$('#start_bid_window').attr('value', item.start_bid_window);
+
+
+          // $('#video_description').attr('value', item.description);
+          // $('#audience_category').attr('value', item.audience_category);
+          // $('#platform_api_key').attr('value', item.platform_api_key);
+          // $('#social_media_platform').attr('value', item.social_media_platform);
+          // $('#open_bid_amount').attr('value', item.open_bid_amount);
+          // $('#kid_friendly').attr('value', item.kid_friendly);
+          // $('#enable_publish').attr('value', item.enable_publish);
+
+
+          // For Bidder
+          $('#bidder_email_detail').html(item.creator_email);
+
+          // this is redundant but just in case i missed something
+          window.localStorage.setItem('video_key', item.key);
+          console.log('get video detail video_key ' + item.key);
+          window.localStorage.setItem('creator_email', item.creator_email)
+
+          $('#video_bid_detail').html('Open Bid Amount:' + item.open_bid_amount + '\n' +
+                  'Bid Window: ' + item.start_bid_window + " - " + item.end_bid_window);
+
+          if (item.enable_publish) {
+            $('#video_published_to_platform').html('Is Live');
+          } else {
+            $('#video_published_to_platform').html('Not Live');
+          }
+
+          displayProtectedImage('#video', window.api_endpoint + "/content/" + item.key);
+
+          getBidDetail();
+        },
+        error: function (xhr, status, error) {
+          console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+          alert("You are no longer logged in");
+          //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+        }
+      });
+      // need to implement onSubmit
+    });
+
+  </script>
+
+ <!-- List Create Calendar -->
+  <script>
+
+    //console.log("api_endpoint " + api_endpoint);
+
+    var events = [];
+
+    $(document).ready(function () {
+
+      $.ajax({
+        type: "GET",
+        url: window.api_endpoint + "/listCreatorVideos/" + window.identity,
+        crossDomain: true,
+        headers: {
+          'Authorization': 'Bearer ' + window.token
+        },
+        dataType: 'json',
+        success: function (result) {
+          var json = $.parseJSON(JSON.stringify(result));
+          console.log(JSON.stringify(json));
+          let items = json.Items;
+          console.log(JSON.stringify(items));
+
+
+          for (var i in json.Items) {
+            let row = $("#mrjohnny-creator-video-list .mrjohnny-creator-video-list-row").first().clone();
+            console.log(JSON.stringify(items[i]));
+
+            //
+            // 2020-02-16T16:00:00
+            // 2023/01/22 23:00
+
+            var format_date = items[i].scheduled_release_date.replaceAll("/", "-").replace(" ", "T");
+            console.log(format_date);
+
+            main_item = {}
+            main_item ["title"] = items[i].title;
+            main_item ["start"] = format_date;
+            main_item ["url"] = "javascript: loadUrl('/pages/brand-dashboard.html', '" + items[i].id + "')";
+            events.push(main_item);
+
+            if(items[i].open_bid_amount && items[i].start_bid_window) {
+              bid_item = {}
+              bid_item ["title"] = items[i].title + " (" + items[i].open_bid_amount + ")";
+              bid_item ["start"] = items[i].start_bid_window;
+              bid_item ["end"] = items[i].end_bid_window;
+              bid_item ["url"] = "javascript: loadUrl('/pages/brand-dashboard.html', '" + items[i].id + "')";
+              events.push(bid_item);
+            }
+
+            window.localStorage.setItem(items[i].id, JSON.stringify(items[i]));
+
+            //2020-02-16T16:00:00
+            // {
+            //     groupId: 999,
+            //         title: 'Repeating Event',
+            //     start: '2020-02-16T16:00:00'
+            // },
+            //
+          }
+
+          console.log(events);
+
+          var calendarEl = document.getElementById('calendar');
+
+          console.log(events);
+
+          var calendar = new FullCalendar.Calendar(calendarEl, {
+            plugins: [ 'interaction', 'dayGrid' ],
+            defaultDate: '2023-01-22',
+            editable: true,
+            eventLimit: true, // allow "more" link when too many events
+            events: events
+          });
+
+          calendar.render();
+
+        },
+        error: function (xhr, status, error) {
+          console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+          //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+        }
+      });
+    });
+
+    function loadUrl(url, video_id) {
+      window.localStorage.setItem('video_id', video_id);
+      window.location.href = window.localStorage.getItem("web-endpoint") + url;
+    }
+
+  </script>
+
+<!-- Brand Image Upload -->
+  <script type="text/javascript">
+    let brandImageKey;
+
+    $(document).ready(function () {
+      //const previousElement = ( document.activeElement || document.body );
+
+      $("form#image_upload_data").submit(function (e) {
+        console.log(window.api_endpoint);
+        $('#loading').show();
+        e.preventDefault();
+
+        let formData = new FormData(this);
+        const photo = document.getElementById("upload-image").files[0];
+        formData.delete('upload-image');
+
+        if(photo) {
+          console.log(photo.name);
+          var cleanFileName = photo.name.split('\\').pop(); // clean from C:\fakepath OR C:\fake_path
+          console.log('clean file name : ' + cleanFileName);
+
+          for (var pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
+          }
+
+          const videoFields = JSON.parse(window.localStorage.getItem(window.video_id));
+          console.log('identity is ' + window.identity);
+          console.log('video_key is ' + videoFields.key);
+          console.log('video_key is ' + window.localStorage.getItem('video_key'));
+
+          brandImageKey = window.identity + "/" + cleanFileName;
+          formData.append('bidder_email', window.identity);
+          formData.append('video_key', videoFields.key);
+          formData.append('video_id', window.video_id);
+          formData.append('creator_email', videoFields.creator_email);
+          formData.append('image_key', brandImageKey);
+          formData.append('filename', cleanFileName);
+
+          $('#bidder_email_detail').attr('value', videoFields.creator_email)
+
+          window.localStorage.setItem('image_key', brandImageKey);
+          window.localStorage.setItem('creator_email', videoFields.creator_email);
+          window.localStorage.setItem('video_key', videoFields.Key);
+
+
+          $.ajax({
+            type: "PUT",
+            url: window.api_endpoint + "/brand-sign-url/" + window.identity + "/" + cleanFileName,
+            crossDomain: true,
+            headers: {
+              'Authorization': 'Bearer ' + window.token
+            },
+            data: JSON.stringify(Object.fromEntries(formData)),
+            dataType: 'json',
+            success: function (signedURL) {
+              console.log('success ' + signedURL);
+              var json = $.parseJSON(JSON.stringify(signedURL));
+              console.log('signUrl json ' + json);
+              console.log('uploadURL ' + json.uploadURL);
+
+              $.ajax({
+                type: "PUT",
+                url: json.uploadURL,
+                crossDomain: true,
+                headers: {
+                  "x-amz-acl": "public-read",
+                  "Key": window.identity + "/" + cleanFileName,
+                  "Content-Type": "image/jpeg"
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+                async: true,
+                data: photo,
+                //dataType: 'text/html',
+                success: function (result) {
+                  console.log("got a success");
+                  // success is going into error even though i change type to text/html
+                  $('#loading').hide();
+
+                  $('.modal.in').modal('hide');
+                  $('#imageUploadFormModal').hide();
+                  //$('#imageUploadFormModal').fadeOut();
+                  //$('#imageUploadFormModal').parent().focus();
+                  $('#imageUploadFormModal').find('form')[0].reset();
+                  $('.modal-backdrop').hide();
+
+
+                  let key = window.identity + "/" + cleanFileName;
+                  displayProtectedImage('#bidder_image_upload', window.api_endpoint + "/content/" + key);
+                  console.log('result from ' + json.brand_image_id);
+
+                  //const brand_image_id = json.brand_image_id;
+                  //console.log('brand_image_id from upload image is ' + brand_image_id);
+                  window.localStorage.setItem('brand_image_id', json.brand_image_id);
+                },
+                error: function (xhr, status, error) {
+                  console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+                  $('#loading').hide();
+                  $('#imageUploadFormModal').hide();
+                  $('.modal-backdrop').hide();
+                  //$('.modal.in').modal('hide')
+                  // check if all is wll
+                  //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+                }
+              });
+            },
+            error: function (xhr, status, error) {
+              console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+              $('#loading').hide();
+
+              $('#imageUploadFormModal').hide();
+              $('.modal-backdrop').hide();
+              //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+            }
+          });
+        }
+      });
+    });
+
+    function fetchSignUrl(url) {
+      console.log('fetching sign url to retrieve asset');
+      return $.ajax({
+        type: "GET",
+        url: url,
+        crossDomain: true,
+        headers: {
+          'Authorization': 'Bearer ' + window.token
+        },
+        dataType: 'json'
+      });
+    }
+
+    async function displayProtectedImage(
+            imageId, imageUrl
+    ) {
+      fetchSignUrl(imageUrl).done(function (response) {
+        console.log('got s3 video url is ' + response);
+        var json = $.parseJSON(JSON.stringify(response));
+        console.log('video url ' + json.uploadURL);
+
+        $(imageId).attr('src', json.uploadURL);
+
+      }).fail(function () {
+        //$('#imageUploadFormModal').hide();
+        //$('.modal.in').modal('hide');
+      });
+    }
+
+  </script>
+
+  <!-- Submit Bid Post -->
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $("form#bid_data").submit(function (e) {
+        console.log(window.api_endpoint);
+        $('#loading').show();
+        e.preventDefault();
+
+        var formData = new FormData(this);
+        formData.delete('upload-image');
+
+        brandImageKey = window.localStorage.getItem('image_key');
+        const brandImageId = window.localStorage.getItem('brand_image_id');
+        console.log('brand image id is ' + brandImageId);
+
+        if(brandImageKey) {
+          formData.append('image_key', brandImageKey);
+          formData.append('filename', brandImageKey.split('/')[1]);
+
+          for (let pair of formData.entries()) {
+            console.log(pair[0], pair[1]);
+          }
+
+          formData.append('bidder_email', window.identity);
+          formData.append('video_key', window.localStorage.getItem('video_key'));
+          formData.append('video_id', window.video_id);
+          formData.append('creator_email', window.localStorage.getItem('creator_email'));
+          formData.append('id', brandImageId);
+
+          $.ajax({
+            type: "POST",
+            url: window.api_endpoint + "/bids",
+            crossDomain: true,
+            headers: {
+              'Authorization': 'Bearer ' + window.token
+            },
+            data: JSON.stringify(Object.fromEntries(formData)),
+            dataType: 'json',
+            success: function (bidResponse) {
+
+              $('.modal.in').modal('hide');
+              $('#placeBidFormModal').hide();
+              //$('#placeBidFormModal').fadeOut();
+              //$('#placeBidFormModal').parent().focus();
+              $('#placeBidFormModal').find('form')[0].reset();
+              $('.modal-backdrop').hide();
+
+
+              console.log('success ' + JSON.stringify(bidResponse));
+              console.log('id should match what was posted' + JSON.parse(bidResponse).brand_image_id);
+
+              getBidDetail();
+            },
+            error: function (xhr, status, error) {
+              console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+              $('.modal.in').modal('hide');
+              $('#loading').hide();
+              //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+            }
+          });
+        }
+      });
+    });
+
+  </script>
+
+  <!-- Get Bid Detail If One Exist - Get By Creator And Bidder And Image Key -->
+  <script>
+    function getBidDetail() {
+      console.log('Getting fresh bid detail');
+      const creatorEmail = window.localStorage.getItem('creator_email');
+      const bidderEmail = window.localStorage.getItem('bidder_email');
+      const videoKey = window.localStorage.getItem('video_key');
+
+      $.ajax({
+        type: "GET",
+        url: window.api_endpoint + "/bids-query/" + bidderEmail + "/" + videoKey,
+        crossDomain: true,
+        headers: {
+          'Authorization': 'Bearer ' + window.token
+        },
+        dataType: 'json',
+        success: function (result) {
+          console.log('success');
+          const json = JSON.parse(JSON.stringify(result));
+          // {"Item":{"content":"mustache","currency":"USD","frame_location":"1000","placement_y":"300","amount":"400","merchant_id":"mrjohnny","placement_x":"400","id":"86818d4f-fddb-4c05-8fbb-4d83d884ce7a"}}
+          const items = json.Items;
+          console.log(JSON.stringify(items));
+          if(items.length > 0) {
+            const item = items.pop();
+            console.log('item amount is ' + item.amount);
+            $('#bid_amount_detail').html(item.amount);
+            $('#image_key').attr('value', item.image_key);
+            // bidder_email: obj.bidder_email,
+            // video_key: obj.video_key,
+            // video_id: obj.video_id,
+            // creator_email: obj.creator_email,
+            // ad_description: obj.ad_description,
+            // position_x: obj.position_x,
+            // position_y: obj.position_y,
+            // frame_pixel: obj.frame_pixel,
+            // html_position_x: obj.html_position_x,
+            // html_position_y: obj.html_position_y,
+            // creator_accepted: false,
+            // created_on: Date.now()
+
+            console.log('update is successful when this is filled ' + item.position_y);
+
+            $('#position_x_detail').html(item.position_x);
+            $('#position_y_detail').html(item.position_y);
+            $('#html_position_x_detail').html(item.html_position_x);
+            $('#html_position_y_detail').html(item.html_position_y);
+            $('#frame_pixel_detail').html(item.frame_pixel);
+
+            console.log('position_x ' + item.position_x);
+            console.log('position_y ' + item.position_y);
+            console.log('html_position_x ' + item.html_position_x);
+            console.log('html_position_y ' + item.html_position_y);
+            console.log('frame_pixel ' + item.frame_pixel);
+
+            // if image src is not empty
+            // y.style.marginLeft = '100px';
+            // y.style.maringTop = '-60px';
+            // y.classList.add('yourCssClass')
+            //$(imageId).attr('src', json.uploadURL);
+
+            console.log('id to retrieve bid and post to ' + item.id);
+            window.localStorage.setItem('brand_image_id', item.id);
+            window.localStorage.setItem("image_key", item.image_key);
+            if(! $('#bidder_image_upload').attr('src')) {  // only retrieve image if img src is empty
+              displayProtectedImage('#bidder_image_upload', window.api_endpoint + "/content/" + item.image_key);
+            }
+          }
+        },
+        error: function (xhr, status, error) {
+          console.log("going into error " + JSON.stringify(xhr) + " " + status + " " + error);
+          //location.href = 'http://mrjohnny.s3-website-us-east-1.amazonaws.com/index.html';
+        }
+      });
+
+      // need to implement onSubmit
+    }
+  </script>
+
+
+  <style>
+    .loading-progress{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-top: -50px;
+      margin-left: -50px;
+      width: 100px;
+      height: 100px;
+    }
+
+  </style>
+
+</head>
+
+<img id="loading" src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/loading.gif" style="display:none;" class="loading-progress">
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="placeBidFormModal" tabindex="-1" aria-labelledby="placeBidFormModalModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="bid_data" method="post" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="placeBidFormModalModalLabel">Place Bid Form</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" name="position_x" id="position_x"/>
+          <input type="hidden" name="position_y" id="position_y"/>
+          <input type="hidden" name="frame_pixel" id="frame_pixel"/>
+          <input type="hidden" name="html_position_x" id="html_position_x"/>
+          <input type="hidden" name="html_position_y" id="html_position_y"/>
+
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><input type="text" name="bid_amount" id="bid_amount" class="form-control input-lg" aria-label="Bid Amount" placeholder="Bid Amount"></div>
+          </div>
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><input type="text" name="ad_description" id="ad_description" class="form-control input-lg" aria-label="Ad Description" placeholder="Ad Description"></div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" id="submit_bid" class="btn btn-primary">Place Bid</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="imageUploadFormModal" tabindex="-1" aria-labelledby="imageUploadFormModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="image_upload_data" method="post" enctype="multipart/form-data">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="imageUploadFormModalLabel">Upload Brand Image</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <div class="row g-3" style="margin-top:20px">
+            <div class="col"><input id="upload-image" name="upload-image" class="form-control" type="file" aria-label="Upload Image"/></div>
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="submit" id="submit_brand_image_upload" class="btn btn-primary">Upload Image</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="placeBidDetailModal" tabindex="-1" aria-labelledby="placeBidDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="placeBidDetailModalLabel">Video Detail</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="card border-success mb-3">
+            <div class="card-header bg-transparent border-success">
+              <span id="bidder_email_detail"></span>
+            </div>
+            <div class="card-body text-success">
+              <h5 class="card-title"><small class="text-muted"><span id="bid_ad_description_detail"></span></small></h5>
+              <p class="card-text">
+              <table class="table align-items-center mb-0">
+                <tr><th></th><th></th><th>X</span></th><th>Y</th></tr>
+                <tr><td>Image</td><td></td><td><span id="position_x_detail"></span></td><td><span id="position_y_detail"></span></td></tr>
+                <tr><td>Screen</td><td></td><td><span id="html_position_x_detail"></span></td><td><span id="html_position_y_detail"></span></td></tr>
+                <tr><td>Frame</td><td><span id="frame_pixel_detail"></span></td><td colspan="2"></td></tr>
+              </table>
+              </p>
+            </div>
+            <div class="card-footer bg-transparent border-success" style="text-align:center;color:black;">
+              <p class="card-text"><small class="text-muted">Bid Amount :<span id="bid_amount_detail"></span></small></p>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="influencerVideoDetailModal" tabindex="-1" aria-labelledby="influencerVideoDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="influencerVideoDetailModalLabel">Video Detail</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="card border-success mb-3">
+          <div class="card-header bg-transparent border-success">
+            <span id="video_title_detail"></span>
+          </div>
+          <div class="card-body text-success">
+            <h5 class="card-title"><small class="text-muted"><span id="video_name"></span></small></h5>
+            <p class="card-text">
+            <table class="table align-items-center mb-0">
+              <tr><td><span id="social_media_detail"></span></td><td><span id="video_published_to_platform"></span></td></tr>
+              <tr><td>Minimum Bid</td><td> @ <span id="open_bid_amount_detail"></span></td></tr>
+            </table>
+            </p>
+            <p class="card-text">
+            <div class="row" >
+              <div class="col">
+                Scheduled Release Date @
+              </div>
+              <div class="col">
+                <span id="scheduled_release_date_detail"></span>
+              </div>
+            </div>
+            </p>
+          </div>
+          <div class="card-footer bg-transparent border-success" style="text-align:center;color:black;">
+            <div class="row">
+              <div class="col">
+                <span id="start_window"></span>
+              </div>
+              <div class="col">
+                <span id="end_window"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button"  class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<body class="g-sidenav-show  bg-gray-200">
+
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Pages</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
+          </ol>
+          <h6 class="font-weight-bolder mb-0">Dashboard</h6>
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            <div class="input-group input-group-outline">
+              <label class="form-label">Type here...</label>
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <ul class="navbar-nav  justify-content-end">
+            <li class="nav-item d-flex align-items-center">
+              <a id="identity" class="btn btn-outline-primary btn-sm mb-0 me-3" href="/pages/brand-landing-page.html">Online Builder</a>
+            </li>
+            <li class="nav-item d-flex align-items-center">
+              <a href="javascript:logout();" class="nav-link text-body font-weight-bold px-0">
+                <i class="fa fa-user me-sm-1"></i>
+                <span class="d-sm-inline d-none">Sign Out</span>
+              </a>
+            </li>
+            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item px-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0">
+                <i class="fa fa-cog fixed-plugin-button-nav cursor-pointer"></i>
+              </a>
+            </li>
+            <li class="nav-item dropdown pe-2 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fa fa-bell cursor-pointer"></i>
+              </a>
+
+              <!-- Can add ALERT here -->
+              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                <li class="mb-2">
+                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                    <div class="d-flex py-1">
+                      <div class="my-auto">
+                        <img src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/img/team-2.jpg" class="avatar avatar-sm  me-3 ">
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="text-sm font-weight-normal mb-1">
+                          <span class="font-weight-bold">New message</span> from Laur
+                        </h6>
+                        <p class="text-xs text-secondary mb-0">
+                          <i class="fa fa-clock me-1"></i>
+                          13 minutes ago
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li class="mb-2">
+                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                    <div class="d-flex py-1">
+                      <div class="my-auto">
+                        <img src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/img/small-logos/logo-spotify.svg" class="avatar avatar-sm bg-gradient-dark  me-3 ">
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="text-sm font-weight-normal mb-1">
+                          <span class="font-weight-bold">New album</span> by Travis Scott
+                        </h6>
+                        <p class="text-xs text-secondary mb-0">
+                          <i class="fa fa-clock me-1"></i>
+                          1 day
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+                <li>
+                  <a class="dropdown-item border-radius-md" href="javascript:;">
+                    <div class="d-flex py-1">
+                      <div class="avatar avatar-sm bg-gradient-secondary  me-3  my-auto">
+                        <svg width="12px" height="12px" viewBox="0 0 43 36" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                          <title>credit-card</title>
+                          <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                            <g transform="translate(-2169.000000, -745.000000)" fill="#FFFFFF" fill-rule="nonzero">
+                              <g transform="translate(1716.000000, 291.000000)">
+                                <g transform="translate(453.000000, 454.000000)">
+                                  <path class="color-background" d="M43,10.7482083 L43,3.58333333 C43,1.60354167 41.3964583,0 39.4166667,0 L3.58333333,0 C1.60354167,0 0,1.60354167 0,3.58333333 L0,10.7482083 L43,10.7482083 Z" opacity="0.593633743"></path>
+                                  <path class="color-background" d="M0,16.125 L0,32.25 C0,34.2297917 1.60354167,35.8333333 3.58333333,35.8333333 L39.4166667,35.8333333 C41.3964583,35.8333333 43,34.2297917 43,32.25 L43,16.125 L0,16.125 Z M19.7083333,26.875 L7.16666667,26.875 L7.16666667,23.2916667 L19.7083333,23.2916667 L19.7083333,26.875 Z M35.8333333,26.875 L28.6666667,26.875 L28.6666667,23.2916667 L35.8333333,23.2916667 L35.8333333,26.875 Z"></path>
+                                </g>
+                              </g>
+                            </g>
+                          </g>
+                        </svg>
+                      </div>
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="text-sm font-weight-normal mb-1">
+                          Payment successfully completed
+                        </h6>
+                        <p class="text-xs text-secondary mb-0">
+                          <i class="fa fa-clock me-1"></i>
+                          2 days
+                        </p>
+                      </div>
+                    </div>
+                  </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <!-- END ALERT -->
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+
+    <div class="container-fluid py-4">
+
+
+      <div class="row mb-4">
+        <div class="col-lg-8 col-md-6 mb-md-0 mb-4" sytle="width:700px;">
+          <div class="card"  sytle="width:700px;">
+            <div class="card-header pb-0" >
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <h6>Influencer Video</h6>
+                  <p class="text-sm mb-0">
+                    <i class="fa fa-check text-info" aria-hidden="true"></i>
+                    <span class="font-weight-bold ms-1">30 done</span> this month
+                  </p>
+                </div>
+                <div class="col-lg-6 col-5 my-auto text-end">
+                  <div class="dropdown float-lg-end pe-4">
+                    <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v text-secondary"></i>
+                    </a>
+                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
+                      <li><a id="influencer_video_detail" class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#influencerVideoDetailModal">Detail</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body px-0 pb-2 text-center">
+
+              <div id="drop">
+                <p>
+                  <video id="video" style="max-width:100%">
+                    <source id="mp4" src="#"
+                            type="video/mp4"/>
+                  </video>
+                </p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+
+        <div class="col-lg-4 col-md-6" style="width:200px;">
+          <div class="card h-100">
+            <div class="card-header pb-0">
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <h6>Brand Image</h6>
+                  <p class="text-sm mb-0">
+                    <i class="fa fa-check text-info" aria-hidden="true"></i>
+                    <span class="font-weight-bold ms-1">30</span>
+                  </p>
+                </div>
+                <div class="col-lg-6 col-5 my-auto text-end">
+                  <div class="dropdown float-lg-end pe-4">
+                    <a class="cursor-pointer" id="dropdownTableForBrand" data-bs-toggle="dropdown" aria-expanded="false">
+                      <i class="fa fa-ellipsis-v text-secondary"></i>
+                    </a>
+                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTableForBrand">
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#imageUploadFormModal">Brand Upload</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#placeBidFormModal">Place Bid</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#placeBidDetailModal">Bid Detail</a></li>
+                      <li><a id="playVideo" class="dropdown-item border-radius-md" href="javascript:;"><span class="bi bi-play-btn-fill"></span>Play</a></li>
+                      <li><a id="review" class="dropdown-item border-radius-md" href="javascript:;" >Review</a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body p-3">
+
+              <div id="drag">
+                <p><img id="bidder_image_upload" src=""/></p>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+      <footer class="footer py-4  ">
+        <div class="container-fluid">
+          <div class="row align-items-center justify-content-lg-between">
+            <div class="col-lg-6 mb-lg-0 mb-4">
+              <div class="copyright text-center text-sm text-muted text-lg-start">
+                © <script>
+                  document.write(new Date().getFullYear())
+                </script>,
+                made with <i class="fa fa-heart"></i> by
+                <a href="#" class="font-weight-bold" target="_blank">Creative Tim</a>
+                for a better web.
+              </div>
+            </div>
+            <div class="col-lg-6">
+              <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+                <li class="nav-item">
+                  <a href="#" class="nav-link text-muted" target="_blank">Creative
+                    Tim</a>
+                </li>
+                <li class="nav-item">
+                  <a href="#n" class="nav-link text-muted"
+                     target="_blank">About Us</a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link text-muted"
+                     target="_blank">Blog</a>
+                </li>
+                <li class="nav-item">
+                  <a href="#" class="nav-link pe-0 text-muted"
+                     target="_blank">License</a>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </main>
+
+
+
+
+  <div class="fixed-plugin">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+      <i class="material-icons py-2">settings</i>
+    </a>
+    <div class="card shadow-lg">
+      <div class="card-header pb-0 pt-3">
+        <div class="float-start">
+          <h5 class="mt-3 mb-0">Scheduled Videos</h5>
+          <p>See whats scheduled</p>
+        </div>
+        <div class="float-end mt-4">
+          <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+            <i class="material-icons">clear</i>
+          </button>
+        </div>
+        <!-- End Toggle Button -->
+      </div>
+      <hr class="horizontal dark my-1">
+      <div class="card-body pt-sm-3 pt-0">
+        <!-- Sidebar Backgrounds -->
+
+        <div class="content">
+          <div id='calendar'></div>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <!--   Core JS Files   -->
+  <script src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/js/core/popper.min.js"></script>
+  <script src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/js/core/bootstrap.min.js"></script>
+  <script src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/js/plugins/chartjs.min.js"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="http://mrjohnny-assets.s3-website-us-east-1.amazonaws.com/assets/js/material-dashboard.min.js?v=3.0.4"></script>
+</body>
+
+</html>
